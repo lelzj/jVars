@@ -70,8 +70,8 @@ end
 --  @param  string  Value
 --  @return void
 function jName:SetValue( Index,Value )
-    if( self.persistence[ Index ] ~= nil ) then
-        self.persistence[ Index ] = Value;
+    if( self.persistence.CVars[ Index ] ~= nil ) then
+        self.persistence.CVars[ Index ] = Value;
     end
 end
 
@@ -81,8 +81,8 @@ end
 --  @param  string  Index
 --  @return mixed
 function jName:GetValue( Index )
-    if( self.persistence[ Index ] ~= nil ) then
-        return self.persistence[ Index ];
+    if( self.persistence.CVars[ Index ] ~= nil ) then
+        return self.persistence.CVars[ Index ];
     end
 end
 
@@ -112,13 +112,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'countdownForCooldowns',
@@ -129,13 +129,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'findyourselfanywhere',
@@ -315,13 +315,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateRemovalAnimation',
@@ -494,13 +494,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'NameplatePersonalShowAlways',
@@ -511,13 +511,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'NameplatePersonalShowInCombat',
@@ -528,13 +528,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowAll',
@@ -545,13 +545,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowEnemies',
@@ -562,13 +562,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowEnemyGuardians',
@@ -579,13 +579,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowEnemyMinions',
@@ -596,13 +596,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowEnemyPets',
@@ -613,13 +613,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowEnemyTotems',
@@ -630,13 +630,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowFriendlyMinions',
@@ -647,13 +647,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowFriendlyNPCs',
@@ -664,13 +664,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowFriends',
@@ -681,13 +681,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowFriendlyGuardians',
@@ -698,13 +698,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowFriendlyPets',
@@ -715,13 +715,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'nameplateShowFriendlyTotems',
@@ -800,13 +800,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'predictedHealth',
@@ -817,13 +817,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'ShowClassColorInFriendlyNameplate',
@@ -834,13 +834,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'ShowClassColorInNameplate',
@@ -851,13 +851,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showtargetoftarget',
@@ -868,13 +868,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'statusText',
@@ -908,13 +908,13 @@ function jName:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'UnitNameGuildTitle',
@@ -959,6 +959,22 @@ function jName:OnEnable()
     end
     -- default handler
     self.Config.default = function( self )
-        self.db:ResetDB();
+        jName.db:ResetDB();
     end
+    -- Check external updates
+    for CVar,Value in pairs( self.persistence.CVars ) do
+        if( Value ~= GetCVar( CVar ) ) then
+            self.persistence.CVars[ CVar ] = GetCVar( CVar );
+        end
+    end
+    --[[
+    local CheckData = {};
+    for CVar,Value in pairs( self.persistence.CVars ) do
+        CheckData[ CVar ] = {
+            cvar_value = GetCVar( CVar ),
+            db_value = Value,
+        };
+    end
+    self:Dump( CheckData );
+    ]]
 end

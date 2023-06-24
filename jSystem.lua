@@ -58,8 +58,8 @@ end
 --  @param  string  Value
 --  @return void
 function jSystem:SetValue( Index,Value )
-    if( self.persistence[ Index ] ~= nil ) then
-        self.persistence[ Index ] = Value;
+    if( self.persistence.CVars[ Index ] ~= nil ) then
+        self.persistence.CVars[ Index ] = Value;
     end
 end
 
@@ -69,8 +69,8 @@ end
 --  @param  string  Index
 --  @return mixed
 function jSystem:GetValue( Index )
-    if( self.persistence[ Index ] ~= nil ) then
-        return self.persistence[ Index ];
+    if( self.persistence.CVars[ Index ] ~= nil ) then
+        return self.persistence.CVars[ Index ];
     end
 end
 
@@ -100,13 +100,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'autoClearAFK',
@@ -117,13 +117,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'autoLootDefault',
@@ -134,13 +134,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'autoSelfCast',
@@ -187,13 +187,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'deselectOnClick',
@@ -204,13 +204,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'doNotFlashLowHealthWarning',
@@ -221,13 +221,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'emphasizeMySpellEffects',
@@ -256,13 +256,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'ffxDeath',
@@ -273,13 +273,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'ffxGlow',
@@ -416,13 +416,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'interactOnLeftClick',
@@ -433,13 +433,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'lootUnderMouse',
@@ -450,13 +450,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'instantQuestText',
@@ -485,13 +485,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'projectedtextures',
@@ -520,13 +520,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'screenEdgeFlash',
@@ -537,13 +537,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showTutorials',
@@ -590,13 +590,13 @@ function jSystem:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'timeMgrUseLocalTime',
@@ -702,6 +702,22 @@ function jSystem:OnEnable()
     end
     -- default handler
     self.Config.default = function( self )
-        self.db:ResetDB();
+        jSystem.db:ResetDB();
     end
+    -- Check external updates
+    for CVar,Value in pairs( self.persistence.CVars ) do
+        if( Value ~= GetCVar( CVar ) ) then
+            self.persistence.CVars[ CVar ] = GetCVar( CVar );
+        end
+    end
+    --[[
+    local CheckData = {};
+    for CVar,Value in pairs( self.persistence.CVars ) do
+        CheckData[ CVar ] = {
+            cvar_value = GetCVar( CVar ),
+            db_value = Value,
+        };
+    end
+    self:Dump( CheckData );
+    ]]
 end

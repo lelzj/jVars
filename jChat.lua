@@ -35,8 +35,8 @@ end
 --  @param  string  Value
 --  @return void
 function jChat:SetValue( Index,Value )
-    if( self.persistence[ Index ] ~= nil ) then
-        self.persistence[ Index ] = Value;
+    if( self.persistence.CVars[ Index ] ~= nil ) then
+        self.persistence.CVars[ Index ] = Value;
     end
 end
 
@@ -46,8 +46,8 @@ end
 --  @param  string  Index
 --  @return mixed
 function jChat:GetValue( Index )
-    if( self.persistence[ Index ] ~= nil ) then
-        return self.persistence[ Index ];
+    if( self.persistence.CVars[ Index ] ~= nil ) then
+        return self.persistence.CVars[ Index ];
     end
 end
 
@@ -77,13 +77,13 @@ function jChat:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                         if( Addon:Int2Bool( Value ) ) then
                             SetCVar( 'chatClassColorOverride',0 );
                             SetCVar( 'colorChatNamesByClass',1 );
@@ -101,13 +101,13 @@ function jChat:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'profanityfilter',
@@ -118,13 +118,13 @@ function jChat:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showToastBroadcast',
@@ -135,13 +135,13 @@ function jChat:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showToastFriendRequest',
@@ -152,13 +152,13 @@ function jChat:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showToastWindow',
@@ -169,13 +169,13 @@ function jChat:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showToastOffline',
@@ -186,13 +186,13 @@ function jChat:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showToastOnline',
@@ -203,13 +203,13 @@ function jChat:GetSettings()
                 type = 'toggle',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
                     end
                 end,
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'spamFilter',
@@ -253,6 +253,22 @@ function jChat:OnEnable()
     end
     -- default handler
     self.Config.default = function( self )
-        self.db:ResetDB();
+        jChat.db:ResetDB();
     end
+    -- Check external updates
+    for CVar,Value in pairs( self.persistence.CVars ) do
+        if( Value ~= GetCVar( CVar ) ) then
+            self.persistence.CVars[ CVar ] = GetCVar( CVar );
+        end
+    end
+    --[[
+    local CheckData = {};
+    for CVar,Value in pairs( self.persistence.CVars ) do
+        CheckData[ CVar ] = {
+            cvar_value = GetCVar( CVar ),
+            db_value = Value,
+        };
+    end
+    self:Dump( CheckData );
+    ]]
 end
