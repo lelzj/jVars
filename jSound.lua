@@ -277,31 +277,25 @@ function jSound:OnEnable()
     if( not self.persistence ) then
         return;
     end
+    -- Check external updates
+    -- Bug found in wow-classic-era-source/Interface/FrameXML/OptionsPanelTemplates.lua
+    -- ^ BlizzardOptionsPanel_SetCVarSafe() being called by blizz on login, forcing values to be incorrectly updated
+    -- ^^ As such, we will have to forcefully override those dumb updates they are making
+    for CVar,Value in pairs( self.persistence.CVars ) do
+        SetCVar( CVar,Value );
+    end
     -- Config
     LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self:GetName() ),self:GetSettings() );
     self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self:GetName() ),self:GetName(),'jVars' );
     -- ok handler
     self.Config.okay = function( self )
+        for CVar,Value in pairs( self.persistence.CVars ) do
+            SetCVar( CVar,Value );
+        end 
         RestartGx();
     end
     -- default handler
     self.Config.default = function( self )
         jSound.db:ResetDB();
     end
-    -- Check external updates
-    for CVar,Value in pairs( self.persistence.CVars ) do
-        if( Value ~= GetCVar( CVar ) ) then
-            self.persistence.CVars[ CVar ] = GetCVar( CVar );
-        end
-    end
-    --[[
-    local CheckData = {};
-    for CVar,Value in pairs( self.persistence.CVars ) do
-        CheckData[ CVar ] = {
-            cvar_value = GetCVar( CVar ),
-            db_value = Value,
-        };
-    end
-    self:Dump( CheckData );
-    ]]
 end
