@@ -694,12 +694,6 @@ function jSystem:OnEnable()
         return;
     end
     -- Check external updates
-    for CVar,Value in pairs( self.persistence.CVars ) do
-        if( tostring( Value ) ~= tostring( GetCVar( CVar ) ) ) then
-            --self.persistence.CVars[ CVar ] = GetCVar( CVar );
-        end
-    end
-    -- Check external updates
     -- Bug found in wow-classic-era-source/Interface/FrameXML/OptionsPanelTemplates.lua
     -- ^ BlizzardOptionsPanel_SetCVarSafe() being called by blizz on login, forcing values to be incorrectly updated
     -- ^^ As such, we will have to forcefully override those dumb updates they are making
