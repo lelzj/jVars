@@ -83,13 +83,13 @@ function jChat:GetSettings()
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
                         self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        BlizzardOptionsPanel_SetCVarSafe( Info.arg,Addon:BoolToInt( Value ) );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                         if( Addon:Int2Bool( Value ) ) then
-                            BlizzardOptionsPanel_SetCVarSafe( 'chatClassColorOverride',0 );
-                            BlizzardOptionsPanel_SetCVarSafe( 'colorChatNamesByClass',1 );
+                            SetCVar( 'chatClassColorOverride',0 );
+                            SetCVar( 'colorChatNamesByClass',1 );
                         else
-                            BlizzardOptionsPanel_SetCVarSafe( 'chatClassColorOverride',1 );
-                            BlizzardOptionsPanel_SetCVarSafe( 'colorChatNamesByClass',0 );
+                            SetCVar( 'chatClassColorOverride',1 );
+                            SetCVar( 'colorChatNamesByClass',0 );
                         end
                     end
                 end,
@@ -107,7 +107,7 @@ function jChat:GetSettings()
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
                         self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        BlizzardOptionsPanel_SetCVarSafe( Info.arg,Addon:BoolToInt( Value ) );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'profanityfilter',
@@ -124,7 +124,7 @@ function jChat:GetSettings()
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
                         self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        BlizzardOptionsPanel_SetCVarSafe( Info.arg,Addon:BoolToInt( Value ) );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showToastBroadcast',
@@ -141,7 +141,7 @@ function jChat:GetSettings()
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
                         self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        BlizzardOptionsPanel_SetCVarSafe( Info.arg,Addon:BoolToInt( Value ) );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showToastFriendRequest',
@@ -158,7 +158,7 @@ function jChat:GetSettings()
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
                         self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        BlizzardOptionsPanel_SetCVarSafe( Info.arg,Addon:BoolToInt( Value ) );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showToastWindow',
@@ -175,7 +175,7 @@ function jChat:GetSettings()
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
                         self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        BlizzardOptionsPanel_SetCVarSafe( Info.arg,Addon:BoolToInt( Value ) );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showToastOffline',
@@ -192,7 +192,7 @@ function jChat:GetSettings()
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
                         self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        BlizzardOptionsPanel_SetCVarSafe( Info.arg,Addon:BoolToInt( Value ) );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'showToastOnline',
@@ -209,7 +209,7 @@ function jChat:GetSettings()
                 set = function( Info,Value )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
                         self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        BlizzardOptionsPanel_SetCVarSafe( Info.arg,Addon:BoolToInt( Value ) );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
                     end
                 end,
                 name = 'spamFilter',
