@@ -142,7 +142,6 @@ function jName:GetSettings()
                 desc = 'Always Highlight your character',
                 arg = 'findyourselfanywhere',
             },
-            --[[
             findYourselfMode = {
                 type = 'select',
                 get = function( Info )
@@ -160,13 +159,12 @@ function jName:GetSettings()
                 name = 'findYourselfMode',
                 desc = 'Graphics quality of shadows',
                 values = {
-                    0 = 'Circle',
-                    1 = 'Circle & Outline',
-                    2 = 'Outline',
+                    [0] = 'Circle',
+                    [1] = 'Circle & Outline',
+                    [2] = 'Outline',
                 },
                 arg = 'findYourselfMode',
             },
-            ]]
             nameplateClassResourceTopInset = {
                 type = 'range',
                 get = function( Info )
@@ -728,7 +726,6 @@ function jName:GetSettings()
                 desc = 'Determines if the the friendly totem nameplate is shown',
                 arg = 'nameplateShowFriendlyTotems',
             },
-            --[[
             NameplatePersonalShowWithTarget = {
                 type = 'select',
                 get = function( Info )
@@ -746,14 +743,12 @@ function jName:GetSettings()
                 name = 'NameplatePersonalShowWithTarget',
                 desc = 'Determines if the personal nameplate is shown when selecting a target. NameplatePersonalShowAlways likely overrides this but that remains to be tested',
                 values = {
-                    0 = 'None',
-                    1 = 'Hostile Target',
-                    2 = 'Any Target',
+                    [0] = 'None',
+                    [1] = 'Hostile Target',
+                    [2] = 'Any Target',
                 },
                 arg = 'NameplatePersonalShowWithTarget',
             },
-            ]]
-            --[[
             nameplateTargetRadialPosition = {
                 type = 'select',
                 get = function( Info )
@@ -771,13 +766,12 @@ function jName:GetSettings()
                 name = 'nameplateTargetRadialPosition',
                 desc = 'When target is off screen, position its nameplate radially around sides and bottom',
                 values = {
-                    0 = 'None',
-                    1 = 'Target Only',
-                    3 = 'All In Combat',
+                    [0] = 'None',
+                    [1] = 'Target Only',
+                    [3] = 'All In Combat',
                 },
                 arg = 'nameplateTargetRadialPosition',
             },
-            ]]
             NamePlateVerticalScale = {
                 type = 'range',
                 get = function( Info )
