@@ -166,10 +166,10 @@ function jSystem:GetSettings()
                 arg = 'cameraDistanceMaxZoomFactor',
             },
             cameraSmoothStyle = {
-                type = 'range',
+                type = 'select',
                 get = function( Info )
                     if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
+                        return self.persistence.CVars[ Info.arg ];
                     end
                 end,
                 set = function( Info,Value )
@@ -179,8 +179,13 @@ function jSystem:GetSettings()
                     end
                 end,
                 name = 'cameraSmoothStyle',
-                desc = 'Sets how early you can pre-activate/queue a spell/ability. (In Milliseconds)',
-                min = 0, max = 4, step = 1,
+                desc = 'Controls the automatic camera adjustment (following) style',
+                values = {
+                    [0] = 'Never adjust camera',
+                    [1] = 'Adjust camera only horizontal when moving',
+                    [2] = 'Always adjust camera',
+                    [4] = 'Adjust camera only when moving',
+                },
                 arg = 'cameraSmoothStyle',
             },
             deselectOnClick = {
