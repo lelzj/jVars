@@ -97,6 +97,23 @@ function jChat:GetSettings()
                 desc = 'Enable/disable class specific color coding names in chat',
                 arg = 'colorChatNamesByClass',
             },
+            guildMemberNotify = {
+                type = 'toggle',
+                get = function( Info )
+                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
+                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
+                    end
+                end,
+                set = function( Info,Value )
+                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
+                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
+                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
+                    end
+                end,
+                name = 'guildMemberNotify',
+                desc = 'Receive notification when guild members log on/off',
+                arg = 'guildMemberNotify',
+            },
             profanityfilter = {
                 type = 'toggle',
                 get = function( Info )
