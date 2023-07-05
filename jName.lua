@@ -157,7 +157,7 @@ function jName:GetSettings()
                 end,
                 style = 'dropdown',
                 name = 'findYourselfMode',
-                desc = 'Graphics quality of shadows',
+                desc = 'Highlight your character. 0 = circle, 1 = circle & outline, 2 = outline',
                 values = {
                     [0] = 'Circle',
                     [1] = 'Circle & Outline',

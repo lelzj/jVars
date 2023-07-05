@@ -295,3 +295,66 @@ Addon.FRAMES.DrawFromSettings = function( self,Settings,ObjHandler )
         end
     end
 end
+
+Addon.FRAMES.AddRange = function( self,Name,Tip,Step,Range,Parent,Handler )
+    Name = string.lower( Name );
+    local Frame = LibStub( 'Sushi-3.1' ).Slider( Parent );
+    Frame:SetTip( Name,Tip );
+    Frame:SetValue( Handler:GetValue( Name ) );
+    Frame.Edit:SetValue( Addon:SliderRound( Handler:GetValue( Name ),Step ) );
+    Frame:SetRange( 
+        Range.Option1.Value,
+        Range.Option2.Value,
+        Range.Option1.Description,
+        Range.Option2.Description 
+    );
+    Frame:SetStep( Step );
+    Frame:SetLabel( Name );
+    Frame.KeyValue = Name;
+    Frame:SetSmall( true );
+    Frame:SetCall( 'OnValue',function( self )
+        Handler:SetValue( self.KeyValue,self:GetValue() );
+    end );
+    return Frame;
+end
+
+Addon.FRAMES.AddToggle = function( self,Name,Tip,Parent,Handler )
+    Name = string.lower( Name );
+    local Frame = LibStub( 'Sushi-3.1' ).Check( Parent );
+    Frame:SetChecked( Addon:Int2Bool( Handler:GetValue( Name ) ) );
+    Frame:SetTip( Name,Tip );
+    Frame:SetLabel( Name );
+    Frame:SetSmall( true );
+    if( tonumber( Handler:GetValue( Name ) ) ~= nil ) then
+        Frame.keyValue = tonumber( Handler:GetValue( Name ) );
+    else
+        Frame.keyValue = Handler:GetValue( Name );
+    end
+    Frame:SetCall( 'OnClick',function( self )
+        Handler:SetValue( self.keyValue,Addon:BoolToInt( self:GetValue() ) );
+    end );
+    return Frame;
+end
+
+Addon.FRAMES.AddSelect = function( self,Name,Tip,Choices,Parent,Handler )
+    Name = string.lower( Name );
+    local Frame = LibStub( 'Sushi-3.1' ).DropChoice( Parent );
+    Frame:SetValue( Handler:GetValue( Name ) );
+    Frame:SetTip( Name,Tip );
+    Frame:SetLabel( Name );
+    Frame:SetSmall( true );
+    if( tonumber( Handler:GetValue( Name ) ) ~= nil ) then
+        Frame.keyValue = tonumber( Handler:GetValue( Name ) );
+        Frame:SetValue( tonumber( Handler:GetValue( Name ) ) );
+    else
+        Frame.keyValue = Handler:GetValue( Name );
+        Frame:SetValue( Handler:GetValue( Name ) );
+    end
+    for i,v in pairs( Choices ) do
+        Frame:Add( v.Value,v.Description );
+    end
+    Frame:SetCall( 'OnInput',function( self )
+        Hanlder:SetValue( self.keyValue,self:GetValue() );
+    end );
+    return Frame;
+end
