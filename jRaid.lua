@@ -1,518 +1,443 @@
 local _, Addon = ...;
-local jVars = LibStub( 'AceAddon-3.0' ):GetAddon( 'jVars' );
-local jRaid = jVars:NewModule( 'jRaid' );
-jRaid.Explode = Addon.Explode;
-jRaid.Implode = Addon.Implode;
-jRaid.Dump = Addon.Dump;
-jRaid.IsClassic = Addon.IsClassic;
-jRaid.Minify = Addon.Minify;
 
---
---  Get module defaults
---
---  @return table
-function jRaid:GetDefaults()
-    return {
-        CVars = {
-            raidGraphicsEnvironmentDetail = GetCVar( 'raidGraphicsEnvironmentDetail' ),
-            raidGraphicsGroundClutter = GetCVar( 'raidGraphicsGroundClutter' ),
-            raidGraphicsLiquidDetail = GetCVar( 'raidGraphicsLiquidDetail' ),
-            raidGraphicsParticleDensity = GetCVar( 'raidGraphicsParticleDensity' ),
-            RAIDgraphicsQuality = GetCVar( 'RAIDgraphicsQuality' ),
-            raidGraphicsShadowQuality = GetCVar( 'raidGraphicsShadowQuality' ),
-            RAIDweatherDensity = GetCVar( 'RAIDweatherDensity' ),
-            raidGraphicsSSAO = GetCVar( 'raidGraphicsSSAO' ),
-            RAIDfarclip = GetCVar( 'RAIDfarclip' ),
-            raidFramesWidth = GetCVar( 'raidFramesWidth' ),
-            raidFramesHeight = GetCVar( 'raidFramesHeight' ),
-            raidFramesHealthText = GetCVar( 'raidFramesHealthText' ),
-            raidOptionKeepGroupsTogether = GetCVar( 'raidOptionKeepGroupsTogether' ),
-            raidOptionDisplayPets = GetCVar( 'raidOptionDisplayPets' ),
-            raidOptionShowBorders = GetCVar( 'raidOptionShowBorders' ),
-            raidOptionSortMode = GetCVar( 'raidOptionSortMode' ),
-            raidOptionIsShown = GetCVar( 'raidOptionIsShown' ),
-            raidFramesDisplayClassColor = GetCVar( 'raidFramesDisplayClassColor' ),
-            raidFramesDisplayOnlyDispellableDebuffs = GetCVar( 'raidFramesDisplayOnlyDispellableDebuffs' ),
-            raidFramesPosition = GetCVar( 'raidFramesPosition' ),
-            useCompactPartyFrames = GetCVar( 'useCompactPartyFrames' ),
-        },
-    };
-end
+Addon.RAID = CreateFrame( 'Frame' );
+Addon.RAID:RegisterEvent( 'ADDON_LOADED' )
+Addon.RAID.FistColInset = 15;
+Addon.RAID.RegisteredFrames = {};
+Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
+    if( AddonName == 'jVars' ) then
 
---
---  Set module setting
---
---  @param  string  Index
---  @param  string  Value
---  @return void
-function jRaid:SetValue( Index,Value )
-    if( self.persistence.CVars[ Index ] ~= nil ) then
-        self.persistence.CVars[ Index ] = Value;
-    end
-end
-
---
---  Get module setting
---
---  @param  string  Index
---  @return mixed
-function jRaid:GetValue( Index )
-    if( self.persistence.CVars[ Index ] ~= nil ) then
-        return self.persistence.CVars[ Index ];
-    end
-end
-
---
---  Get module settings
---
---  @return table
-function jRaid:GetSettings()
-    if( not self.persistence ) then
-        return;
-    end
-    return {
-        type = 'group',
-        get = function( Info )
-            if( self.persistence[ Info.arg ] ~= nil ) then
-                return self.persistence[ Info.arg ];
+        --
+        --  Get module defaults
+        --
+        --  @return table
+        Addon.RAID.GetDefaults = function( self )
+            local Defaults = {
+                raidGraphicsEnvironmentDetail = GetCVar( 'raidGraphicsEnvironmentDetail' ),
+                raidGraphicsGroundClutter = GetCVar( 'raidGraphicsGroundClutter' ),
+                raidGraphicsLiquidDetail = GetCVar( 'raidGraphicsLiquidDetail' ),
+                raidGraphicsParticleDensity = GetCVar( 'raidGraphicsParticleDensity' ),
+                RAIDgraphicsQuality = GetCVar( 'RAIDgraphicsQuality' ),
+                raidGraphicsShadowQuality = GetCVar( 'raidGraphicsShadowQuality' ),
+                RAIDweatherDensity = GetCVar( 'RAIDweatherDensity' ),
+                raidGraphicsSSAO = GetCVar( 'raidGraphicsSSAO' ),
+                RAIDfarclip = GetCVar( 'RAIDfarclip' ),
+                raidFramesWidth = GetCVar( 'raidFramesWidth' ),
+                raidFramesHeight = GetCVar( 'raidFramesHeight' ),
+                raidFramesHealthText = GetCVar( 'raidFramesHealthText' ),
+                raidOptionKeepGroupsTogether = GetCVar( 'raidOptionKeepGroupsTogether' ),
+                raidOptionDisplayPets = GetCVar( 'raidOptionDisplayPets' ),
+                raidOptionShowBorders = GetCVar( 'raidOptionShowBorders' ),
+                raidOptionSortMode = GetCVar( 'raidOptionSortMode' ),
+                raidOptionIsShown = GetCVar( 'raidOptionIsShown' ),
+                raidFramesDisplayClassColor = GetCVar( 'raidFramesDisplayClassColor' ),
+                raidFramesDisplayOnlyDispellableDebuffs = GetCVar( 'raidFramesDisplayOnlyDispellableDebuffs' ),
+                raidFramesPosition = GetCVar( 'raidFramesPosition' ),
+                useCompactPartyFrames = GetCVar( 'useCompactPartyFrames' ),
+            };
+            for i,v in pairs( Defaults ) do
+                Defaults[ string.lower( i ) ] = v;
             end
-        end,
-        set = function( Info,Value )
-            if( self.persistence[ Info.arg ] ~= nil ) then
-                self.persistence[ Info.arg ] = Value;
+            return Defaults;
+        end
+
+        --
+        --  Set module setting
+        --
+        --  @param  string  Index
+        --  @param  string  Value
+        --  @return void
+        Addon.RAID.SetValue = function( self,Index,Value )
+            if( self.RegisteredVars[ string.lower( Index ) ] ) then
+                if( self.RegisteredVars[ string.lower( Index ) ].Type == 'Toggle' ) then
+                    if( type( Value ) == 'boolean' ) then
+                        self.persistence[ string.lower( Index ) ] = Addon:BoolToInt( Value );
+                    else
+                        self.persistence[ string.lower( Index ) ] = Value;
+                    end
+                else
+                    self.persistence[ string.lower( Index ) ] = Value;
+                end
+                self:Refresh();
             end
-        end,
-        name = self:GetName()..' Settings',
-        args = {
-            RAIDfarclip = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'RAIDfarclip',
-                desc = 'This CVar controls the view distance of the raid environment',
-                min = 0, max = 1300, step = 10,
-                arg = 'RAIDfarclip',
-            },
-            raidFramesDisplayClassColor = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'raidFramesDisplayClassColor',
-                desc = 'Colors raid frames with the class color',
-                arg = 'raidFramesDisplayClassColor',
-            },
-            raidFramesDisplayOnlyDispellableDebuffs = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'raidFramesDisplayOnlyDispellableDebuffs',
-                desc = 'Whether to display only dispellable debuffs on Raid Frames',
-                arg = 'raidFramesDisplayOnlyDispellableDebuffs',
-            },
-            raidFramesHealthText = {
-                type = 'select',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                style = 'dropdown',
-                name = 'raidFramesHealthText',
-                desc = 'How to display health text on the raid frames',
-                values = {
-                    none = 'none',
-                    health = 'Health Remaining',
-                    losthealth = 'Health Lost (ie Deficit)',
-                    perc = 'Health Percentage',
-                },
-                arg = 'raidFramesHealthText',
-            },
-            raidFramesHeight = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'raidFramesHeight',
-                desc = 'The height of the individual raid frames',
-                min = 75, max = 200, step = 25,
-                arg = 'raidFramesHeight',
-            },
-            raidFramesPosition = {
-                type = 'input',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'raidFramesPosition',
-                desc = 'This CVar saves where the raid frames should be placed',
-                arg = 'raidFramesPosition',
-                disabled = true,
-            },
-            raidFramesWidth = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'raidFramesWidth',
-                desc = 'The width of the individual raid frames',
-                min = 75, max = 200, step = 25,
-                arg = 'raidFramesWidth',
-            },
-            raidGraphicsEnvironmentDetail = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'raidGraphicsEnvironmentDetail',
-                desc = 'UI value of the graphics setting',
-                min = 1, max = 7, step = 1,
-                arg = 'raidGraphicsEnvironmentDetail',
-            },
-            raidGraphicsGroundClutter = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'raidGraphicsGroundClutter',
-                desc = 'UI value of the graphics setting',
-                min = 1, max = 7, step = 1,
-                arg = 'raidGraphicsGroundClutter',
-            },
-            raidGraphicsLiquidDetail = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'raidGraphicsLiquidDetail',
-                desc = 'UI value of the graphics setting',
-                min = 1, max = 7, step = 1,
-                arg = 'raidGraphicsLiquidDetail',
-            },
-            raidGraphicsParticleDensity = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'raidGraphicsParticleDensity',
-                desc = 'UI value of the graphics setting',
-                min = 10, max = 100, step = 10,
-                arg = 'raidGraphicsParticleDensity',
-            },
-            raidGraphicsShadowQuality = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'raidGraphicsShadowQuality',
-                desc = 'Graphics quality of shadows',
-                min = 0, max = 5, step = 1,
-                arg = 'raidGraphicsShadowQuality',
-            },
-            raidGraphicsSSAO = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'raidGraphicsSSAO',
-                desc = 'Controls the rendering quality of the advanced lighting effects in raids. Decreasing this may greatly improve performance',
-                min = 0, max = 4, step = 1,
-                arg = 'raidGraphicsSSAO',
-            },
-            RAIDgraphicsQuality = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'RAIDgraphicsQuality',
-                desc = 'UI value of the graphics setting',
-                min = 1, max = 10, step = 1,
-                arg = 'RAIDgraphicsQuality',
-            },
-            raidOptionDisplayPets = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'raidOptionDisplayPets',
-                desc = 'Toggles the option for displaying hunter and warlock pets in raid frames',
-                arg = 'raidOptionDisplayPets',
-            },
-            raidOptionIsShown = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'raidOptionIsShown',
-                desc = 'Whether the Raid Frames are shown while in a raid',
-                arg = 'raidOptionIsShown',
-            },
-            raidOptionKeepGroupsTogether = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'raidOptionKeepGroupsTogether',
-                desc = 'The way to group raid frames',
-                arg = 'raidOptionKeepGroupsTogether',
-            },
-            raidOptionShowBorders = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'raidOptionShowBorders',
-                desc = 'Displays borders around the raid frames',
-                arg = 'raidOptionShowBorders',
-            },
-            raidOptionSortMode = {
-                type = 'select',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                style = 'dropdown',
-                name = 'raidOptionSortMode',
-                desc = 'The way to sort raid frames',
-                values = {
-                    role = 'Role',
-                    group = 'Group',
-                },
-                arg = 'raidOptionSortMode',
-            },
-            RAIDweatherDensity = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'RAIDweatherDensity',
-                desc = 'Intensity of raid weather',
-                min = 0, max = 3, step = 1,
-                arg = 'RAIDweatherDensity',
-            },
-            useCompactPartyFrames = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'useCompactPartyFrames',
-                desc = 'This CVar controls the type of party frames used in-game',
-                arg = 'useCompactPartyFrames',
-            },
-        },
-    };
-end
+        end
 
---
---  Module initialize
---
---  @return void
-function jRaid:OnInitialize()
-    -- Database
-    self.db = LibStub( 'AceDB-3.0' ):New( self:GetName(),{ profile = self:GetDefaults() },true );
-    if( not self.db ) then
-        return;
-    end
-    --self.db:ResetDB();
-    self.persistence = self.db.profile;
-    if( not self.persistence ) then
-        return;
-    end
-end
+        --
+        --  Get module setting
+        --
+        --  @param  string  Index
+        --  @return mixed
+        Addon.RAID.GetValue = function( self,Index )
+            if( self.persistence[ string.lower( Index ) ] ~= nil ) then
+                return self.persistence[ string.lower( Index ) ];
+            end
+        end
 
---
---  Module enable
---
---  @return void
-function jRaid:OnEnable()
-    if( not self.persistence ) then
-        return;
+        Addon.RAID.FrameRegister = function( self,FrameData )
+            local Found = false;
+            for i,MetaData in pairs( self.RegisteredFrames ) do
+                if( MetaData.Name == FrameData.Name ) then
+                    Found = true;
+                end
+            end
+            if( not Found ) then
+                table.insert( self.RegisteredFrames,{
+                    Name        = FrameData.Name,
+                    Frame       = FrameData.Frame,
+                    Description = FrameData.Description,
+                } );
+            end
+        end
+
+        Addon.RAID.ShowAll = function( self )
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                FrameData.Frame:Show();
+            end
+        end
+
+        Addon.RAID.HideAll = function( self )
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                FrameData.Frame:Hide();
+            end
+        end
+
+        Addon.RAID.GetRegisteredFrame = function( self,Name )
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                if( FrameData.Name == Name ) then
+                    return FrameData.Frame;
+                end
+            end
+        end
+
+        Addon.RAID.Filter = function( self,SearchQuery )
+            if( not ( string.len( SearchQuery ) >= 3 ) ) then
+                return;
+            end
+            local FoundFrames = {};
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                if( Addon:Minify( FrameData.Name ):find( Addon:Minify( SearchQuery ) ) ) then
+                    if( not FoundFrames [ string.lower( FrameData.Name ) ] ) then
+                        FoundFrames [ string.lower( FrameData.Name ) ] = FrameData.Frame;
+                    end
+                end
+                if( Addon:Minify( FrameData.Description ):find( Addon:Minify( SearchQuery ) ) ) then
+                    if( not FoundFrames [ string.lower( FrameData.Name ) ] ) then
+                        FoundFrames [ string.lower( FrameData.Name ) ] = FrameData.Frame;
+                    end
+                end
+            end
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                if( not FoundFrames[ string.lower( FrameData.Name ) ] ) then
+                    FrameData.Frame:Hide();
+                else
+                    FrameData.Frame:Show();
+                end
+            end
+        end
+
+        --
+        --  Create module config frames
+        --
+        --  @return void
+        Addon.RAID.CreateFrames = function( self )
+            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( 'jRaid' ),{
+                type = 'group',
+                name = 'jRaid',
+                args = {},
+            } );
+            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( 'jRaid' ),'jRaid','jVars' );
+            self.Config.Name = 'jRaid';
+        end
+
+        --
+        --  Module refresh
+        --
+        --  @return void
+        Addon.RAID.Refresh = function( self )
+            if( not Addon.RAID.persistence ) then
+                return;
+            end
+            for VarName,VarData in pairs( self.RegisteredVars ) do
+                if( self.persistence[ string.lower( VarName ) ] ~= nil ) then
+                    SetCVar( string.lower( VarName ),self.persistence[ string.lower( VarName ) ] );
+                end
+            end
+            RestartGx();
+        end
+
+        --
+        --  Module init
+        --
+        --  @return void
+        Addon.RAID.Init = function( self )
+            local RegisteredVars = {
+                RAIDfarclip = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1300,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 100,
+                },
+                raidFramesDisplayClassColor = {
+                    Type = 'Toggle',
+                },
+                raidFramesDisplayOnlyDispellableDebuffs = {
+                    Type = 'Toggle',
+                },
+                raidFramesHealthText = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 'none',
+                            Description = 'None',
+                        },
+                        Option2 = {
+                            Value = 'health',
+                            Description = 'Health Remaining',
+                        },
+                        Option3 = {
+                            Value = 'losthealth',
+                            Description = 'Health Lost (ie Deficit)',
+                        },
+                        Option4 = {
+                            Value = 'perc',
+                            Description = 'Health Percentage',
+                        },
+                    },
+                },
+                raidFramesHeight = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 75,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 200,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 25,
+                },
+                raidFramesWidth = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 75,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 200,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 25,
+                },
+                raidGraphicsEnvironmentDetail = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 7,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                raidGraphicsGroundClutter = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 7,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                raidGraphicsLiquidDetail = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 7,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                raidGraphicsParticleDensity = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 10,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 100,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 10,
+                },
+                raidGraphicsShadowQuality = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 5,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                raidGraphicsSSAO = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 4,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                RAIDgraphicsQuality = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 10,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                raidOptionDisplayPets = {
+                    Type = 'Toggle',
+                },
+                raidOptionIsShown = {
+                    Type = 'Toggle',
+                },
+                raidOptionKeepGroupsTogether = {
+                    Type = 'Toggle',
+                },
+                raidOptionShowBorders = {
+                    Type = 'Toggle',
+                },
+                raidOptionSortMode = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 'role',
+                            Description = 'Role',
+                        },
+                        Option2 = {
+                            Value = 'group',
+                            Description = 'Group',
+                        },
+                    },
+                },
+                RAIDweatherDensity = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                useCompactPartyFrames = {
+                    Type = 'Toggle',
+                },
+            };
+            self.RegisteredVars = {};
+            for VarName,VarData in pairs( RegisteredVars ) do
+                if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
+                    VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
+                end
+                self.RegisteredVars[ string.lower( VarName ) ] = VarData;
+            end
+            self.db = LibStub( 'AceDB-3.0' ):New( 'jRaid',{ profile = self:GetDefaults() },true );
+            if( not self.db ) then
+                return;
+            end
+            --self.db:ResetDB();
+            self.persistence = self.db.profile;
+            if( not self.persistence ) then
+                return;
+            end
+        end
+
+        --
+        --  Module run
+        --
+        --  @return void
+        Addon.RAID.Run = function( self )
+            self.ScrollChild = Addon.GRID:RegisterGrid( self.Config,self.RegisteredVars,self );
+
+            self.FilterBox = CreateFrame( 'EditBox','jRaidFilter',self.ScrollChild,'SearchBoxTemplate' );
+            self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
+            self.FilterBox:SetSize( 200,20 );
+            self.FilterBox.clearButton:Hide();
+            self.FilterBox:ClearFocus();
+            self.FilterBox:SetAutoFocus( false );
+            self.FilterBox:SetScript( 'OnEscapePressed',function( self )
+                Addon.RAID:ShowAll();
+                self:SetAutoFocus( false );
+                if( self.Instructions ) then
+                    self.Instructions:Show();
+                end
+                self:ClearFocus();
+                self:SetText( '' );
+            end );
+            self.FilterBox:SetScript( 'OnEditFocusGained',function( self ) 
+                self:SetAutoFocus( true );
+                if( self.Instructions ) then
+                    self.Instructions:Hide();
+                end
+                self:HighlightText();
+            end );
+            self.FilterBox:SetScript( 'OnTextChanged',function( self )
+                Addon.RAID:ShowAll();
+                Addon.RAID:Filter( self:GetText(),Addon.RAID );
+            end );
+        end
+
+        Addon.RAID:Init();
+        Addon.RAID:CreateFrames();
+        Addon.RAID:Refresh();
+        Addon.RAID:Run();
+        Addon.RAID:UnregisterEvent( 'ADDON_LOADED' );
     end
-    -- Check external updates
-    -- Bug found in wow-classic-era-source/Interface/FrameXML/OptionsPanelTemplates.lua
-    -- ^ BlizzardOptionsPanel_SetCVarSafe() being called by blizz on login, forcing values to be incorrectly updated
-    -- ^^ As such, we will have to forcefully override those dumb updates they are making
-    for CVar,Value in pairs( self.persistence.CVars ) do
-        SetCVar( CVar,Value );
-    end
-    -- Config
-    LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self:GetName() ),self:GetSettings() );
-    self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self:GetName() ),self:GetName(),'jVars' );
-    -- ok handler
-    self.Config.okay = function( self )
-        for CVar,Value in pairs( self.persistence.CVars ) do
-            SetCVar( CVar,Value );
-        end 
-        RestartGx();
-    end
-    -- default handler
-    self.Config.default = function( self )
-        jRaid.db:ResetDB();
-    end
-end
+end );

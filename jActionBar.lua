@@ -1,26 +1,21 @@
 local _, Addon = ...;
 
-Addon.CHAT = CreateFrame( 'Frame' );
-Addon.CHAT:RegisterEvent( 'ADDON_LOADED' )
-Addon.CHAT.FistColInset = 15;
-Addon.CHAT.RegisteredFrames = {};
-Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
+Addon.ACTIONBAR = CreateFrame( 'Frame' );
+Addon.ACTIONBAR:RegisterEvent( 'ADDON_LOADED' )
+Addon.ACTIONBAR.FistColInset = 15;
+Addon.ACTIONBAR.RegisteredFrames = {};
+Addon.ACTIONBAR:SetScript( 'OnEvent',function( self,Event,AddonName )
     if( AddonName == 'jVars' ) then
 
         --
         --  Get module defaults
         --
         --  @return table
-        Addon.CHAT.GetDefaults = function( self )
+        Addon.ACTIONBAR.GetDefaults = function( self )
             local Defaults = {
-                colorChatNamesByClass = GetCVar( 'colorChatNamesByClass' ),
-                guildMemberNotify = GetCVar( 'guildMemberNotify' ),
-                profanityfilter = GetCVar( 'profanityfilter' ),
-                showToastBroadcast = GetCVar( 'showToastBroadcast' ),
-                showToastWindow = GetCVar( 'showToastWindow' ),
-                showToastOffline = GetCVar( 'showToastOffline' ),
-                showToastOnline = GetCVar( 'showToastOnline' ),
-                spamFilter = GetCVar( 'spamFilter' ),
+                alwaysShowActionBars = GetCVar( 'alwaysShowActionBars' ),
+                LockActionBars = GetCVar( 'LockActionBars' ),
+                multiBarRightVerticalLayout = GetCVar( 'multiBarRightVerticalLayout' ),
             };
             for i,v in pairs( Defaults ) do
                 Defaults[ string.lower( i ) ] = v;
@@ -34,7 +29,7 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  string  Index
         --  @param  string  Value
         --  @return void
-        Addon.CHAT.SetValue = function( self,Index,Value )
+        Addon.ACTIONBAR.SetValue = function( self,Index,Value )
             if( self.RegisteredVars[ string.lower( Index ) ] ) then
                 if( self.RegisteredVars[ string.lower( Index ) ].Type == 'Toggle' ) then
                     if( type( Value ) == 'boolean' ) then
@@ -54,13 +49,13 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @param  string  Index
         --  @return mixed
-        Addon.CHAT.GetValue = function( self,Index )
+        Addon.ACTIONBAR.GetValue = function( self,Index )
             if( self.persistence[ string.lower( Index ) ] ~= nil ) then
                 return self.persistence[ string.lower( Index ) ];
             end
         end
 
-        Addon.CHAT.FrameRegister = function( self,FrameData )
+        Addon.ACTIONBAR.FrameRegister = function( self,FrameData )
             local Found = false;
             for i,MetaData in pairs( self.RegisteredFrames ) do
                 if( MetaData.Name == FrameData.Name ) then
@@ -76,19 +71,19 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        Addon.CHAT.ShowAll = function( self )
+        Addon.ACTIONBAR.ShowAll = function( self )
             for i,FrameData in pairs( self.RegisteredFrames ) do
                 FrameData.Frame:Show();
             end
         end
 
-        Addon.CHAT.HideAll = function( self )
+        Addon.ACTIONBAR.HideAll = function( self )
             for i,FrameData in pairs( self.RegisteredFrames ) do
                 FrameData.Frame:Hide();
             end
         end
 
-        Addon.CHAT.GetRegisteredFrame = function( self,Name )
+        Addon.ACTIONBAR.GetRegisteredFrame = function( self,Name )
             for i,FrameData in pairs( self.RegisteredFrames ) do
                 if( FrameData.Name == Name ) then
                     return FrameData.Frame;
@@ -96,7 +91,7 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        Addon.CHAT.Filter = function( self,SearchQuery )
+        Addon.ACTIONBAR.Filter = function( self,SearchQuery )
             if( not ( string.len( SearchQuery ) >= 3 ) ) then
                 return;
             end
@@ -126,22 +121,22 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  Create module config frames
         --
         --  @return void
-        Addon.CHAT.CreateFrames = function( self )
-            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( 'jChat' ),{
+        Addon.ACTIONBAR.CreateFrames = function( self )
+            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( 'jActionBar' ),{
                 type = 'group',
-                name = 'jChat',
+                name = 'jActionBar',
                 args = {},
             } );
-            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( 'jChat' ),'jChat','jVars' );
-            self.Config.Name = 'jChat';
+            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( 'jActionBar' ),'jActionBar','jVars' );
+            self.Config.Name = 'jActionBar';
         end
 
         --
         --  Module refresh
         --
         --  @return void
-        Addon.CHAT.Refresh = function( self )
-            if( not Addon.CHAT.persistence ) then
+        Addon.ACTIONBAR.Refresh = function( self )
+            if( not Addon.ACTIONBAR.persistence ) then
                 return;
             end
             for VarName,VarData in pairs( self.RegisteredVars ) do
@@ -149,51 +144,22 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
                     SetCVar( string.lower( VarName ),self.persistence[ string.lower( VarName ) ] );
                 end
             end
-            self:ColorNames();
             RestartGx();
-        end
-
-        Addon.CHAT.ColorNames = function( self )
-            if( self.persistence[ string.lower( 'colorChatNamesByClass' ) ] ~= nil ) then
-                if( self.persistence[ string.lower( 'colorChatNamesByClass' ) ] ) then
-                    SetCVar( 'chatClassColorOverride',0 );
-                else
-                    SetCVar( 'chatClassColorOverride',1 );
-                end
-            end
         end
 
         --
         --  Module init
         --
         --  @return void
-        Addon.CHAT.Init = function( self )
+        Addon.ACTIONBAR.Init = function( self )
             local RegisteredVars = {
-                colorChatNamesByClass = {
+                alwaysShowActionBars = {
                     Type = 'Toggle',
                 },
-                guildMemberNotify = {
+                LockActionBars = {
                     Type = 'Toggle',
                 },
-                profanityfilter = {
-                    Type = 'Toggle',
-                },
-                showToastBroadcast = {
-                    Type = 'Toggle',
-                },
-                showToastFriendRequest = {
-                    Type = 'Toggle',
-                },
-                showToastWindow = {
-                    Type = 'Toggle',
-                },
-                showToastOffline = {
-                    Type = 'Toggle',
-                },
-                showToastOnline = {
-                    Type = 'Toggle',
-                },
-                spamFilter = {
+                multiBarRightVerticalLayout = {
                     Type = 'Toggle',
                 },
             };
@@ -204,7 +170,7 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
                 end
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
-            self.db = LibStub( 'AceDB-3.0' ):New( 'jChat',{ profile = self:GetDefaults() },true );
+            self.db = LibStub( 'AceDB-3.0' ):New( 'jActionBar',{ profile = self:GetDefaults() },true );
             if( not self.db ) then
                 return;
             end
@@ -219,17 +185,17 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  Module run
         --
         --  @return void
-        Addon.CHAT.Run = function( self )
+        Addon.ACTIONBAR.Run = function( self )
             self.ScrollChild = Addon.GRID:RegisterGrid( self.Config,self.RegisteredVars,self );
 
-            self.FilterBox = CreateFrame( 'EditBox','jChatChatFilter',self.ScrollChild,'SearchBoxTemplate' );
+            self.FilterBox = CreateFrame( 'EditBox','jActionBarChatFilter',self.ScrollChild,'SearchBoxTemplate' );
             self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
             self.FilterBox:SetSize( 200,20 );
             self.FilterBox.clearButton:Hide();
             self.FilterBox:ClearFocus();
             self.FilterBox:SetAutoFocus( false );
             self.FilterBox:SetScript( 'OnEscapePressed',function( self )
-                Addon.CHAT:ShowAll();
+                Addon.ACTIONBAR:ShowAll();
                 self:SetAutoFocus( false );
                 if( self.Instructions ) then
                     self.Instructions:Show();
@@ -245,15 +211,15 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
                 self:HighlightText();
             end );
             self.FilterBox:SetScript( 'OnTextChanged',function( self )
-                Addon.CHAT:ShowAll();
-                Addon.CHAT:Filter( self:GetText(),Addon.CHAT );
+                Addon.ACTIONBAR:ShowAll();
+                Addon.ACTIONBAR:Filter( self:GetText(),Addon.ACTIONBAR );
             end );
         end
 
-        Addon.CHAT:Init();
-        Addon.CHAT:CreateFrames();
-        Addon.CHAT:Refresh();
-        Addon.CHAT:Run();
-        Addon.CHAT:UnregisterEvent( 'ADDON_LOADED' );
+        Addon.ACTIONBAR:Init();
+        Addon.ACTIONBAR:CreateFrames();
+        Addon.ACTIONBAR:Refresh();
+        Addon.ACTIONBAR:Run();
+        Addon.ACTIONBAR:UnregisterEvent( 'ADDON_LOADED' );
     end
 end );

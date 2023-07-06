@@ -1,722 +1,534 @@
 local _, Addon = ...;
-local jVars = LibStub( 'AceAddon-3.0' ):GetAddon( 'jVars' );
-local jSystem = jVars:NewModule( 'jSystem' );
-jSystem.Explode = Addon.Explode;
-jSystem.Implode = Addon.Implode;
-jSystem.Dump = Addon.Dump;
-jSystem.IsClassic = Addon.IsClassic;
-jSystem.Minify = Addon.Minify;
 
---
---  Get module defaults
---
---  @return table
-function jSystem:GetDefaults()
-    return {
-        CVars = {
-            violencelevel = GetCVar( 'violencelevel' ),
-            autoSelfCast = GetCVar( 'autoSelfCast' ),
-            autoClearAFK = GetCVar( 'autoClearAFK' ),
-            projectedtextures = GetCVar( 'projectedtextures' ),
-            emphasizeMySpellEffects = GetCVar( 'emphasizeMySpellEffects' ),
-            ffxDeath = GetCVar( 'ffxDeath' ),
-            groundEffectDensity = GetCVar( 'groundEffectDensity' ),
-            graphicsEnvironmentDetail = GetCVar( 'graphicsEnvironmentDetail' ),
-            graphicsGroundClutter = GetCVar( 'graphicsGroundClutter' ),
-            graphicsLiquidDetail = GetCVar( 'graphicsLiquidDetail' ),
-            particleDensity = GetCVar( 'particleDensity' ),
-            graphicsQuality = GetCVar( 'graphicsQuality' ),
-            cameraDistanceMaxZoomFactor = GetCVar( 'cameraDistanceMaxZoomFactor' ),
-            farclip = GetCVar( 'farclip' ),
-            SpellQueueWindow = GetCVar( 'SpellQueueWindow' ),
-            cameraSmoothStyle = GetCVar( 'cameraSmoothStyle' ),
-            deselectOnClick = GetCVar( 'deselectOnClick' ),
-            ffxGlow = GetCVar( 'ffxGlow' ),
-            graphicsShadowQuality = GetCVar( 'graphicsShadowQuality' ),
-            weatherDensity = GetCVar( 'weatherDensity' ),
-            SkyCloudLOD = GetCVar( 'SkyCloudLOD' ),
-            graphicsSSAO = GetCVar( 'graphicsSSAO' ),
-            doNotFlashLowHealthWarning = GetCVar( 'doNotFlashLowHealthWarning' ),
-            showTutorials = GetCVar( 'showTutorials' ),
-            autoLootDefault = GetCVar( 'autoLootDefault' ),
-            screenEdgeFlash = GetCVar( 'screenEdgeFlash' ),
-            RenderScale = GetCVar( 'RenderScale' ),
-            uiScale = GetCVar( 'uiScale' ),
-            useUiScale = GetCVar( 'useUiScale' ),
-            interactOnLeftClick = GetCVar( 'interactOnLeftClick' ),
-            lootUnderMouse = GetCVar( 'raidFramesDisplayOnlyDispellableDebuffs' ),
-            instantQuestText = GetCVar( 'instantQuestText' ),
-            timeMgrUseLocalTime = GetCVar( 'timeMgrUseLocalTime' ),
-        },
-    };
-end
+Addon.SYSTEM = CreateFrame( 'Frame' );
+Addon.SYSTEM:RegisterEvent( 'ADDON_LOADED' )
+Addon.SYSTEM.FistColInset = 15;
+Addon.SYSTEM.RegisteredFrames = {};
+Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
+    if( AddonName == 'jVars' ) then
 
---
---  Set module setting
---
---  @param  string  Index
---  @param  string  Value
---  @return void
-function jSystem:SetValue( Index,Value )
-    if( self.persistence.CVars[ Index ] ~= nil ) then
-        self.persistence.CVars[ Index ] = Value;
-    end
-end
-
---
---  Get module setting
---
---  @param  string  Index
---  @return mixed
-function jSystem:GetValue( Index )
-    if( self.persistence.CVars[ Index ] ~= nil ) then
-        return self.persistence.CVars[ Index ];
-    end
-end
-
---
---  Get module settings
---
---  @return table
-function jSystem:GetSettings()
-    if( not self.persistence ) then
-        return;
-    end
-    return {
-        type = 'group',
-        get = function( Info )
-            if( self.persistence[ Info.arg ] ~= nil ) then
-                return self.persistence[ Info.arg ];
+        --
+        --  Get module defaults
+        --
+        --  @return table
+        Addon.SYSTEM.GetDefaults = function( self )
+            local Defaults = {
+                violencelevel = GetCVar( 'violencelevel' ),
+                autoSelfCast = GetCVar( 'autoSelfCast' ),
+                autoClearAFK = GetCVar( 'autoClearAFK' ),
+                projectedtextures = GetCVar( 'projectedtextures' ),
+                emphasizeMySpellEffects = GetCVar( 'emphasizeMySpellEffects' ),
+                ffxDeath = GetCVar( 'ffxDeath' ),
+                groundEffectDensity = GetCVar( 'groundEffectDensity' ),
+                graphicsEnvironmentDetail = GetCVar( 'graphicsEnvironmentDetail' ),
+                graphicsGroundClutter = GetCVar( 'graphicsGroundClutter' ),
+                graphicsLiquidDetail = GetCVar( 'graphicsLiquidDetail' ),
+                particleDensity = GetCVar( 'particleDensity' ),
+                graphicsQuality = GetCVar( 'graphicsQuality' ),
+                cameraDistanceMaxZoomFactor = GetCVar( 'cameraDistanceMaxZoomFactor' ),
+                farclip = GetCVar( 'farclip' ),
+                SpellQueueWindow = GetCVar( 'SpellQueueWindow' ),
+                cameraSmoothStyle = GetCVar( 'cameraSmoothStyle' ),
+                deselectOnClick = GetCVar( 'deselectOnClick' ),
+                ffxGlow = GetCVar( 'ffxGlow' ),
+                graphicsShadowQuality = GetCVar( 'graphicsShadowQuality' ),
+                weatherDensity = GetCVar( 'weatherDensity' ),
+                SkyCloudLOD = GetCVar( 'SkyCloudLOD' ),
+                graphicsSSAO = GetCVar( 'graphicsSSAO' ),
+                doNotFlashLowHealthWarning = GetCVar( 'doNotFlashLowHealthWarning' ),
+                showTutorials = GetCVar( 'showTutorials' ),
+                autoLootDefault = GetCVar( 'autoLootDefault' ),
+                screenEdgeFlash = GetCVar( 'screenEdgeFlash' ),
+                RenderScale = GetCVar( 'RenderScale' ),
+                uiScale = GetCVar( 'uiScale' ),
+                useUiScale = GetCVar( 'useUiScale' ),
+                interactOnLeftClick = GetCVar( 'interactOnLeftClick' ),
+                lootUnderMouse = GetCVar( 'raidFramesDisplayOnlyDispellableDebuffs' ),
+                instantQuestText = GetCVar( 'instantQuestText' ),
+                timeMgrUseLocalTime = GetCVar( 'timeMgrUseLocalTime' ),
+            };
+            for i,v in pairs( Defaults ) do
+                Defaults[ string.lower( i ) ] = v;
             end
-        end,
-        set = function( Info,Value )
-            if( self.persistence[ Info.arg ] ~= nil ) then
-                self.persistence[ Info.arg ] = Value;
+            return Defaults;
+        end
+
+        --
+        --  Set module setting
+        --
+        --  @param  string  Index
+        --  @param  string  Value
+        --  @return void
+        Addon.SYSTEM.SetValue = function( self,Index,Value )
+            if( self.RegisteredVars[ string.lower( Index ) ] ) then
+                if( self.RegisteredVars[ string.lower( Index ) ].Type == 'Toggle' ) then
+                    if( type( Value ) == 'boolean' ) then
+                        self.persistence[ string.lower( Index ) ] = Addon:BoolToInt( Value );
+                    else
+                        self.persistence[ string.lower( Index ) ] = Value;
+                    end
+                else
+                    self.persistence[ string.lower( Index ) ] = Value;
+                end
             end
-        end,
-        name = self:GetName()..' Settings',
-        args = {
-            autoClearAFK = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
+        end
+
+        --
+        --  Get module setting
+        --
+        --  @param  string  Index
+        --  @return mixed
+        Addon.SYSTEM.GetValue = function( self,Index )
+            if( self.persistence[ string.lower( Index ) ] ~= nil ) then
+                return self.persistence[ string.lower( Index ) ];
+            end
+        end
+
+        Addon.SYSTEM.FrameRegister = function( self,FrameData )
+            local Found = false;
+            for i,MetaData in pairs( self.RegisteredFrames ) do
+                if( MetaData.Name == FrameData.Name ) then
+                    Found = true;
+                end
+            end
+            if( not Found ) then
+                table.insert( self.RegisteredFrames,{
+                    Name        = FrameData.Name,
+                    Frame       = FrameData.Frame,
+                    Description = FrameData.Description,
+                } );
+            end
+        end
+
+        Addon.SYSTEM.ShowAll = function( self )
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                FrameData.Frame:Show();
+            end
+        end
+
+        Addon.SYSTEM.HideAll = function( self )
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                FrameData.Frame:Hide();
+            end
+        end
+
+        Addon.SYSTEM.GetRegisteredFrame = function( self,Name )
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                if( FrameData.Name == Name ) then
+                    return FrameData.Frame;
+                end
+            end
+        end
+
+        Addon.SYSTEM.Filter = function( self,SearchQuery )
+            if( not ( string.len( SearchQuery ) >= 3 ) ) then
+                return;
+            end
+            local FoundFrames = {};
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                if( Addon:Minify( FrameData.Name ):find( Addon:Minify( SearchQuery ) ) ) then
+                    if( not FoundFrames [ string.lower( FrameData.Name ) ] ) then
+                        FoundFrames [ string.lower( FrameData.Name ) ] = FrameData.Frame;
                     end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
+                end
+                if( Addon:Minify( FrameData.Description ):find( Addon:Minify( SearchQuery ) ) ) then
+                    if( not FoundFrames [ string.lower( FrameData.Name ) ] ) then
+                        FoundFrames [ string.lower( FrameData.Name ) ] = FrameData.Frame;
                     end
-                end,
-                name = 'autoClearAFK',
-                desc = 'Automatically clear AFK when moving or chatting',
-                arg = 'autoClearAFK',
-            },
-            autoLootDefault = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'autoLootDefault',
-                desc = 'Automatically loot items when the loot window opens',
-                arg = 'autoLootDefault',
-            },
-            autoSelfCast = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'autoSelfCast',
-                desc = 'Whether spells should automatically be cast on you if you don\'t have a valid target',
-                arg = 'autoSelfCast',
-            },
-            cameraDistanceMaxZoomFactor = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'cameraDistanceMaxZoomFactor',
-                desc = 'The maximum zoom setting',
-                min = 1.0, max = 3.4, step = 0.1,
-                arg = 'cameraDistanceMaxZoomFactor',
-            },
-            cameraSmoothStyle = {
-                type = 'select',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'cameraSmoothStyle',
-                desc = 'Controls the automatic camera adjustment (following) style',
-                values = {
-                    [0] = 'Never adjust camera',
-                    [1] = 'Adjust camera only horizontal when moving',
-                    [2] = 'Always adjust camera',
-                    [4] = 'Adjust camera only when moving',
+                end
+            end
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                if( not FoundFrames[ string.lower( FrameData.Name ) ] ) then
+                    FrameData.Frame:Hide();
+                else
+                    FrameData.Frame:Show();
+                end
+            end
+        end
+
+        --
+        --  Create module config frames
+        --
+        --  @return void
+        Addon.SYSTEM.CreateFrames = function( self )
+            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( 'jSystem' ),{
+                type = 'group',
+                name = 'jSystem',
+                args = {},
+            } );
+            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( 'jSystem' ),'jSystem','jVars' );
+            self.Config.Name = 'jSystem';
+        end
+
+        --
+        --  Module refresh
+        --
+        --  @return void
+        Addon.SYSTEM.Refresh = function( self )
+            if( not Addon.SYSTEM.persistence ) then
+                return;
+            end
+            for VarName,VarData in pairs( self.RegisteredVars ) do
+                if( self.persistence[ string.lower( VarName ) ] ~= nil ) then
+                    SetCVar( string.lower( VarName ),self.persistence[ string.lower( VarName ) ] );
+                end
+            end
+        end
+
+        --
+        --  Module init
+        --
+        --  @return void
+        Addon.SYSTEM.Init = function( self )
+            local RegisteredVars = {
+                autoClearAFK = {
+                    Type = 'Toggle',
                 },
-                arg = 'cameraSmoothStyle',
-            },
-            deselectOnClick = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'deselectOnClick',
-                desc = 'Clear the target when clicking on terrain',
-                arg = 'deselectOnClick',
-            },
-            doNotFlashLowHealthWarning = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'doNotFlashLowHealthWarning',
-                desc = 'Do not flash your screen red when you are low on health',
-                arg = 'doNotFlashLowHealthWarning',
-            },
-            emphasizeMySpellEffects = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'emphasizeMySpellEffects',
-                desc = 'Whether other player\'s spell impacts are toned down or not',
-                arg = 'emphasizeMySpellEffects',
-            },
-            farclip = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'farclip',
-                desc = 'This CVar controls the view distance of the environment',
-                min = 0, max = 1300, step = 10,
-                arg = 'farclip',
-            },
-            ffxDeath = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'ffxDeath',
-                desc = 'Toggles Fullscreen Glow. The checkbox to toggle this was removed in 4.0.1. Disabling can improve fps',
-                arg = 'ffxDeath',
-            },
-            ffxGlow = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'ffxGlow',
-                desc = 'Full screen death desat effect',
-                arg = 'ffxGlow',
-            },
-            graphicsEnvironmentDetail = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'graphicsEnvironmentDetail',
-                desc = 'UI value of the graphics setting',
-                min = 1, max = 7, step = 1,
-                arg = 'graphicsEnvironmentDetail',
-            },
-            graphicsGroundClutter = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'graphicsGroundClutter',
-                desc = 'UI value of the graphics setting',
-                min = 1, max = 7, step = 1,
-                arg = 'graphicsGroundClutter',
-            },
-            graphicsLiquidDetail = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'graphicsLiquidDetail',
-                desc = 'UI value of the graphics setting',
-                min = 1, max = 7, step = 1,
-                arg = 'graphicsLiquidDetail',
-            },
-            graphicsShadowQuality = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'graphicsShadowQuality',
-                desc = 'Graphics quality of shadows',
-                min = 0, max = 5, step = 1,
-                arg = 'graphicsShadowQuality',
-            },
-            graphicsSSAO = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'graphicsSSAO',
-                desc = 'Controls the rendering quality of the advanced lighting effects in the world. Decreasing this may greatly improve performance',
-                min = 0, max = 4, step = 1,
-                arg = 'graphicsSSAO',
-            },
-            graphicsQuality = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'graphicsQuality',
-                desc = 'UI value of the graphics setting',
-                min = 1, max = 10, step = 1,
-                arg = 'graphicsQuality',
-            },
-            groundEffectDensity = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'groundEffectDensity',
-                desc = 'Ground effect density, Set the density of ground effects such as ferns, flowers, grass, and rocks',
-                min = 16, max = 256, step = 16,
-                arg = 'groundEffectDensity',
-            },
-            interactOnLeftClick = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'interactOnLeftClick',
-                desc = 'Test CVar for interacting with NPC\'s on left click',
-                arg = 'interactOnLeftClick',
-            },
-            lootUnderMouse = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'lootUnderMouse',
-                desc = 'Whether the loot window should open under the mouse',
-                arg = 'lootUnderMouse',
-            },
-            instantQuestText = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'instantQuestText',
-                desc = 'Whether to instantly show quest text instead of fading it in',
-                arg = 'instantQuestText',
-            },
-            particleDensity = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'particleDensity',
-                desc = 'UI value of the graphics setting',
-                min = 10, max = 100, step = 10,
-                arg = 'particleDensity',
-            },
-            projectedtextures = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'projectedtextures',
-                desc = 'Projected Textures',
-                arg = 'projectedtextures',
-            },
-            RenderScale = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'RenderScale',
-                desc = 'Render scale (for supersampling or undersampling)',
-                min = 0, max = 3, step = 1,
-                arg = 'RenderScale',
-            },
-            screenEdgeFlash = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'screenEdgeFlash',
-                desc = 'Whether to show a red flash while you are in combat with the world map up',
-                arg = 'screenEdgeFlash',
-            },
-            showTutorials = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'showTutorials',
-                desc = 'Whether to show tutorials',
-                arg = 'showTutorials',
-            },
-            SkyCloudLOD = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'SkyCloudLOD',
-                desc = 'Texture resolution for clouds',
-                min = 0, max = 3, step = 1,
-                arg = 'SkyCloudLOD',
-            },
-            SpellQueueWindow = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'SpellQueueWindow',
-                desc = 'Sets how early you can pre-activate/queue a spell/ability. (In Milliseconds)',
-                min = 0, max = 400, step = 1,
-                arg = 'SpellQueueWindow',
-            },
-            timeMgrUseLocalTime = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'timeMgrUseLocalTime',
-                desc = 'Toggles the use of either the realm time or your system time',
-                arg = 'timeMgrUseLocalTime',
-            },
-            uiScale = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                        if( Value > 0.0 ) then
-                            self.persistence.CVars.useUiScale = 1;
-                            SetCVar( 'useUiScale',1 );
-                        else
-                            SetCVar( 'useUiScale',0 );
-                            self.persistence.CVars.useUiScale = 0;
-                        end
-                    end
-                end,
-                name = 'uiScale',
-                desc = 'This variable is used to scale the User Interface',
-                min = 0.0, max = 1.0, step = 0.1,
-                arg = 'uiScale',
-            },
-            violencelevel = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'violencelevel',
-                desc = 'Sets the violence level of the game',
-                min = 0, max = 5, step = 1,
-                arg = 'violencelevel',
-            },
-            weatherDensity = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'weatherDensity',
-                desc = 'Intensity of world weather',
-                min = 0, max = 3, step = 1,
-                arg = 'weatherDensity',
-            },
-        },
-    };
-end
+                autoLootDefault = {
+                    Type = 'Toggle',
+                },
+                autoSelfCast = {
+                    Type = 'Toggle',
+                },
+                cameraDistanceMaxZoomFactor = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 1.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 3.4,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                cameraSmoothStyle = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Never adjust camera',
+                        },
+                        Option2 = {
+                            Value = 1,
+                            Description = 'Adjust camera only horizontal when moving',
+                        },
+                        Option3 = {
+                            Value = 2,
+                            Description = 'Always adjust camera',
+                        },
+                        Option4 = {
+                            Value = 4,
+                            Description = 'Adjust camera only when moving',
+                        },
+                    },
+                },
+                deselectOnClick = {
+                    Type = 'Toggle',
+                },
+                doNotFlashLowHealthWarning = {
+                    Type = 'Toggle',
+                },
+                emphasizeMySpellEffects = {
+                    Type = 'Toggle',
+                },
+                farclip = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1300,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 100,
+                },
+                ffxDeath = {
+                    Type = 'Toggle',
+                },
+                ffxGlow = {
+                    Type = 'Toggle',
+                },
+                graphicsEnvironmentDetail = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 7,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                graphicsGroundClutter = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 7,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                graphicsLiquidDetail = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 7,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                graphicsShadowQuality = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 5,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                graphicsSSAO = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 4,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                graphicsQuality = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 10,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                groundEffectDensity = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 16,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 256,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 16,
+                },
+                interactOnLeftClick = {
+                    Type = 'Toggle',
+                },
+                lootUnderMouse = {
+                    Type = 'Toggle',
+                },
+                instantQuestText = {
+                    Type = 'Toggle',
+                },
+                particleDensity = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 10,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 100,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 10,
+                },
+                projectedtextures = {
+                    Type = 'Toggle',
+                },
+                RenderScale = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                screenEdgeFlash = {
+                    Type = 'Toggle',
+                },
+                showTutorials = {
+                    Type = 'Toggle',
+                },
+                SkyCloudLOD = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                SpellQueueWindow = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 400,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 20,
+                },
+                timeMgrUseLocalTime = {
+                    Type = 'Toggle',
+                },
+                uiScale = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                violencelevel = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 5,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                weatherDensity = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+            };
+            self.RegisteredVars = {};
+            for VarName,VarData in pairs( RegisteredVars ) do
+                if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
+                    VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
+                end
+                self.RegisteredVars[ string.lower( VarName ) ] = VarData;
+            end
+            self.db = LibStub( 'AceDB-3.0' ):New( 'jSystem',{ profile = self:GetDefaults() },true );
+            if( not self.db ) then
+                return;
+            end
+            --self.db:ResetDB();
+            self.persistence = self.db.profile;
+            if( not self.persistence ) then
+                return;
+            end
+        end
 
---
---  Module initialize
---
---  @return void
-function jSystem:OnInitialize()
-    -- Database
-    self.db = LibStub( 'AceDB-3.0' ):New( self:GetName(),{ profile = self:GetDefaults() },true );
-    if( not self.db ) then
-        return;
-    end
-    --self.db:ResetDB();
-    self.persistence = self.db.profile;
-    if( not self.persistence ) then
-        return;
-    end
-end
+        --
+        --  Module run
+        --
+        --  @return void
+        Addon.SYSTEM.Run = function( self )
+            self.ScrollChild = Addon.GRID:RegisterGrid( self.Config,self.RegisteredVars,self );
 
---
---  Module enable
---
---  @return void
-function jSystem:OnEnable()
-    if( not self.persistence ) then
-        return;
+            self.FilterBox = CreateFrame( 'EditBox','jSystemFilter',self.ScrollChild,'SearchBoxTemplate' );
+            self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
+            self.FilterBox:SetSize( 200,20 );
+            self.FilterBox.clearButton:Hide();
+            self.FilterBox:ClearFocus();
+            self.FilterBox:SetAutoFocus( false );
+            self.FilterBox:SetScript( 'OnEscapePressed',function( self )
+                Addon.SYSTEM:ShowAll();
+                self:SetAutoFocus( false );
+                if( self.Instructions ) then
+                    self.Instructions:Show();
+                end
+                self:ClearFocus();
+                self:SetText( '' );
+            end );
+            self.FilterBox:SetScript( 'OnEditFocusGained',function( self ) 
+                self:SetAutoFocus( true );
+                if( self.Instructions ) then
+                    self.Instructions:Hide();
+                end
+                self:HighlightText();
+            end );
+            self.FilterBox:SetScript( 'OnTextChanged',function( self )
+                Addon.SYSTEM:ShowAll();
+                Addon.SYSTEM:Filter( self:GetText(),Addon.SYSTEM );
+            end );
+        end
+
+        Addon.SYSTEM:Init();
+        Addon.SYSTEM:CreateFrames();
+        Addon.SYSTEM:Refresh();
+        Addon.SYSTEM:Run();
+        Addon.SYSTEM:UnregisterEvent( 'ADDON_LOADED' );
     end
-    -- Check external updates
-    -- Bug found in wow-classic-era-source/Interface/FrameXML/OptionsPanelTemplates.lua
-    -- ^ BlizzardOptionsPanel_SetCVarSafe() being called by blizz on login, forcing values to be incorrectly updated
-    -- ^^ As such, we will have to forcefully override those dumb updates they are making
-    for CVar,Value in pairs( self.persistence.CVars ) do
-        SetCVar( CVar,Value );
-    end
-    -- Config
-    LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self:GetName() ),self:GetSettings() );
-    self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self:GetName() ),self:GetName(),'jVars' );
-    -- ok handler
-    self.Config.okay = function( self )
-        for CVar,Value in pairs( self.persistence.CVars ) do
-            SetCVar( CVar,Value );
-        end 
-        RestartGx();
-    end
-    -- default handler
-    self.Config.default = function( self )
-        jSystem.db:ResetDB();
-    end
-end
+end );

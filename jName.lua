@@ -1,968 +1,652 @@
 local _, Addon = ...;
-local jVars = LibStub( 'AceAddon-3.0' ):GetAddon( 'jVars' );
-local jName = jVars:NewModule( 'jName' );
-jName.Explode = Addon.Explode;
-jName.Implode = Addon.Implode;
-jName.Dump = Addon.Dump;
-jName.IsClassic = Addon.IsClassic;
-jName.Minify = Addon.Minify;
 
---
---  Get module defaults
---
---  @return table
-function jName:GetDefaults()
-    return {
-        CVars = {
-            findYourselfMode = GetCVar( 'findYourselfMode' ),
-            findyourselfanywhere = GetCVar( 'findyourselfanywhere' ),
-            NameplatePersonalShowAlways = GetCVar( 'NameplatePersonalShowAlways' ),
-            nameplateShowEnemyPets = GetCVar( 'nameplateShowEnemyPets' ),
-            nameplateShowFriends = GetCVar( 'nameplateShowFriends' ),
-            nameplateShowFriendlyGuardians = GetCVar( 'nameplateShowFriendlyGuardians' ),
-            nameplateTargetRadialPosition = GetCVar( 'nameplateTargetRadialPosition' ),
-            countdownForCooldowns = GetCVar( 'countdownForCooldowns' ),
-            NameplatePersonalShowInCombat = GetCVar( 'NameplatePersonalShowInCombat' ),
-            NameplatePersonalShowWithTarget = GetCVar( 'NameplatePersonalShowWithTarget' ),
-            nameplateShowEnemies = GetCVar( 'nameplateShowEnemies' ),
-            nameplateShowEnemyGuardians = GetCVar( 'nameplateShowEnemyGuardians' ),
-            nameplateShowEnemyTotems = GetCVar( 'nameplateShowEnemyTotems' ),
-            nameplateShowFriendlyNPCs = GetCVar( 'nameplateShowFriendlyNPCs' ),
-            nameplateShowFriendlyTotems = GetCVar( 'nameplateShowFriendlyTotems' ),
-            nameplateShowEnemyMinions = GetCVar( 'nameplateShowEnemyMinions' ),
-            nameplateShowFriendlyPets = GetCVar( 'nameplateShowFriendlyPets' ),
-            nameplateShowFriendlyMinions = GetCVar( 'nameplateShowFriendlyMinions' ),
-            nameplateShowAll = GetCVar( 'nameplateShowAll' ),
-            NameplatePersonalHideDelaySeconds = GetCVar( 'NameplatePersonalHideDelaySeconds' ),
-            NameplatePersonalHideDelayAlpha = GetCVar( 'NameplatePersonalHideDelayAlpha' ),
-            NamePlateVerticalScale = GetCVar( 'NamePlateVerticalScale' ),
-            NamePlateHorizontalScale = GetCVar( 'NamePlateHorizontalScale' ),
-            nameplateLargerScale = GetCVar( 'nameplateLargerScale' ),
-            nameplateMaxAlpha = GetCVar( 'nameplateMaxAlpha' ),
-            nameplateMaxDistance = GetCVar( 'nameplateMaxDistance' ),
-            nameplateSelectedScale = GetCVar( 'nameplateSelectedScale' ),
-            nameplateSelfScale = GetCVar( 'nameplateSelfScale' ),
-            nameplateMinScaleDistance = GetCVar( 'nameplateMinScaleDistance' ),
-            nameplateSelectedAlpha = GetCVar( 'nameplateSelectedAlpha' ),
-            nameplateSelfAlpha = GetCVar( 'nameplateSelfAlpha' ),
-            nameplateMotionSpeed = GetCVar( 'nameplateMotionSpeed' ),
-            nameplateMaxScaleDistance = GetCVar( 'nameplateMaxScaleDistance' ),
-            statusText = GetCVar( 'statusText' ),
-            statusTextDisplay = GetCVar( 'statusTextDisplay' ),
-            predictedHealth = GetCVar( 'predictedHealth' ),
-            UnitNameGuildTitle = GetCVar( 'UnitNameGuildTitle' ),
-            ShowClassColorInNameplate = GetCVar( 'ShowClassColorInNameplate' ),
-            nameplateNotSelectedAlpha = GetCVar( 'nameplateNotSelectedAlpha' ) or 0,
-            nameplateRemovalAnimation = GetCVar( 'nameplateRemovalAnimation' ),
-            showtargetoftarget = GetCVar( 'showtargetoftarget' ),
-            nameplateMinAlphaDistance = GetCVar( 'nameplateMinAlphaDistance' ),
-            nameplateClassResourceTopInset = GetCVar( 'nameplateClassResourceTopInset' ),
-            nameplateOtherBottomInset = GetCVar( 'nameplateOtherBottomInset' ),
-            ShowClassColorInFriendlyNameplate = GetCVar( 'ShowClassColorInFriendlyNameplate' ),
-        },
-    };
-end
+Addon.NAME = CreateFrame( 'Frame' );
+Addon.NAME:RegisterEvent( 'ADDON_LOADED' )
+Addon.NAME.FistColInset = 15;
+Addon.NAME.RegisteredFrames = {};
+Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
+    if( AddonName == 'jVars' ) then
 
---
---  Set module setting
---
---  @param  string  Index
---  @param  string  Value
---  @return void
-function jName:SetValue( Index,Value )
-    if( self.persistence.CVars[ Index ] ~= nil ) then
-        self.persistence.CVars[ Index ] = Value;
-    end
-end
-
---
---  Get module setting
---
---  @param  string  Index
---  @return mixed
-function jName:GetValue( Index )
-    if( self.persistence.CVars[ Index ] ~= nil ) then
-        return self.persistence.CVars[ Index ];
-    end
-end
-
---
---  Get module settings
---
---  @return table
-function jName:GetSettings()
-    if( not self.persistence ) then
-        return;
-    end
-    return {
-        type = 'group',
-        get = function( Info )
-            if( self.persistence[ Info.arg ] ~= nil ) then
-                return self.persistence[ Info.arg ];
+        --
+        --  Get module defaults
+        --
+        --  @return table
+        Addon.NAME.GetDefaults = function( self )
+            local Defaults = {
+                findYourselfMode = GetCVar( 'findYourselfMode' ),
+                findyourselfanywhere = GetCVar( 'findyourselfanywhere' ),
+                NameplatePersonalShowAlways = GetCVar( 'NameplatePersonalShowAlways' ),
+                nameplateShowEnemyPets = GetCVar( 'nameplateShowEnemyPets' ),
+                nameplateShowFriends = GetCVar( 'nameplateShowFriends' ),
+                nameplateShowFriendlyGuardians = GetCVar( 'nameplateShowFriendlyGuardians' ),
+                nameplateTargetRadialPosition = GetCVar( 'nameplateTargetRadialPosition' ),
+                countdownForCooldowns = GetCVar( 'countdownForCooldowns' ),
+                NameplatePersonalShowInCombat = GetCVar( 'NameplatePersonalShowInCombat' ),
+                NameplatePersonalShowWithTarget = GetCVar( 'NameplatePersonalShowWithTarget' ),
+                nameplateShowEnemies = GetCVar( 'nameplateShowEnemies' ),
+                nameplateShowEnemyGuardians = GetCVar( 'nameplateShowEnemyGuardians' ),
+                nameplateShowEnemyTotems = GetCVar( 'nameplateShowEnemyTotems' ),
+                nameplateShowFriendlyNPCs = GetCVar( 'nameplateShowFriendlyNPCs' ),
+                nameplateShowFriendlyTotems = GetCVar( 'nameplateShowFriendlyTotems' ),
+                nameplateShowEnemyMinions = GetCVar( 'nameplateShowEnemyMinions' ),
+                nameplateShowFriendlyPets = GetCVar( 'nameplateShowFriendlyPets' ),
+                nameplateShowFriendlyMinions = GetCVar( 'nameplateShowFriendlyMinions' ),
+                nameplateShowAll = GetCVar( 'nameplateShowAll' ),
+                NameplatePersonalHideDelaySeconds = GetCVar( 'NameplatePersonalHideDelaySeconds' ),
+                NameplatePersonalHideDelayAlpha = GetCVar( 'NameplatePersonalHideDelayAlpha' ),
+                NamePlateVerticalScale = GetCVar( 'NamePlateVerticalScale' ),
+                NamePlateHorizontalScale = GetCVar( 'NamePlateHorizontalScale' ),
+                nameplateLargerScale = GetCVar( 'nameplateLargerScale' ),
+                nameplateMaxAlpha = GetCVar( 'nameplateMaxAlpha' ),
+                nameplateMaxDistance = GetCVar( 'nameplateMaxDistance' ),
+                nameplateSelectedScale = GetCVar( 'nameplateSelectedScale' ),
+                nameplateSelfScale = GetCVar( 'nameplateSelfScale' ),
+                nameplateMinScaleDistance = GetCVar( 'nameplateMinScaleDistance' ),
+                nameplateSelectedAlpha = GetCVar( 'nameplateSelectedAlpha' ),
+                nameplateSelfAlpha = GetCVar( 'nameplateSelfAlpha' ),
+                nameplateMaxScaleDistance = GetCVar( 'nameplateMaxScaleDistance' ),
+                statusText = GetCVar( 'statusText' ),
+                statusTextDisplay = GetCVar( 'statusTextDisplay' ),
+                predictedHealth = GetCVar( 'predictedHealth' ),
+                UnitNameGuildTitle = GetCVar( 'UnitNameGuildTitle' ),
+                ShowClassColorInNameplate = GetCVar( 'ShowClassColorInNameplate' ),
+                nameplateNotSelectedAlpha = GetCVar( 'nameplateNotSelectedAlpha' ) or 0,
+                nameplateRemovalAnimation = GetCVar( 'nameplateRemovalAnimation' ),
+                showtargetoftarget = GetCVar( 'showtargetoftarget' ),
+                nameplateMinAlphaDistance = GetCVar( 'nameplateMinAlphaDistance' ),
+                nameplateClassResourceTopInset = GetCVar( 'nameplateClassResourceTopInset' ),
+                nameplateOtherBottomInset = GetCVar( 'nameplateOtherBottomInset' ),
+                ShowClassColorInFriendlyNameplate = GetCVar( 'ShowClassColorInFriendlyNameplate' ),
+                nameplateMotionSpeed = GetCVar( 'nameplateMotionSpeed' ),
+            };
+            for i,v in pairs( Defaults ) do
+                Defaults[ string.lower( i ) ] = v;
             end
-        end,
-        set = function( Info,Value )
-            if( self.persistence[ Info.arg ] ~= nil ) then
-                self.persistence[ Info.arg ] = Value;
+            return Defaults;
+        end
+
+        --
+        --  Set module setting
+        --
+        --  @param  string  Index
+        --  @param  string  Value
+        --  @return void
+        Addon.NAME.SetValue = function( self,Index,Value )
+            if( self.RegisteredVars[ string.lower( Index ) ] ) then
+                if( self.RegisteredVars[ string.lower( Index ) ].Type == 'Toggle' ) then
+                    if( type( Value ) == 'boolean' ) then
+                        self.persistence[ string.lower( Index ) ] = Addon:BoolToInt( Value );
+                    else
+                        self.persistence[ string.lower( Index ) ] = Value;
+                    end
+                else
+                    self.persistence[ string.lower( Index ) ] = Value;
+                end
+                self:Refresh();
             end
-        end,
-        name = self:GetName()..' Settings',
-        args = {
-            countdownForCooldowns = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'countdownForCooldowns',
-                desc = 'Whether to use number countdown instead of radial swipe for action button cooldowns or not',
-                arg = 'countdownForCooldowns',
-            },
-            findyourselfanywhere = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'findyourselfanywhere',
-                desc = 'Always Highlight your character',
-                arg = 'findyourselfanywhere',
-            },
-            findYourselfMode = {
-                type = 'select',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                style = 'dropdown',
-                name = 'findYourselfMode',
-                desc = 'Highlight your character. 0 = circle, 1 = circle & outline, 2 = outline',
-                values = {
-                    [0] = 'Circle',
-                    [1] = 'Circle & Outline',
-                    [2] = 'Outline',
-                },
-                arg = 'findYourselfMode',
-            },
-            nameplateClassResourceTopInset = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateClassResourceTopInset',
-                desc = 'The inset from the top (in screen percent) that nameplates are clamped to when class resources are being displayed on them',
-                min = 0.0, max = 1.0, step = 0.1,
-                arg = 'nameplateClassResourceTopInset',
-            },
-            NamePlateHorizontalScale = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'NamePlateHorizontalScale',
-                desc = 'Applied to horizontal size of all nameplates',
-                min = 0.0, max = 1.0, step = 0.1,
-                arg = 'NamePlateHorizontalScale',
-            },
-            nameplateLargerScale = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateLargerScale',
-                desc = 'An additional scale modifier for important monsters',
-                min = 0.0, max = 2.0, step = 0.1,
-                arg = 'nameplateLargerScale',
-            },
-            nameplateOtherBottomInset = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateOtherBottomInset',
-                desc = 'The inset from the bottom (in screen percent) that the non-self nameplates are clamped to',
-                min = 0.0, max = 1.0, step = 0.1,
-                arg = 'nameplateOtherBottomInset',
-            },
-            nameplateMaxScaleDistance = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateMaxScaleDistance',
-                desc = 'The distance from the camera that nameplates will reach their maximum scale',
-                min = 20, max = 60, step = 20,
-                arg = 'nameplateMaxScaleDistance',
-            },
-            nameplateMinAlphaDistance = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateMinAlphaDistance',
-                desc = 'The distance from the max distance that nameplates will reach their minimum alpha',
-                min = 20, max = 60, step = 20,
-                arg = 'nameplateMinAlphaDistance',
-            },
-            nameplateMinScaleDistance = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateMinScaleDistance',
-                desc = 'The distance from the max distance that nameplates will reach their minimum scale',
-                min = 20, max = 60, step = 20,
-                arg = 'nameplateMinScaleDistance',
-            },
-            nameplateMotionSpeed = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateMotionSpeed',
-                desc = 'Controls the rate at which nameplate animates into their target locations',
-                min = 0.0, max = 1.0, step = 0.1,
-                arg = 'nameplateMotionSpeed',
-            },
-            nameplateRemovalAnimation = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateRemovalAnimation',
-                desc = 'When enabled, nameplates will play a brief shrinking animation when disappearing',
-                arg = 'nameplateRemovalAnimation',
-            },
-            nameplateNotSelectedAlpha = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateNotSelectedAlpha',
-                desc = 'When you have a target, the alpha of other units\' nameplates',
-                min = 0.0, max = 1.0, step = 0.1,
-                arg = 'nameplateNotSelectedAlpha',
-            },
-            nameplateSelectedAlpha = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateSelectedAlpha',
-                desc = 'The alpha of the selected nameplate',
-                min = 0.0, max = 1.0, step = 0.1,
-                arg = 'nameplateSelectedAlpha',
-            },
-            nameplateSelfAlpha = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateSelfAlpha',
-                desc = 'The alpha of the self nameplate',
-                min = 0.0, max = 1.0, step = 0.1,
-                arg = 'nameplateSelfAlpha',
-            },
-            nameplateSelectedScale = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateSelectedScale',
-                desc = 'The scale of the selected nameplate',
-                min = 0.0, max = 2.0, step = 0.1,
-                arg = 'nameplateSelectedScale',
-            },
-            nameplateSelfScale = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateSelfScale',
-                desc = 'The scale of the selected nameplate',
-                min = 0.0, max = 2.0, step = 0.1,
-                arg = 'nameplateSelfScale',
-            },
-            nameplateMaxAlpha = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateMaxAlpha',
-                desc = 'The max alpha of nameplates',
-                min = 0.0, max = 1.0, step = 0.1,
-                arg = 'nameplateMaxAlpha',
-            },
-            nameplateMaxDistance = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'nameplateMaxDistance',
-                desc = 'The max distance to show nameplates',
-                min = 20, max = 60, step = 20,
-                arg = 'nameplateMaxDistance',
-            },
-            NameplatePersonalHideDelayAlpha = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'NameplatePersonalHideDelayAlpha',
-                desc = 'Determines the alpha of the personal nameplate after no visibility conditions are met (during the period of time specified by NameplatePersonalHideDelaySeconds)',
-                min = 0.0, max = 1.0, step = 0.1,
-                arg = 'NameplatePersonalHideDelayAlpha',
-            },
-            NameplatePersonalHideDelaySeconds = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'NameplatePersonalHideDelaySeconds',
-                desc = 'Determines the length of time in seconds that the personal nameplate will be visible after no visibility conditions are met',
-                min = 0, max = 3, step = 1,
-                arg = 'NameplatePersonalHideDelaySeconds',
-            },
-            NameplatePersonalShowAlways = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'NameplatePersonalShowAlways',
-                desc = 'Determines if the the personal nameplate is shown',
-                arg = 'NameplatePersonalShowAlways',
-            },
-            NameplatePersonalShowInCombat = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'NameplatePersonalShowInCombat',
-                desc = 'Determines if the the personal nameplate is shown when you enter combat. NameplatePersonalShowAlways likely overrides this but that remains to be tested',
-                arg = 'NameplatePersonalShowInCombat',
-            },
-            nameplateShowAll = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowAll',
-                desc = 'Determines if nameplates are shown',
-                arg = 'nameplateShowAll',
-            },
-            nameplateShowEnemies = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowEnemies',
-                desc = 'Determines if enemy nameplates are shown',
-                arg = 'nameplateShowEnemies',
-            },
-            nameplateShowEnemyGuardians = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowEnemyGuardians',
-                desc = 'Determines if the the enemy guardian nameplate is shown',
-                arg = 'nameplateShowEnemyGuardians',
-            },
-            nameplateShowEnemyMinions = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowEnemyMinions',
-                desc = 'Determines if the enemy minion nameplate is shown',
-                arg = 'nameplateShowEnemyMinions',
-            },
-            nameplateShowEnemyPets = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowEnemyPets',
-                desc = 'Determines if the the enemy pet nameplate is shown',
-                arg = 'nameplateShowEnemyPets',
-            },
-            nameplateShowEnemyTotems = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowEnemyTotems',
-                desc = 'Determines if the enemy totem nameplate is shown',
-                arg = 'nameplateShowEnemyTotems',
-            },
-            nameplateShowFriendlyMinions = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowFriendlyMinions',
-                desc = 'Determines if the friendly minion nameplate is shown',
-                arg = 'nameplateShowFriendlyMinions',
-            },
-            nameplateShowFriendlyNPCs = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowFriendlyNPCs',
-                desc = 'Determines if the the friendly NPC nameplate is shown',
-                arg = 'nameplateShowFriendlyNPCs',
-            },
-            nameplateShowFriends = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowFriends',
-                desc = 'Determines if the the friendly nameplate is shown',
-                arg = 'nameplateShowFriends',
-            },
-            nameplateShowFriendlyGuardians = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowFriendlyGuardians',
-                desc = 'Determines if the the friendly guardian nameplate is shown',
-                arg = 'nameplateShowFriendlyGuardians',
-            },
-            nameplateShowFriendlyPets = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowFriendlyPets',
-                desc = 'Determines if the friendly pet nameplate is shown',
-                arg = 'nameplateShowFriendlyPets',
-            },
-            nameplateShowFriendlyTotems = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'nameplateShowFriendlyTotems',
-                desc = 'Determines if the the friendly totem nameplate is shown',
-                arg = 'nameplateShowFriendlyTotems',
-            },
-            NameplatePersonalShowWithTarget = {
-                type = 'select',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                style = 'dropdown',
-                name = 'NameplatePersonalShowWithTarget',
-                desc = 'Determines if the personal nameplate is shown when selecting a target. NameplatePersonalShowAlways likely overrides this but that remains to be tested',
-                values = {
-                    [0] = 'None',
-                    [1] = 'Hostile Target',
-                    [2] = 'Any Target',
-                },
-                arg = 'NameplatePersonalShowWithTarget',
-            },
-            nameplateTargetRadialPosition = {
-                type = 'select',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                style = 'dropdown',
-                name = 'nameplateTargetRadialPosition',
-                desc = 'When target is off screen, position its nameplate radially around sides and bottom',
-                values = {
-                    [0] = 'None',
-                    [1] = 'Target Only',
-                    [3] = 'All In Combat',
-                },
-                arg = 'nameplateTargetRadialPosition',
-            },
-            NamePlateVerticalScale = {
-                type = 'range',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return tonumber( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                name = 'NamePlateVerticalScale',
-                desc = 'Applied to vertical size of all nameplates',
-                min = 0.0, max = 1.0, step = 0.1,
-                arg = 'NamePlateVerticalScale',
-            },
-            predictedHealth = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'predictedHealth',
-                desc = 'Whether or not to use predicted health values in the UI',
-                arg = 'predictedHealth',
-            },
-            ShowClassColorInFriendlyNameplate = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'ShowClassColorInFriendlyNameplate',
-                desc = 'Use this to display the class color in friendly nameplate health bars',
-                arg = 'ShowClassColorInFriendlyNameplate',
-            },
-            ShowClassColorInNameplate = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'ShowClassColorInNameplate',
-                desc = 'Use this to display the class color in nameplate health bars',
-                arg = 'ShowClassColorInNameplate',
-            },
-            showtargetoftarget = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'showtargetoftarget',
-                desc = 'Whether the target of target frame should be shown',
-                arg = 'showtargetoftarget',
-            },
-            statusText = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'statusText',
-                desc = 'Whether the status bars show numeric health/mana values',
-                arg = 'statusText',
-            },
-            statusTextDisplay = {
-                type = 'select',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return self.persistence.CVars[ Info.arg ];
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Value;
-                        SetCVar( Info.arg,Value );
-                    end
-                end,
-                style = 'dropdown',
-                name = 'statusTextDisplay',
-                desc = 'When target is off screen, position its nameplate radially around sides and bottom',
-                values = {
-                    NONE = 'None',
-                    NUMERIC = 'Numeric',
-                    PERCENT = 'Percent',
-                },
-                arg = 'statusTextDisplay',
-            },
-            UnitNameGuildTitle = {
-                type = 'toggle',
-                get = function( Info )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        return Addon:Int2Bool( self.persistence.CVars[ Info.arg ] );
-                    end
-                end,
-                set = function( Info,Value )
-                    if( self.persistence.CVars[ Info.arg ] ~= nil ) then
-                        self.persistence.CVars[ Info.arg ] = Addon:BoolToInt( Value );
-                        SetCVar( Info.arg,Addon:BoolToInt( Value ) );
-                    end
-                end,
-                name = 'UnitNameGuildTitle',
-                desc = 'Whether or not to display guild for playable characters',
-                arg = 'UnitNameGuildTitle',
-            },
-        },
-    };
-end
+        end
 
---
---  Module initialize
---
---  @return void
-function jName:OnInitialize()
-    -- Database
-    self.db = LibStub( 'AceDB-3.0' ):New( self:GetName(),{ profile = self:GetDefaults() },true );
-    if( not self.db ) then
-        return;
-    end
-    --self.db:ResetDB();
-    self.persistence = self.db.profile;
-    if( not self.persistence ) then
-        return;
-    end
-end
+        --
+        --  Get module setting
+        --
+        --  @param  string  Index
+        --  @return mixed
+        Addon.NAME.GetValue = function( self,Index )
+            if( self.persistence[ string.lower( Index ) ] ~= nil ) then
+                return self.persistence[ string.lower( Index ) ];
+            end
+        end
 
---
---  Module enable
---
---  @return void
-function jName:OnEnable()
-    if( not self.persistence ) then
-        return;
+        Addon.NAME.FrameRegister = function( self,FrameData )
+            local Found = false;
+            for i,MetaData in pairs( self.RegisteredFrames ) do
+                if( MetaData.Name == FrameData.Name ) then
+                    Found = true;
+                end
+            end
+            if( not Found ) then
+                table.insert( self.RegisteredFrames,{
+                    Name        = FrameData.Name,
+                    Frame       = FrameData.Frame,
+                    Description = FrameData.Description,
+                } );
+            end
+        end
+
+        Addon.NAME.ShowAll = function( self )
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                FrameData.Frame:Show();
+            end
+        end
+
+        Addon.NAME.HideAll = function( self )
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                FrameData.Frame:Hide();
+            end
+        end
+
+        Addon.NAME.GetRegisteredFrame = function( self,Name )
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                if( FrameData.Name == Name ) then
+                    return FrameData.Frame;
+                end
+            end
+        end
+
+        Addon.NAME.Filter = function( self,SearchQuery )
+            if( not ( string.len( SearchQuery ) >= 3 ) ) then
+                return;
+            end
+            local FoundFrames = {};
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                if( Addon:Minify( FrameData.Name ):find( Addon:Minify( SearchQuery ) ) ) then
+                    if( not FoundFrames [ string.lower( FrameData.Name ) ] ) then
+                        FoundFrames [ string.lower( FrameData.Name ) ] = FrameData.Frame;
+                    end
+                end
+                if( Addon:Minify( FrameData.Description ):find( Addon:Minify( SearchQuery ) ) ) then
+                    if( not FoundFrames [ string.lower( FrameData.Name ) ] ) then
+                        FoundFrames [ string.lower( FrameData.Name ) ] = FrameData.Frame;
+                    end
+                end
+            end
+            for i,FrameData in pairs( self.RegisteredFrames ) do
+                if( not FoundFrames[ string.lower( FrameData.Name ) ] ) then
+                    FrameData.Frame:Hide();
+                else
+                    FrameData.Frame:Show();
+                end
+            end
+        end
+
+        --
+        --  Create module config frames
+        --
+        --  @return void
+        Addon.NAME.CreateFrames = function( self )
+            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( 'jName' ),{
+                type = 'group',
+                name = 'jName',
+                args = {},
+            } );
+            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( 'jName' ),'jName','jVars' );
+            self.Config.Name = 'jName';
+        end
+
+        --
+        --  Module refresh
+        --
+        --  @return void
+        Addon.NAME.Refresh = function( self )
+            if( not Addon.NAME.persistence ) then
+                return;
+            end
+            for VarName,VarData in pairs( self.RegisteredVars ) do
+                if( self.persistence[ string.lower( VarName ) ] ~= nil ) then
+                    SetCVar( string.lower( VarName ),self.persistence[ string.lower( VarName ) ] );
+                end
+            end
+            RestartGx();
+        end
+
+        --
+        --  Module init
+        --
+        --  @return void
+        Addon.NAME.Init = function( self )
+            local RegisteredVars = {
+                countdownForCooldowns = {
+                    Type = 'Toggle',
+                },
+                findyourselfanywhere = {
+                    Type = 'Toggle',
+                },
+                findYourselfMode = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Circle',
+                        },
+                        Option2 = {
+                            Value = 1,
+                            Description = 'Circle & Outline',
+                        },
+                        Option3 = {
+                            Value = 2,
+                            Description = 'Outline',
+                        },
+                    },
+                },
+                nameplateRemovalAnimation = {
+                    Type = 'Toggle',
+                },
+                nameplateClassResourceTopInset = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                NamePlateHorizontalScale = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                nameplateLargerScale = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 2.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                nameplateMaxScaleDistance = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 20,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 60,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 20,
+                },
+
+                nameplateMotionSpeed = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+
+
+                NamePlateVerticalScale = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                NameplatePersonalHideDelaySeconds = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                nameplateSelectedScale = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 2.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                nameplateNotSelectedAlpha = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                nameplateMaxDistance = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 20,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 60,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 20,
+                },
+                nameplateSelfScale = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 2.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                NameplatePersonalShowAlways = {
+                    Type = 'Toggle',
+                },
+                NameplatePersonalShowInCombat = {
+                    Type = 'Toggle',
+                },
+                nameplateShowAll = {
+                    Type = 'Toggle',
+                },
+                nameplateShowEnemies = {
+                    Type = 'Toggle',
+                },
+                nameplateShowEnemyGuardians = {
+                    Type = 'Toggle',
+                },
+                nameplateShowEnemyMinions = {
+                    Type = 'Toggle',
+                },
+                nameplateShowEnemyPets = {
+                    Type = 'Toggle',
+                },
+                nameplateShowEnemyTotems = {
+                    Type = 'Toggle',
+                },
+                nameplateShowFriends ={
+                    Type = 'Toggle',
+                },
+                nameplateShowFriendlyGuardians = {
+                    Type = 'Toggle',
+                },
+                nameplateTargetRadialPosition = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'None',
+                        },
+                        Option2 = {
+                            Value = 1,
+                            Description = 'Target Only',
+                        },
+                        Option3 = {
+                            Value = 3,
+                            Description = 'All In Combat',
+                        },
+                    },
+                },
+                NameplatePersonalShowWithTarget = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0,
+                            Description = 'None',
+                        },
+                        Option2 = {
+                            Value = 1,
+                            Description = 'Hostile Target',
+                        },
+                        Option3 = {
+                            Value = 2,
+                            Description = 'Any Target',
+                        },
+                    },
+                },
+                nameplateShowFriendlyNPCs = {
+                    Type = 'Toggle',
+                },
+                nameplateShowFriendlyTotems = {
+                    Type = 'Toggle',
+                },
+                nameplateShowFriendlyPets = {
+                    Type = 'Toggle',
+                },
+                nameplateShowFriendlyMinions = {
+                    Type = 'Toggle',
+                },
+                statusText = {
+                    Type = 'Toggle',
+                },
+                statusTextDisplay = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 'NONE',
+                            Description = 'None',
+                        },
+                        Option2 = {
+                            Value = 'NUMERIC',
+                            Description = 'Numeric',
+                        },
+                        Option3 = {
+                            Value = 'PERCENT',
+                            Description = 'Percent',
+                        },
+                    },
+                },
+                predictedHealth = {
+                    Type = 'Toggle',
+                },
+                UnitNameGuildTitle = {
+                    Type = 'Toggle',
+                },
+                ShowClassColorInNameplate = {
+                    Type = 'Toggle',
+                },
+                showtargetoftarget = {
+                    Type = 'Toggle',
+                },
+                ShowClassColorInFriendlyNameplate = {
+                    Type = 'Toggle',
+                },
+                --[[
+                nameplateSelfAlpha = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                nameplateOtherBottomInset = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                nameplateMinAlphaDistance = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 20,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 60,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 20,
+                },
+                nameplateMinScaleDistance = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 20,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 60,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 20,
+                }
+                nameplateSelfAlpha = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                nameplateMaxAlpha = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                NameplatePersonalHideDelayAlpha = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Option1 = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        Option2 = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                ]]
+            };
+            self.RegisteredVars = {};
+            for VarName,VarData in pairs( RegisteredVars ) do
+                if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
+                    VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
+                end
+                self.RegisteredVars[ string.lower( VarName ) ] = VarData;
+            end
+            self.db = LibStub( 'AceDB-3.0' ):New( 'jName',{ profile = self:GetDefaults() },true );
+            if( not self.db ) then
+                return;
+            end
+            --self.db:ResetDB();
+            self.persistence = self.db.profile;
+            if( not self.persistence ) then
+                return;
+            end
+        end
+
+        --
+        --  Module run
+        --
+        --  @return void
+        Addon.NAME.Run = function( self )
+            self.ScrollChild = Addon.GRID:RegisterGrid( self.Config,self.RegisteredVars,self );
+
+            self.FilterBox = CreateFrame( 'EditBox','jNameChatFilter',self.ScrollChild,'SearchBoxTemplate' );
+            self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
+            self.FilterBox:SetSize( 200,20 );
+            self.FilterBox.clearButton:Hide();
+            self.FilterBox:ClearFocus();
+            self.FilterBox:SetAutoFocus( false );
+            self.FilterBox:SetScript( 'OnEscapePressed',function( self )
+                Addon.NAME:ShowAll();
+                self:SetAutoFocus( false );
+                if( self.Instructions ) then
+                    self.Instructions:Show();
+                end
+                self:ClearFocus();
+                self:SetText( '' );
+            end );
+            self.FilterBox:SetScript( 'OnEditFocusGained',function( self ) 
+                self:SetAutoFocus( true );
+                if( self.Instructions ) then
+                    self.Instructions:Hide();
+                end
+                self:HighlightText();
+            end );
+            self.FilterBox:SetScript( 'OnTextChanged',function( self )
+                Addon.NAME:ShowAll();
+                Addon.NAME:Filter( self:GetText(),Addon.NAME );
+            end );
+        end
+
+        Addon.NAME:Init();
+        Addon.NAME:CreateFrames();
+        Addon.NAME:Refresh();
+        Addon.NAME:Run();
+        Addon.NAME:UnregisterEvent( 'ADDON_LOADED' );
     end
-    -- Check external updates
-    -- Bug found in wow-classic-era-source/Interface/FrameXML/OptionsPanelTemplates.lua
-    -- ^ BlizzardOptionsPanel_SetCVarSafe() being called by blizz on login, forcing values to be incorrectly updated
-    -- ^^ As such, we will have to forcefully override those dumb updates they are making
-    for CVar,Value in pairs( self.persistence.CVars ) do
-        SetCVar( CVar,Value );
-    end
-    -- Config
-    LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self:GetName() ),self:GetSettings() );
-    self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self:GetName() ),self:GetName(),'jVars' );
-    -- ok handler
-    self.Config.okay = function( self )
-        for CVar,Value in pairs( self.persistence.CVars ) do
-            SetCVar( CVar,Value );
-        end 
-        RestartGx();
-    end
-    -- default handler
-    self.Config.default = function( self )
-        jName.db:ResetDB();
-    end
-end
+end );
