@@ -150,7 +150,14 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
                 end
             end
             self:ColorNames();
-            RestartGx();
+        end
+
+        --
+        --  Module reset
+        --
+        --  @return void
+        Addon.CHAT.ResetDb = function( self )
+            self.db:ResetDB();
         end
 
         Addon.CHAT.ColorNames = function( self )

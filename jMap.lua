@@ -142,7 +142,14 @@ Addon.MAP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     SetCVar( string.lower( VarName ),self.persistence[ string.lower( VarName ) ] );
                 end
             end
-            RestartGx();
+        end
+
+        --
+        --  Module reset
+        --
+        --  @return void
+        Addon.MAP.ResetDb = function( self )
+            self.db:ResetDB();
         end
 
         --

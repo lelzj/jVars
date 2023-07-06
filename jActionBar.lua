@@ -144,7 +144,14 @@ Addon.ACTIONBAR:SetScript( 'OnEvent',function( self,Event,AddonName )
                     SetCVar( string.lower( VarName ),self.persistence[ string.lower( VarName ) ] );
                 end
             end
-            RestartGx();
+        end
+
+        --
+        --  Module reset
+        --
+        --  @return void
+        Addon.ACTIONBAR.ResetDb = function( self )
+            self.db:ResetDB();
         end
 
         --

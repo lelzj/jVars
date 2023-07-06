@@ -19,13 +19,59 @@ Addon.VARS:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( AddonName ),AddonName );
 
             self.Config.okay = function( self )
-                Addon.System:Refresh();
+
+                Addon.ACTIONBAR:Init();
+                Addon.ACTIONBAR:Refresh();
+
+                Addon.CHAT:Init();
+                Addon.CHAT:Refresh();
+
+                Addon.MAP:Init();
+                Addon.MAP:Refresh();
+
+                Addon.NAME:Init();
+                Addon.NAME:Refresh();
+
+                Addon.RAID:Init();
+                Addon.RAID:Refresh();
+
+                Addon.SOUND:Init();
+                Addon.SOUND:Refresh();
+
+                Addon.SYSTEM:Init();
+                Addon.SYSTEM:Refresh();
                 RestartGx();
             end
 
             self.Config.default = function( self )
-                Addon.System.db:ResetDB();
-                Addon.System:Refresh();
+
+                Addon.ACTIONBAR:ResetDb();
+                Addon.ACTIONBAR:Init();
+                Addon.ACTIONBAR:Refresh();
+
+                Addon.CHAT:ResetDb();
+                Addon.CHAT:Init();
+                Addon.CHAT:Refresh();
+
+                Addon.MAP:ResetDb();
+                Addon.MAP:Init();
+                Addon.MAP:Refresh();
+
+                Addon.NAME:ResetDb();
+                Addon.NAME:Init();
+                Addon.NAME:Refresh();
+
+                Addon.RAID:ResetDb();
+                Addon.RAID:Init();
+                Addon.RAID:Refresh();
+
+                Addon.SOUND:ResetDb();
+                Addon.SOUND:Init();
+                Addon.SOUND:Refresh();
+
+                Addon.SYSTEM:ResetDb();
+                Addon.SYSTEM:Init();
+                Addon.SYSTEM:Refresh();
                 RestartGx();
             end
         end
@@ -42,7 +88,7 @@ Addon.VARS:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.VARS.Init = function( self )
-            self.Dictionary = {};
+            self.Dictionary,self.Modules = {},{};
             for i,Row in pairs( C_Console.GetAllCommands() ) do
                 Row.command = string.lower( Row.command );
                 local CurrentValue,DefaultValue,AccountWide,PerCharacter,_,Secure,ReadOnly = GetCVarInfo( Row.command );

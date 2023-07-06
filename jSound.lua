@@ -151,14 +151,21 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
                     SetCVar( string.lower( VarName ),self.persistence[ string.lower( VarName ) ] );
                 end
             end
-            RestartGx();
+        end
+
+        --
+        --  Module reset
+        --
+        --  @return void
+        Addon.SOUND.ResetDb = function( self )
+            self.db:ResetDB();
         end
 
         --
         --  Module init
         --
         --  @return void
-        Addon.SOUND.Init = function( self )
+        Addon.SOUND.Init = function( self )  
             local RegisteredVars = {
                 FootstepSounds = {
                     Type = 'Toggle',

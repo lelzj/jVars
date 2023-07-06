@@ -176,6 +176,14 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         --
+        --  Module reset
+        --
+        --  @return void
+        Addon.SYSTEM.ResetDb = function( self )
+            self.db:ResetDB();
+        end
+
+        --
         --  Module init
         --
         --  @return void
