@@ -2,10 +2,11 @@
 ..\FrameXML\UI.xsd">
 	<Script file="jVars.lua"/>
 	<Script file="jActionBar.lua"/>
-	<Script file="jChat.lua"/>
+	<Script file="jDebug.lua"/>
 	<Script file="jMap.lua"/>
 	<Script file="jName.lua"/>
 	<Script file="jRaid.lua"/>
+	<Script file="jSocial.lua"/>
 	<Script file="jSound.lua"/>
 	<Script file="jSystem.lua"/>
 </Ui>

@@ -12,13 +12,14 @@ Addon.ACTIONBAR:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return table
         Addon.ACTIONBAR.GetDefaults = function( self )
-            local Defaults = {
-                alwaysShowActionBars = GetCVar( 'alwaysShowActionBars' ),
-                LockActionBars = GetCVar( 'LockActionBars' ),
-                multiBarRightVerticalLayout = GetCVar( 'multiBarRightVerticalLayout' ),
-            };
-            for i,v in pairs( Defaults ) do
-                Defaults[ string.lower( i ) ] = v;
+            local Defaults = {};
+            for VarName,_ in pairs( self.RegisteredVars ) do
+                Defaults[ string.lower( VarName ) ] = GetCVar( VarName );
+                if( Defaults[ string.lower( VarName ) ] == nil ) then
+                    Defaults[ string.lower( VarName ) ] = 0;
+                    self.RegisteredVars[ string.lower( VarName ) ].Flagged = true;
+                    print( AddonName..' Flagging '..VarName );
+                end
             end
             return Defaults;
         end
@@ -122,13 +123,12 @@ Addon.ACTIONBAR:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.ACTIONBAR.CreateFrames = function( self )
-            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( 'jActionBar' ),{
+            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self.Name ),{
                 type = 'group',
-                name = 'jActionBar',
+                name = self.Name,
                 args = {},
             } );
-            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( 'jActionBar' ),'jActionBar','jVars' );
-            self.Config.Name = 'jActionBar';
+            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self.Name ),self.Name,'jVars' );
         end
 
         --
@@ -159,6 +159,7 @@ Addon.ACTIONBAR:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.ACTIONBAR.Init = function( self )
+            self.Name = 'jActionBar';
             local RegisteredVars = {
                 alwaysShowActionBars = {
                     Type = 'Toggle',
@@ -175,11 +176,14 @@ Addon.ACTIONBAR:SetScript( 'OnEvent',function( self,Event,AddonName )
                 if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
                     VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
                     VarData.DisplayText = Addon.VARS.Dictionary[ string.lower( VarName ) ].DisplayText;
+                else
+                    VarData.Description = 'Info is currently unavailable';
+                    VarData.DisplayText = VarName;
                 end
                 VarData.Name = string.lower( VarName );
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
-            self.db = LibStub( 'AceDB-3.0' ):New( 'jActionBar',{ profile = self:GetDefaults() },true );
+            self.db = LibStub( 'AceDB-3.0' ):New( self.Name,{ profile = self:GetDefaults() },true );
             if( not self.db ) then
                 return;
             end
@@ -195,9 +199,9 @@ Addon.ACTIONBAR:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.ACTIONBAR.Run = function( self )
-            self.ScrollChild = Addon.GRID:RegisterGrid( self.Config,self.RegisteredVars,self );
+            self.ScrollChild = Addon.GRID:RegisterGrid( self.RegisteredVars,self );
 
-            self.FilterBox = CreateFrame( 'EditBox','jActionBarChatFilter',self.ScrollChild,'SearchBoxTemplate' );
+            self.FilterBox = CreateFrame( 'EditBox',self.Name..'ChatFilter',self.ScrollChild,'SearchBoxTemplate' );
             self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
             self.FilterBox:SetSize( 200,20 );
             self.FilterBox.clearButton:Hide();

@@ -12,11 +12,14 @@ Addon.MAP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return table
         Addon.MAP.GetDefaults = function( self )
-            local Defaults = {
-                mapFade = GetCVar( 'mapFade' ),
-            };
-            for i,v in pairs( Defaults ) do
-                Defaults[ string.lower( i ) ] = v;
+            local Defaults = {};
+            for VarName,_ in pairs( self.RegisteredVars ) do
+                Defaults[ string.lower( VarName ) ] = GetCVar( VarName );
+                if( Defaults[ string.lower( VarName ) ] == nil ) then
+                    Defaults[ string.lower( VarName ) ] = 0;
+                    self.RegisteredVars[ string.lower( VarName ) ].Flagged = true;
+                    print( AddonName..' Flagging '..VarName );
+                end
             end
             return Defaults;
         end
@@ -120,13 +123,12 @@ Addon.MAP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.MAP.CreateFrames = function( self )
-            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( 'jMap' ),{
+            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self.Name ),{
                 type = 'group',
-                name = 'jMap',
+                name = self.Name,
                 args = {},
             } );
-            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( 'jMap' ),'jMap','jVars' );
-            self.Config.Name = 'jMap';
+            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self.Name ),self.Name,'jVars' );
         end
 
         --
@@ -157,8 +159,18 @@ Addon.MAP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.MAP.Init = function( self )
+            self.Name = 'jMap';
             local RegisteredVars = {
                 mapFade = {
+                    Type = 'Toggle',
+                },
+                showMinimapClock = {
+                    Type = 'Toggle',
+                },
+                secondaryProfessionsFilter = {
+                    Type = 'Toggle',
+                },
+                rotateMinimap = {
                     Type = 'Toggle',
                 },
             };
@@ -167,11 +179,14 @@ Addon.MAP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
                     VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
                     VarData.DisplayText = Addon.VARS.Dictionary[ string.lower( VarName ) ].DisplayText;
+                else
+                    VarData.Description = 'Info is currently unavailable';
+                    VarData.DisplayText = VarName;
                 end
                 VarData.Name = string.lower( VarName );
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
-            self.db = LibStub( 'AceDB-3.0' ):New( 'jMap',{ profile = self:GetDefaults() },true );
+            self.db = LibStub( 'AceDB-3.0' ):New( self.Name,{ profile = self:GetDefaults() },true );
             if( not self.db ) then
                 return;
             end
@@ -187,9 +202,9 @@ Addon.MAP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.MAP.Run = function( self )
-            self.ScrollChild = Addon.GRID:RegisterGrid( self.Config,self.RegisteredVars,self );
+            self.ScrollChild = Addon.GRID:RegisterGrid( self.RegisteredVars,self );
 
-            self.FilterBox = CreateFrame( 'EditBox','jMapFilter',self.ScrollChild,'SearchBoxTemplate' );
+            self.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',self.ScrollChild,'SearchBoxTemplate' );
             self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
             self.FilterBox:SetSize( 200,20 );
             self.FilterBox.clearButton:Hide();

@@ -40,6 +40,9 @@ Addon.VARS:SetScript( 'OnEvent',function( self,Event,AddonName )
 
                 Addon.SYSTEM:Init();
                 Addon.SYSTEM:Refresh();
+
+                Addon.DEBUG:Init();
+                Addon.DEBUG:Refresh();
                 RestartGx();
             end
 
@@ -72,6 +75,10 @@ Addon.VARS:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Addon.SYSTEM:ResetDb();
                 Addon.SYSTEM:Init();
                 Addon.SYSTEM:Refresh();
+
+                Addon.DEBUG:ResetDb();
+                Addon.DEBUG:Init();
+                Addon.DEBUG:Refresh();
                 RestartGx();
             end
         end

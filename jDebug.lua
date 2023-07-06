@@ -1,29 +1,24 @@
 local _, Addon = ...;
 
-Addon.CHAT = CreateFrame( 'Frame' );
-Addon.CHAT:RegisterEvent( 'ADDON_LOADED' )
-Addon.CHAT.FistColInset = 15;
-Addon.CHAT.RegisteredFrames = {};
-Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
+Addon.DEBUG = CreateFrame( 'Frame' );
+Addon.DEBUG:RegisterEvent( 'ADDON_LOADED' )
+Addon.DEBUG.FistColInset = 15;
+Addon.DEBUG.RegisteredFrames = {};
+Addon.DEBUG:SetScript( 'OnEvent',function( self,Event,AddonName )
     if( AddonName == 'jVars' ) then
 
         --
         --  Get module defaults
         --
         --  @return table
-        Addon.CHAT.GetDefaults = function( self )
-            local Defaults = {
-                colorChatNamesByClass = GetCVar( 'colorChatNamesByClass' ),
-                guildMemberNotify = GetCVar( 'guildMemberNotify' ),
-                profanityfilter = GetCVar( 'profanityfilter' ),
-                showToastBroadcast = GetCVar( 'showToastBroadcast' ),
-                showToastWindow = GetCVar( 'showToastWindow' ),
-                showToastOffline = GetCVar( 'showToastOffline' ),
-                showToastOnline = GetCVar( 'showToastOnline' ),
-                spamFilter = GetCVar( 'spamFilter' ),
-            };
-            for i,v in pairs( Defaults ) do
-                Defaults[ string.lower( i ) ] = v;
+        Addon.DEBUG.GetDefaults = function( self )
+            local Defaults = {};
+            for VarName,_ in pairs( self.RegisteredVars ) do
+                Defaults[ string.lower( VarName ) ] = GetCVar( VarName );
+                if( Defaults[ string.lower( VarName ) ] == nil ) then
+                    Defaults[ string.lower( VarName ) ] = 0;
+                    print( AddonName..' Flagging '..VarName );
+                end
             end
             return Defaults;
         end
@@ -34,7 +29,7 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  string  Index
         --  @param  string  Value
         --  @return void
-        Addon.CHAT.SetValue = function( self,Index,Value )
+        Addon.DEBUG.SetValue = function( self,Index,Value )
             if( self.RegisteredVars[ string.lower( Index ) ] ) then
                 if( self.RegisteredVars[ string.lower( Index ) ].Type == 'Toggle' ) then
                     if( type( Value ) == 'boolean' ) then
@@ -54,13 +49,13 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @param  string  Index
         --  @return mixed
-        Addon.CHAT.GetValue = function( self,Index )
+        Addon.DEBUG.GetValue = function( self,Index )
             if( self.persistence[ string.lower( Index ) ] ~= nil ) then
                 return self.persistence[ string.lower( Index ) ];
             end
         end
 
-        Addon.CHAT.FrameRegister = function( self,FrameData )
+        Addon.DEBUG.FrameRegister = function( self,FrameData )
             local Found = false;
             for i,MetaData in pairs( self.RegisteredFrames ) do
                 if( MetaData.Name == FrameData.Name ) then
@@ -76,19 +71,19 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        Addon.CHAT.ShowAll = function( self )
+        Addon.DEBUG.ShowAll = function( self )
             for i,FrameData in pairs( self.RegisteredFrames ) do
                 FrameData.Frame:Show();
             end
         end
 
-        Addon.CHAT.HideAll = function( self )
+        Addon.DEBUG.HideAll = function( self )
             for i,FrameData in pairs( self.RegisteredFrames ) do
                 FrameData.Frame:Hide();
             end
         end
 
-        Addon.CHAT.GetRegisteredFrame = function( self,Name )
+        Addon.DEBUG.GetRegisteredFrame = function( self,Name )
             for i,FrameData in pairs( self.RegisteredFrames ) do
                 if( FrameData.Name == Name ) then
                     return FrameData.Frame;
@@ -96,7 +91,7 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        Addon.CHAT.Filter = function( self,SearchQuery )
+        Addon.DEBUG.Filter = function( self,SearchQuery )
             if( not ( string.len( SearchQuery ) >= 3 ) ) then
                 return;
             end
@@ -126,22 +121,21 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  Create module config frames
         --
         --  @return void
-        Addon.CHAT.CreateFrames = function( self )
-            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( 'jChat' ),{
+        Addon.DEBUG.CreateFrames = function( self )
+            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self.Name ),{
                 type = 'group',
-                name = 'jChat',
+                name = self.Name,
                 args = {},
             } );
-            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( 'jChat' ),'jChat','jVars' );
-            self.Config.Name = 'jChat';
+            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self.Name ),self.Name,'jVars' );
         end
 
         --
         --  Module refresh
         --
         --  @return void
-        Addon.CHAT.Refresh = function( self )
-            if( not Addon.CHAT.persistence ) then
+        Addon.DEBUG.Refresh = function( self )
+            if( not Addon.DEBUG.persistence ) then
                 return;
             end
             for VarName,VarData in pairs( self.RegisteredVars ) do
@@ -156,11 +150,11 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  Module reset
         --
         --  @return void
-        Addon.CHAT.ResetDb = function( self )
+        Addon.DEBUG.ResetDb = function( self )
             self.db:ResetDB();
         end
 
-        Addon.CHAT.ColorNames = function( self )
+        Addon.DEBUG.ColorNames = function( self )
             if( self.persistence[ string.lower( 'colorChatNamesByClass' ) ] ~= nil ) then
                 if( self.persistence[ string.lower( 'colorChatNamesByClass' ) ] ) then
                     SetCVar( 'chatClassColorOverride',0 );
@@ -174,33 +168,48 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  Module init
         --
         --  @return void
-        Addon.CHAT.Init = function( self )
+        Addon.DEBUG.Init = function( self )
+            self.Name = 'jDebug';
             local RegisteredVars = {
-                colorChatNamesByClass = {
+                --[[
+                ConsoleKey = {
+                    Type = 'Edit',
+                },
+                ]]
+                checkAddonVersion = {
                     Type = 'Toggle',
                 },
-                guildMemberNotify = {
+                enableSourceLocationLookup = {
                     Type = 'Toggle',
                 },
-                profanityfilter = {
+                fstack_showhighlight = {
                     Type = 'Toggle',
                 },
-                showToastBroadcast = {
+                fstack_showanchors = {
                     Type = 'Toggle',
                 },
-                showToastFriendRequest = {
+                fstack_showhidden = {
                     Type = 'Toggle',
                 },
-                showToastWindow = {
+                fstack_showregions = {
                     Type = 'Toggle',
                 },
-                showToastOffline = {
+                fullDump = {
                     Type = 'Toggle',
                 },
-                showToastOnline = {
+                scriptErrors = {
                     Type = 'Toggle',
                 },
-                spamFilter = {
+                scriptProfile = {
+                    Type = 'Toggle',
+                },
+                scriptWarnings = {
+                    Type = 'Toggle',
+                },
+                showErrors = {
+                    Type = 'Toggle',
+                },
+                taintLog = {
                     Type = 'Toggle',
                 },
             };
@@ -209,11 +218,14 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
                 if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
                     VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
                     VarData.DisplayText = Addon.VARS.Dictionary[ string.lower( VarName ) ].DisplayText;
+                else
+                    VarData.Description = 'Info is currently unavailable';
+                    VarData.DisplayText = VarName;
                 end
                 VarData.Name = string.lower( VarName );
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
-            self.db = LibStub( 'AceDB-3.0' ):New( 'jChat',{ profile = self:GetDefaults() },true );
+            self.db = LibStub( 'AceDB-3.0' ):New( self.Name,{ profile = self:GetDefaults() },true );
             if( not self.db ) then
                 return;
             end
@@ -228,17 +240,17 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  Module run
         --
         --  @return void
-        Addon.CHAT.Run = function( self )
-            self.ScrollChild = Addon.GRID:RegisterGrid( self.Config,self.RegisteredVars,self );
+        Addon.DEBUG.Run = function( self )
+            self.ScrollChild = Addon.GRID:RegisterGrid( self.RegisteredVars,self );
 
-            self.FilterBox = CreateFrame( 'EditBox','jChatChatFilter',self.ScrollChild,'SearchBoxTemplate' );
+            self.FilterBox = CreateFrame( 'EditBox',self.Name..'ChatFilter',self.ScrollChild,'SearchBoxTemplate' );
             self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
             self.FilterBox:SetSize( 200,20 );
             self.FilterBox.clearButton:Hide();
             self.FilterBox:ClearFocus();
             self.FilterBox:SetAutoFocus( false );
             self.FilterBox:SetScript( 'OnEscapePressed',function( self )
-                Addon.CHAT:ShowAll();
+                Addon.DEBUG:ShowAll();
                 self:SetAutoFocus( false );
                 if( self.Instructions ) then
                     self.Instructions:Show();
@@ -254,15 +266,15 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
                 self:HighlightText();
             end );
             self.FilterBox:SetScript( 'OnTextChanged',function( self )
-                Addon.CHAT:ShowAll();
-                Addon.CHAT:Filter( self:GetText(),Addon.CHAT );
+                Addon.DEBUG:ShowAll();
+                Addon.DEBUG:Filter( self:GetText(),Addon.DEBUG );
             end );
         end
 
-        Addon.CHAT:Init();
-        Addon.CHAT:CreateFrames();
-        Addon.CHAT:Refresh();
-        Addon.CHAT:Run();
-        Addon.CHAT:UnregisterEvent( 'ADDON_LOADED' );
+        Addon.DEBUG:Init();
+        Addon.DEBUG:CreateFrames();
+        Addon.DEBUG:Refresh();
+        Addon.DEBUG:Run();
+        Addon.DEBUG:UnregisterEvent( 'ADDON_LOADED' );
     end
 end );

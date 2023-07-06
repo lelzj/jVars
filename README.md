@@ -15,6 +15,8 @@ Interface > Addons UI
 UI works with Classic Era, Classic Wrath and Retail
 
 ## FAQ
+- I added a lot of CVars but not all
+- ...you may request additions
 
 ## Issues
 https://github.com/jadissa/jVars/issues

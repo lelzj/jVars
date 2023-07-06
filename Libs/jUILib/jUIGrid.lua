@@ -4,12 +4,12 @@ Addon.GRID = CreateFrame( 'Frame' );
 Addon.GRID.MaxColumns = 3;
 Addon.GRID.ColInset = 10;
 
-Addon.GRID.RegisterGrid = function( self,Parent,Data,Handler )
-    self.ScrollFrame = CreateFrame( 'ScrollFrame',Parent.Name..'ScrollFrame',Parent,'UIPanelScrollFrameTemplate' );
+Addon.GRID.RegisterGrid = function( self,Data,Handler )
+    self.ScrollFrame = CreateFrame( 'ScrollFrame',Handler.Name..'ScrollFrame',Handler.Config,'UIPanelScrollFrameTemplate' );
     self.ScrollFrame:SetPoint( 'TOPLEFT',3,-4 );
     self.ScrollFrame:SetPoint( 'BOTTOMRIGHT',-27,4 );
 
-    self.ScrollChild = CreateFrame( 'Frame',Parent.Name..'ScrollChild' );
+    self.ScrollChild = CreateFrame( 'Frame',Handler.Name..'ScrollChild' );
     self.ScrollFrame:SetScrollChild( self.ScrollChild );
     if( Addon:IsClassic() ) then
         self.ScrollChild:SetWidth( InterfaceOptionsFramePanelContainer:GetWidth()-18 );
@@ -18,12 +18,12 @@ Addon.GRID.RegisterGrid = function( self,Parent,Data,Handler )
     end
     self.ScrollChild:SetHeight( 20 );
 
-    self.Browser = CreateFrame( 'Frame',Parent.Name..'Browser',self.ScrollChild );
+    self.Browser = CreateFrame( 'Frame',Handler.Name..'Browser',self.ScrollChild );
     self.Browser:SetSize( self.ScrollChild:GetWidth(),self.ScrollChild:GetHeight() );
     self.Browser:SetPoint( 'topleft',self.ScrollChild,'topleft',0,0 );
 
     for i = 1, self.MaxColumns do
-        self.Browser[ i ] = CreateFrame( 'Frame',Parent.Name..'Browser'..i,self.Browser );
+        self.Browser[ i ] = CreateFrame( 'Frame',Handler.Name..'Browser'..i,self.Browser );
         self.Browser[ i ]:SetSize( self.Browser:GetWidth()/self.MaxColumns-25,self.Browser:GetHeight() );
         if( i == 1 ) then
             self.Browser[ i ]:SetPoint( 'topleft',self.Browser,'topleft',self.ColInset,0 );
@@ -38,7 +38,7 @@ Addon.GRID.RegisterGrid = function( self,Parent,Data,Handler )
     for VarName,VarData in Addon:Sort( Data ) do
         local Frame;
         if( VarData.Type == 'Toggle' ) then
-            Frame = self:AddToggle( VarData,Parent,Handler );
+            Frame = self:AddToggle( VarData,self.Browser[ Iterator ],Handler );
             if( not ColumnElements[ self.Browser[ Iterator ]:GetName() ] ) then
                 ColumnElements[ self.Browser[ Iterator ]:GetName() ] = {};
             end
@@ -59,7 +59,7 @@ Addon.GRID.RegisterGrid = function( self,Parent,Data,Handler )
                 Iterator = 1;
             end
         elseif( VarData.Type == 'Select' ) then
-            Frame = self:AddSelect( VarData,Parent,Handler );
+            Frame = self:AddSelect( VarData,self.Browser[ Iterator ],Handler );
             if( not ColumnElements[ self.Browser[ Iterator ]:GetName() ] ) then
                 ColumnElements[ self.Browser[ Iterator ]:GetName() ] = {};
             end
@@ -78,7 +78,7 @@ Addon.GRID.RegisterGrid = function( self,Parent,Data,Handler )
                 Iterator = 1;
             end
         elseif( VarData.Type == 'Range' ) then
-            Frame = self:AddRange( VarData,Parent,Handler );
+            Frame = self:AddRange( VarData,self.Browser[ Iterator ],Handler );
             if( not ColumnElements[ self.Browser[ Iterator ]:GetName() ] ) then
                 ColumnElements[ self.Browser[ Iterator ]:GetName() ] = {};
             end
@@ -134,7 +134,6 @@ Addon.GRID.AddRange = function( self,VarData,Parent,Handler )
 end
 
 Addon.GRID.AddToggle = function( self,VarData,Parent,Handler )
-Addon:Dump( VarData )
     local Key = string.lower( VarData.Name );
     local Frame = LibStub( 'Sushi-3.1' ).Check( Parent );
     Frame:SetChecked( Addon:Int2Bool( Handler:GetValue( Key ) ) );

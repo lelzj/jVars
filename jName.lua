@@ -12,55 +12,14 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return table
         Addon.NAME.GetDefaults = function( self )
-            local Defaults = {
-                findYourselfMode = GetCVar( 'findYourselfMode' ),
-                findyourselfanywhere = GetCVar( 'findyourselfanywhere' ),
-                NameplatePersonalShowAlways = GetCVar( 'NameplatePersonalShowAlways' ),
-                nameplateShowEnemyPets = GetCVar( 'nameplateShowEnemyPets' ),
-                nameplateShowFriends = GetCVar( 'nameplateShowFriends' ),
-                nameplateShowFriendlyGuardians = GetCVar( 'nameplateShowFriendlyGuardians' ),
-                nameplateTargetRadialPosition = GetCVar( 'nameplateTargetRadialPosition' ),
-                countdownForCooldowns = GetCVar( 'countdownForCooldowns' ),
-                NameplatePersonalShowInCombat = GetCVar( 'NameplatePersonalShowInCombat' ),
-                NameplatePersonalShowWithTarget = GetCVar( 'NameplatePersonalShowWithTarget' ),
-                nameplateShowEnemies = GetCVar( 'nameplateShowEnemies' ),
-                nameplateShowEnemyGuardians = GetCVar( 'nameplateShowEnemyGuardians' ),
-                nameplateShowEnemyTotems = GetCVar( 'nameplateShowEnemyTotems' ),
-                nameplateShowFriendlyNPCs = GetCVar( 'nameplateShowFriendlyNPCs' ),
-                nameplateShowFriendlyTotems = GetCVar( 'nameplateShowFriendlyTotems' ),
-                nameplateShowEnemyMinions = GetCVar( 'nameplateShowEnemyMinions' ),
-                nameplateShowFriendlyPets = GetCVar( 'nameplateShowFriendlyPets' ),
-                nameplateShowFriendlyMinions = GetCVar( 'nameplateShowFriendlyMinions' ),
-                nameplateShowAll = GetCVar( 'nameplateShowAll' ),
-                NameplatePersonalHideDelaySeconds = GetCVar( 'NameplatePersonalHideDelaySeconds' ),
-                NameplatePersonalHideDelayAlpha = GetCVar( 'NameplatePersonalHideDelayAlpha' ),
-                NamePlateVerticalScale = GetCVar( 'NamePlateVerticalScale' ),
-                NamePlateHorizontalScale = GetCVar( 'NamePlateHorizontalScale' ),
-                nameplateLargerScale = GetCVar( 'nameplateLargerScale' ),
-                nameplateMaxAlpha = GetCVar( 'nameplateMaxAlpha' ),
-                nameplateMaxDistance = GetCVar( 'nameplateMaxDistance' ),
-                nameplateSelectedScale = GetCVar( 'nameplateSelectedScale' ),
-                nameplateSelfScale = GetCVar( 'nameplateSelfScale' ),
-                nameplateMinScaleDistance = GetCVar( 'nameplateMinScaleDistance' ),
-                nameplateSelectedAlpha = GetCVar( 'nameplateSelectedAlpha' ),
-                nameplateSelfAlpha = GetCVar( 'nameplateSelfAlpha' ),
-                nameplateMaxScaleDistance = GetCVar( 'nameplateMaxScaleDistance' ),
-                statusText = GetCVar( 'statusText' ),
-                statusTextDisplay = GetCVar( 'statusTextDisplay' ),
-                predictedHealth = GetCVar( 'predictedHealth' ),
-                UnitNameGuildTitle = GetCVar( 'UnitNameGuildTitle' ),
-                ShowClassColorInNameplate = GetCVar( 'ShowClassColorInNameplate' ),
-                nameplateNotSelectedAlpha = GetCVar( 'nameplateNotSelectedAlpha' ) or 0,
-                nameplateRemovalAnimation = GetCVar( 'nameplateRemovalAnimation' ),
-                showtargetoftarget = GetCVar( 'showtargetoftarget' ),
-                nameplateMinAlphaDistance = GetCVar( 'nameplateMinAlphaDistance' ),
-                nameplateClassResourceTopInset = GetCVar( 'nameplateClassResourceTopInset' ),
-                nameplateOtherBottomInset = GetCVar( 'nameplateOtherBottomInset' ),
-                ShowClassColorInFriendlyNameplate = GetCVar( 'ShowClassColorInFriendlyNameplate' ),
-                nameplateMotionSpeed = GetCVar( 'nameplateMotionSpeed' ),
-            };
-            for i,v in pairs( Defaults ) do
-                Defaults[ string.lower( i ) ] = v;
+            local Defaults = {};
+            for VarName,_ in pairs( self.RegisteredVars ) do
+                Defaults[ string.lower( VarName ) ] = GetCVar( VarName );
+                if( Defaults[ string.lower( VarName ) ] == nil ) then
+                    Defaults[ string.lower( VarName ) ] = 0;
+                    self.RegisteredVars[ string.lower( VarName ) ].Flagged = true;
+                    print( AddonName..' Flagging '..VarName );
+                end
             end
             return Defaults;
         end
@@ -164,13 +123,12 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.NAME.CreateFrames = function( self )
-            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( 'jName' ),{
+            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self.Name ),{
                 type = 'group',
-                name = 'jName',
+                name = self.Name,
                 args = {},
             } );
-            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( 'jName' ),'jName','jVars' );
-            self.Config.Name = 'jName';
+            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self.Name ),self.Name,'jVars' );
         end
 
         --
@@ -201,6 +159,7 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.NAME.Init = function( self )
+            self.Name = 'jName';
             local RegisteredVars = {
                 countdownForCooldowns = {
                     Type = 'Toggle',
@@ -496,7 +455,15 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 ShowClassColorInFriendlyNameplate = {
                     Type = 'Toggle',
                 },
-                --[[
+                clampTargetNameplateToScreen = {
+                    Type = 'Toggle',
+                },
+                ColorNameplateNameBySelection = {
+                    Type = 'Toggle',
+                },
+                fullSizeFocusFrame = {
+                    Type = 'Toggle',
+                },
                 nameplateSelfAlpha = {
                     Type = 'Range',
                     KeyPairs = {
@@ -552,7 +519,7 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Step = 20,
-                }
+                },
                 nameplateSelfAlpha = {
                     Type = 'Range',
                     KeyPairs = {
@@ -595,18 +562,23 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 0.1,
                 },
-                ]]
+                showArenaEnemyCastbar = {
+                    Type = 'Toggle',
+                },
             };
             self.RegisteredVars = {};
             for VarName,VarData in pairs( RegisteredVars ) do
                 if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
                     VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
                     VarData.DisplayText = Addon.VARS.Dictionary[ string.lower( VarName ) ].DisplayText;
+                else
+                    VarData.Description = 'Info is currently unavailable';
+                    VarData.DisplayText = VarName;
                 end
                 VarData.Name = string.lower( VarName );
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
-            self.db = LibStub( 'AceDB-3.0' ):New( 'jName',{ profile = self:GetDefaults() },true );
+            self.db = LibStub( 'AceDB-3.0' ):New( self.Name,{ profile = self:GetDefaults() },true );
             if( not self.db ) then
                 return;
             end
@@ -622,9 +594,9 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.NAME.Run = function( self )
-            self.ScrollChild = Addon.GRID:RegisterGrid( self.Config,self.RegisteredVars,self );
+            self.ScrollChild = Addon.GRID:RegisterGrid( self.RegisteredVars,self );
 
-            self.FilterBox = CreateFrame( 'EditBox','jNameChatFilter',self.ScrollChild,'SearchBoxTemplate' );
+            self.FilterBox = CreateFrame( 'EditBox',self.Name..'ChatFilter',self.ScrollChild,'SearchBoxTemplate' );
             self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
             self.FilterBox:SetSize( 200,20 );
             self.FilterBox.clearButton:Hide();

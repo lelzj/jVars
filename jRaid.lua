@@ -12,31 +12,14 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return table
         Addon.RAID.GetDefaults = function( self )
-            local Defaults = {
-                raidGraphicsEnvironmentDetail = GetCVar( 'raidGraphicsEnvironmentDetail' ),
-                raidGraphicsGroundClutter = GetCVar( 'raidGraphicsGroundClutter' ),
-                raidGraphicsLiquidDetail = GetCVar( 'raidGraphicsLiquidDetail' ),
-                raidGraphicsParticleDensity = GetCVar( 'raidGraphicsParticleDensity' ),
-                RAIDgraphicsQuality = GetCVar( 'RAIDgraphicsQuality' ),
-                raidGraphicsShadowQuality = GetCVar( 'raidGraphicsShadowQuality' ),
-                RAIDweatherDensity = GetCVar( 'RAIDweatherDensity' ),
-                raidGraphicsSSAO = GetCVar( 'raidGraphicsSSAO' ),
-                RAIDfarclip = GetCVar( 'RAIDfarclip' ),
-                raidFramesWidth = GetCVar( 'raidFramesWidth' ),
-                raidFramesHeight = GetCVar( 'raidFramesHeight' ),
-                raidFramesHealthText = GetCVar( 'raidFramesHealthText' ),
-                raidOptionKeepGroupsTogether = GetCVar( 'raidOptionKeepGroupsTogether' ),
-                raidOptionDisplayPets = GetCVar( 'raidOptionDisplayPets' ),
-                raidOptionShowBorders = GetCVar( 'raidOptionShowBorders' ),
-                raidOptionSortMode = GetCVar( 'raidOptionSortMode' ),
-                raidOptionIsShown = GetCVar( 'raidOptionIsShown' ),
-                raidFramesDisplayClassColor = GetCVar( 'raidFramesDisplayClassColor' ),
-                raidFramesDisplayOnlyDispellableDebuffs = GetCVar( 'raidFramesDisplayOnlyDispellableDebuffs' ),
-                raidFramesPosition = GetCVar( 'raidFramesPosition' ),
-                useCompactPartyFrames = GetCVar( 'useCompactPartyFrames' ),
-            };
-            for i,v in pairs( Defaults ) do
-                Defaults[ string.lower( i ) ] = v;
+            local Defaults = {};
+            for VarName,_ in pairs( self.RegisteredVars ) do
+                Defaults[ string.lower( VarName ) ] = GetCVar( VarName );
+                if( Defaults[ string.lower( VarName ) ] == nil ) then
+                    Defaults[ string.lower( VarName ) ] = 0;
+                    self.RegisteredVars[ string.lower( VarName ) ].Flagged = true;
+                    print( AddonName..' Flagging '..VarName );
+                end
             end
             return Defaults;
         end
@@ -140,13 +123,12 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.RAID.CreateFrames = function( self )
-            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( 'jRaid' ),{
+            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self.Name ),{
                 type = 'group',
-                name = 'jRaid',
+                name = self.Name,
                 args = {},
             } );
-            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( 'jRaid' ),'jRaid','jVars' );
-            self.Config.Name = 'jRaid';
+            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self.Name ),self.Name,'jVars' );
         end
 
         --
@@ -177,6 +159,7 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.RAID.Init = function( self )
+        self.Name = 'jRaid';
             local RegisteredVars = {
                 RAIDfarclip = {
                     Type = 'Range',
@@ -193,9 +176,6 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 100,
                 },
                 raidFramesDisplayClassColor = {
-                    Type = 'Toggle',
-                },
-                raidFramesDisplayOnlyDispellableDebuffs = {
                     Type = 'Toggle',
                 },
                 raidFramesHealthText = {
@@ -387,17 +367,77 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 useCompactPartyFrames = {
                     Type = 'Toggle',
                 },
+                lfgNewPlayerFriendly = {
+                    Type = 'Toggle',
+                },
+                alwaysShowBlizzardGroupsTab = {
+                    Type = 'Toggle',
+                },
+                raidGraphicsSunshafts = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                showPartyBackground = {
+                    Type = 'Toggle',
+                },
+                calendarShowResets = {
+                    Type = 'Toggle',
+                },
+                enablePVPNotifyAFK = {
+                    Type = 'Toggle',
+                },
+                raidFramesDisplayPowerBars = {
+                    Type = 'Toggle',
+                },
+                raidOptionDisplayMainTankAndAssist = {
+                    Type = 'Toggle',
+                },
+                raidOptionLocked = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 'lock',
+                            Description = 'Locked',
+                        },
+                        {
+                            Value = 'unlock',
+                            Description = 'Unlocked',
+                        },
+                    },
+                },
+                showCastableBuffs = {
+                    Type = 'Toggle',
+                },
+                raidFramesDisplayOnlyDispellableDebuffs = {
+                    Type = 'Toggle',
+                },
+                showDispelDebuffs = {
+                    Type = 'Toggle',
+                },
             };
             self.RegisteredVars = {};
             for VarName,VarData in pairs( RegisteredVars ) do
                 if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
                     VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
                     VarData.DisplayText = Addon.VARS.Dictionary[ string.lower( VarName ) ].DisplayText;
+                else
+                    VarData.Description = 'Info is currently unavailable';
+                    VarData.DisplayText = VarName;
                 end
                 VarData.Name = string.lower( VarName );
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
-            self.db = LibStub( 'AceDB-3.0' ):New( 'jRaid',{ profile = self:GetDefaults() },true );
+            self.db = LibStub( 'AceDB-3.0' ):New( self.Name,{ profile = self:GetDefaults() },true );
             if( not self.db ) then
                 return;
             end
@@ -413,9 +453,9 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.RAID.Run = function( self )
-            self.ScrollChild = Addon.GRID:RegisterGrid( self.Config,self.RegisteredVars,self );
+            self.ScrollChild = Addon.GRID:RegisterGrid( self.RegisteredVars,self );
 
-            self.FilterBox = CreateFrame( 'EditBox','jRaidFilter',self.ScrollChild,'SearchBoxTemplate' );
+            self.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',self.ScrollChild,'SearchBoxTemplate' );
             self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
             self.FilterBox:SetSize( 200,20 );
             self.FilterBox.clearButton:Hide();

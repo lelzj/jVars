@@ -1,17 +1,17 @@
 local _, Addon = ...;
 
-Addon.SOUND = CreateFrame( 'Frame' );
-Addon.SOUND:RegisterEvent( 'ADDON_LOADED' )
-Addon.SOUND.FistColInset = 15;
-Addon.SOUND.RegisteredFrames = {};
-Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
+Addon.SOCIAL = CreateFrame( 'Frame' );
+Addon.SOCIAL:RegisterEvent( 'ADDON_LOADED' )
+Addon.SOCIAL.FistColInset = 15;
+Addon.SOCIAL.RegisteredFrames = {};
+Addon.SOCIAL:SetScript( 'OnEvent',function( self,Event,AddonName )
     if( AddonName == 'jVars' ) then
 
         --
         --  Get module defaults
         --
         --  @return table
-        Addon.SOUND.GetDefaults = function( self )
+        Addon.SOCIAL.GetDefaults = function( self )
             local Defaults = {};
             for VarName,_ in pairs( self.RegisteredVars ) do
                 Defaults[ string.lower( VarName ) ] = GetCVar( VarName );
@@ -30,7 +30,7 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  string  Index
         --  @param  string  Value
         --  @return void
-        Addon.SOUND.SetValue = function( self,Index,Value )
+        Addon.SOCIAL.SetValue = function( self,Index,Value )
             if( self.RegisteredVars[ string.lower( Index ) ] ) then
                 if( self.RegisteredVars[ string.lower( Index ) ].Type == 'Toggle' ) then
                     if( type( Value ) == 'boolean' ) then
@@ -50,13 +50,13 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @param  string  Index
         --  @return mixed
-        Addon.SOUND.GetValue = function( self,Index )
+        Addon.SOCIAL.GetValue = function( self,Index )
             if( self.persistence[ string.lower( Index ) ] ~= nil ) then
                 return self.persistence[ string.lower( Index ) ];
             end
         end
 
-        Addon.SOUND.FrameRegister = function( self,FrameData )
+        Addon.SOCIAL.FrameRegister = function( self,FrameData )
             local Found = false;
             for i,MetaData in pairs( self.RegisteredFrames ) do
                 if( MetaData.Name == FrameData.Name ) then
@@ -72,19 +72,19 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        Addon.SOUND.ShowAll = function( self )
+        Addon.SOCIAL.ShowAll = function( self )
             for i,FrameData in pairs( self.RegisteredFrames ) do
                 FrameData.Frame:Show();
             end
         end
 
-        Addon.SOUND.HideAll = function( self )
+        Addon.SOCIAL.HideAll = function( self )
             for i,FrameData in pairs( self.RegisteredFrames ) do
                 FrameData.Frame:Hide();
             end
         end
 
-        Addon.SOUND.GetRegisteredFrame = function( self,Name )
+        Addon.SOCIAL.GetRegisteredFrame = function( self,Name )
             for i,FrameData in pairs( self.RegisteredFrames ) do
                 if( FrameData.Name == Name ) then
                     return FrameData.Frame;
@@ -92,7 +92,7 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        Addon.SOUND.Filter = function( self,SearchQuery )
+        Addon.SOCIAL.Filter = function( self,SearchQuery )
             if( not ( string.len( SearchQuery ) >= 3 ) ) then
                 return;
             end
@@ -122,7 +122,7 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  Create module config frames
         --
         --  @return void
-        Addon.SOUND.CreateFrames = function( self )
+        Addon.SOCIAL.CreateFrames = function( self )
             LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self.Name ),{
                 type = 'group',
                 name = self.Name,
@@ -135,128 +135,223 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  Module refresh
         --
         --  @return void
-        Addon.SOUND.Refresh = function( self )
-            if( not Addon.SOUND.persistence ) then
+        Addon.SOCIAL.Refresh = function( self )
+            if( not Addon.SOCIAL.persistence ) then
                 return;
             end
+
+            -- Set environment CVars to DB values
             for VarName,VarData in pairs( self.RegisteredVars ) do
                 if( self.persistence[ string.lower( VarName ) ] ~= nil ) then
                     SetCVar( string.lower( VarName ),self.persistence[ string.lower( VarName ) ] );
                 end
             end
+
+            -- Color chat names
+            self:ColorNames();
         end
 
         --
         --  Module reset
         --
         --  @return void
-        Addon.SOUND.ResetDb = function( self )
+        Addon.SOCIAL.ResetDb = function( self )
             self.db:ResetDB();
+        end
+
+        Addon.SOCIAL.ColorNames = function( self )
+            if( self.persistence[ string.lower( 'colorChatNamesByClass' ) ] ~= nil ) then
+                if( self.persistence[ string.lower( 'colorChatNamesByClass' ) ] ) then
+                    SetCVar( 'chatClassColorOverride',0 );
+                else
+                    SetCVar( 'chatClassColorOverride',1 );
+                end
+            end
+        end
+
+        Addon.SOCIAL.FillSpeechOptions = function( self )
+            local SelectedValue = tonumber( GetCVar( 'remoteTextToSpeechVoice' ) );
+            for Index,Voice in ipairs( C_VoiceChat.GetRemoteTtsVoices() ) do
+                local Row = {
+                    Value=Voice.voiceID,
+                    Description=VOICE_GENERIC_FORMAT:format( Voice.voiceID ),
+                };
+                table.insert( self.RegisteredVars[ string.lower( 'remoteTextToSpeechVoice' ) ].KeyPairs,Row );
+            end
         end
 
         --
         --  Module init
         --
         --  @return void
-        Addon.SOUND.Init = function( self )
-            self.Name = 'jSound';
+        Addon.SOCIAL.Init = function( self )
+            self.Name = 'jSocial';
             local RegisteredVars = {
-                Sound_EnableSoundWhenGameIsInBG = {
+                colorChatNamesByClass = {
                     Type = 'Toggle',
                 },
-                Sound_EnableEmoteSounds = {
+                guildMemberNotify = {
                     Type = 'Toggle',
                 },
-                Sound_EnablePetSounds = {
+                profanityfilter = {
                     Type = 'Toggle',
                 },
-                FootstepSounds = {
+                showToastBroadcast = {
                     Type = 'Toggle',
                 },
-                Sound_EnableErrorSpeech = {
+                showToastFriendRequest = {
                     Type = 'Toggle',
                 },
-                Sound_EnableMusic = {
+                showToastWindow = {
                     Type = 'Toggle',
                 },
-                Sound_EnableReverb = {
+                showToastOffline = {
                     Type = 'Toggle',
                 },
-                Sound_ZoneMusicNoDelay = {
+                showToastOnline = {
                     Type = 'Toggle',
                 },
-                Sound_EnableAllSound = {
+                spamFilter = {
                     Type = 'Toggle',
                 },
-                Sound_AmbienceVolume = {
-                    Type = 'Range',
+                showLootSpam = {
+                    Type = 'Toggle',
+                },
+                autoCompleteResortNamesOnRecency = {
+                    Type = 'Toggle',
+                },
+                autoCompleteUseContext = {
+                    Type = 'Toggle',
+                },
+                autoCompleteWhenEditingFromCenter = {
+                    Type = 'Toggle',
+                },
+                blockChannelInvites = {
+                    Type = 'Toggle',
+                },
+                chatBubbles = {
+                    Type = 'Toggle',
+                },
+                chatBubblesParty = {
+                    Type = 'Toggle',
+                },
+                chatMouseScroll = {
+                    Type = 'Toggle',
+                },
+                chatStyle = {
+                    Type = 'Select',
                     KeyPairs = {
-                        Low = {
-                            Value = 0.0,
-                            Description = 'Low',
+                        {
+                            Value = 'classic',
+                            Description = 'Classic',
                         },
-                        High = {
-                            Value = 1.0,
-                            Description = 'High',
+                        {
+                            Value = 'im',
+                            Description = 'IM',
                         },
                     },
-                    Step = 0.1,
                 },
-                Sound_DialogVolume = {
-                    Type = 'Range',
+                friendsSmallView = {
+                    Type = 'Toggle',
+                },
+                blockTrades = {
+                    Type = 'Toggle',
+                },
+                autojoinBGVoice = {
+                    Type = 'Toggle',
+                },
+                autojoinPartyVoice = {
+                    Type = 'Toggle',
+                },
+                friendsViewButtons = {
+                    Type = 'Toggle',
+                },
+                guildRosterView = {
+                    Type = 'Select',
                     KeyPairs = {
-                        Low = {
-                            Value = 0.0,
-                            Description = 'Low',
+                        {
+                            Value = 'playerStatus',
+                            Description = 'View Player Status',
                         },
-                        High = {
-                            Value = 1.0,
-                            Description = 'High',
+                        {
+                            Value = 'guildStatus',
+                            Description = 'View Guild Status',
+                        },
+                        {
+                            Value = 'weeklyxp',
+                            Description = 'View Guild Status (weekly)',
+                        },
+                        {
+                            Value = 'totalxp',
+                            Description = 'View Guild Status',
+                        },
+                        {
+                            Value = 'guildStatus',
+                            Description = 'View Guild Status (total)',
+                        },
+                        {
+                            Value = 'achievement',
+                            Description = 'View Achievement Points',
+                        },
+                        {
+                            Value = 'tradeskill',
+                            Description = 'View Professions',
                         },
                     },
-                    Step = 0.1,
                 },
-                Sound_MasterVolume = {
-                    Type = 'Range',
+                --[[
+                lastTalkedToGM = {
+                    Type = 'Edit',
+                },
+                ]]
+                lfgAutoFill = {
+                    Type = 'Toggle',
+                },
+                lfgAutoJoin = {
+                    Type = 'Toggle',
+                },
+                --[[
+                lfgSelectedRoles = {
+                },
+                ]]
+                PushToTalkSound = {
+                    Type = 'Toggle',
+                },
+                remoteTextToSpeech = {
+                    Type = 'Toggle',
+                },
+                remoteTextToSpeechVoice = {
+                    Type = 'Select',
+                    KeyPairs = {},
+                },
+                removeChatDelay = {
+                    Type = 'Toggle',
+                },
+                showToastClubInvitation = {
+                    Type = 'Toggle',
+                },
+                showToastConversation = {
+                    Type = 'Toggle',
+                },
+                textToSpeech = {
+                    Type = 'Toggle',
+                },
+                whisperMode = {
+                    Type = 'Select',
                     KeyPairs = {
-                        Low = {
-                            Value = 0.0,
-                            Description = 'Low',
+                        {
+                            Value = 'popout',
+                            Description = 'Pop Out',
                         },
-                        High = {
-                            Value = 1.0,
-                            Description = 'High',
+                        {
+                            Value = 'inline',
+                            Description = 'Inline',
+                        },
+                        {
+                            Value = 'popout_and_inline',
+                            Description = 'Pop Out & Inline',
                         },
                     },
-                    Step = 0.1,
-                },
-                Sound_MusicVolume = {
-                    Type = 'Range',
-                    KeyPairs = {
-                        Low = {
-                            Value = 0.0,
-                            Description = 'Low',
-                        },
-                        High = {
-                            Value = 1.0,
-                            Description = 'High',
-                        },
-                    },
-                    Step = 0.1,
-                },
-                Sound_SFXVolume = {
-                    Type = 'Range',
-                    KeyPairs = {
-                        Low = {
-                            Value = 0.0,
-                            Description = 'Low',
-                        },
-                        High = {
-                            Value = 1.0,
-                            Description = 'High',
-                        },
-                    },
-                    Step = 0.1,
                 },
             };
             self.RegisteredVars = {};
@@ -280,23 +375,26 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( not self.persistence ) then
                 return;
             end
+
+            -- Text to speech options
+            self:FillSpeechOptions();
         end
 
         --
         --  Module run
         --
         --  @return void
-        Addon.SOUND.Run = function( self )
+        Addon.SOCIAL.Run = function( self )
             self.ScrollChild = Addon.GRID:RegisterGrid( self.RegisteredVars,self );
 
-            self.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',self.ScrollChild,'SearchBoxTemplate' );
+            self.FilterBox = CreateFrame( 'EditBox',self.Name..'ChatFilter',self.ScrollChild,'SearchBoxTemplate' );
             self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
             self.FilterBox:SetSize( 200,20 );
             self.FilterBox.clearButton:Hide();
             self.FilterBox:ClearFocus();
             self.FilterBox:SetAutoFocus( false );
             self.FilterBox:SetScript( 'OnEscapePressed',function( self )
-                Addon.SOUND:ShowAll();
+                Addon.SOCIAL:ShowAll();
                 self:SetAutoFocus( false );
                 if( self.Instructions ) then
                     self.Instructions:Show();
@@ -312,15 +410,15 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
                 self:HighlightText();
             end );
             self.FilterBox:SetScript( 'OnTextChanged',function( self )
-                Addon.SOUND:ShowAll();
-                Addon.SOUND:Filter( self:GetText(),Addon.SOUND );
+                Addon.SOCIAL:ShowAll();
+                Addon.SOCIAL:Filter( self:GetText(),Addon.SOCIAL );
             end );
         end
 
-        Addon.SOUND:Init();
-        Addon.SOUND:CreateFrames();
-        Addon.SOUND:Refresh();
-        Addon.SOUND:Run();
-        Addon.SOUND:UnregisterEvent( 'ADDON_LOADED' );
+        Addon.SOCIAL:Init();
+        Addon.SOCIAL:CreateFrames();
+        Addon.SOCIAL:Refresh();
+        Addon.SOCIAL:Run();
+        Addon.SOCIAL:UnregisterEvent( 'ADDON_LOADED' );
     end
 end );

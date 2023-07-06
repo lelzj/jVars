@@ -12,44 +12,14 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return table
         Addon.SYSTEM.GetDefaults = function( self )
-            local Defaults = {
-                violencelevel = GetCVar( 'violencelevel' ),
-                autoSelfCast = GetCVar( 'autoSelfCast' ),
-                autoClearAFK = GetCVar( 'autoClearAFK' ),
-                projectedtextures = GetCVar( 'projectedtextures' ),
-                emphasizeMySpellEffects = GetCVar( 'emphasizeMySpellEffects' ),
-                ffxDeath = GetCVar( 'ffxDeath' ),
-                groundEffectDensity = GetCVar( 'groundEffectDensity' ),
-                graphicsEnvironmentDetail = GetCVar( 'graphicsEnvironmentDetail' ),
-                graphicsGroundClutter = GetCVar( 'graphicsGroundClutter' ),
-                graphicsLiquidDetail = GetCVar( 'graphicsLiquidDetail' ),
-                particleDensity = GetCVar( 'particleDensity' ),
-                graphicsQuality = GetCVar( 'graphicsQuality' ),
-                cameraDistanceMaxZoomFactor = GetCVar( 'cameraDistanceMaxZoomFactor' ),
-                farclip = GetCVar( 'farclip' ),
-                SpellQueueWindow = GetCVar( 'SpellQueueWindow' ),
-                cameraSmoothStyle = GetCVar( 'cameraSmoothStyle' ),
-                deselectOnClick = GetCVar( 'deselectOnClick' ),
-                ffxGlow = GetCVar( 'ffxGlow' ),
-                graphicsShadowQuality = GetCVar( 'graphicsShadowQuality' ),
-                weatherDensity = GetCVar( 'weatherDensity' ),
-                SkyCloudLOD = GetCVar( 'SkyCloudLOD' ),
-                graphicsSSAO = GetCVar( 'graphicsSSAO' ),
-                doNotFlashLowHealthWarning = GetCVar( 'doNotFlashLowHealthWarning' ),
-                showTutorials = GetCVar( 'showTutorials' ),
-                autoLootDefault = GetCVar( 'autoLootDefault' ),
-                screenEdgeFlash = GetCVar( 'screenEdgeFlash' ),
-                RenderScale = GetCVar( 'RenderScale' ),
-                uiScale = GetCVar( 'uiScale' ),
-                useUiScale = GetCVar( 'useUiScale' ),
-                interactOnLeftClick = GetCVar( 'interactOnLeftClick' ),
-                lootUnderMouse = GetCVar( 'raidFramesDisplayOnlyDispellableDebuffs' ),
-                instantQuestText = GetCVar( 'instantQuestText' ),
-                timeMgrUseLocalTime = GetCVar( 'timeMgrUseLocalTime' ),
-                consolidateBuffs = GetCVar( 'consolidateBuffs' ),
-            };
-            for i,v in pairs( Defaults ) do
-                Defaults[ string.lower( i ) ] = v;
+            local Defaults = {};
+            for VarName,_ in pairs( self.RegisteredVars ) do
+                Defaults[ string.lower( VarName ) ] = GetCVar( VarName );
+                if( Defaults[ string.lower( VarName ) ] == nil ) then
+                    Defaults[ string.lower( VarName ) ] = 0;
+                    self.RegisteredVars[ string.lower( VarName ) ].Flagged = true;
+                    print( AddonName..' Flagging '..VarName );
+                end
             end
             return Defaults;
         end
@@ -152,13 +122,12 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.SYSTEM.CreateFrames = function( self )
-            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( 'jSystem' ),{
+            LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self.Name ),{
                 type = 'group',
-                name = 'jSystem',
+                name = self.Name,
                 args = {},
             } );
-            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( 'jSystem' ),'jSystem','jVars' );
-            self.Config.Name = 'jSystem';
+            self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self.Name ),self.Name,'jVars' );
         end
 
         --
@@ -189,6 +158,7 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.SYSTEM.Init = function( self )
+            self.Name = 'jSystem';
             local RegisteredVars = {
                 equipmentManager = {
                     Type = 'Toggle',
@@ -486,17 +456,260 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                 },
+                useIPv6 = {
+                    Type = 'Toggle',
+                },
+                xpBarText = {
+                    Type = 'Toggle',
+                },
+                synchronizeMacros = {
+                    Type = 'Toggle',
+                },
+                synchronizeSettings = {
+                    Type = 'Toggle',
+                },
+                showfootprintparticles = {
+                    Type = 'Toggle',
+                },
+                speechToText = {
+                    Type = 'Toggle',
+                },
+                synchronizeConfig = {
+                    Type = 'Toggle',
+                },
+                pathSmoothing = {
+                    Type = 'Toggle',
+                },
+                secureAbilityToggle = {
+                    Type = 'Toggle',
+                },
+                maxFPSLoading = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 200,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 10,
+                },
+                maxFPSBk = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 200,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 10,
+                },
+                displayFreeBagSlots = {
+                    Type = 'Toggle',
+                },
+                maxFPS = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 200,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 10,
+                },
+                cursorSizePreferred = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = -1,
+                            Description = 'Determine based on system/monitor dpi',
+                        },
+                        {
+                            Value = 0,
+                            Description = '32x32',
+                        },
+                        {
+                            Value = 1,
+                            Description = '48x48',
+                        },
+                        {
+                            Value = 2,
+                            Description = '64x64',
+                        },
+                        {
+                            Value = 3,
+                            Description = '96x96',
+                        },
+                        {
+                            Value = 4,
+                            Description = '128x128',
+                        },
+                    },
+                },
+                cameraCustomViewSmoothing = {
+                    Type = 'Toggle',
+                },
+                CameraKeepCharacterCentered = {
+                    Type = 'Toggle',
+                },
+                cameraPivot = {
+                    Type = 'Toggle',
+                },
+                cameraTerrainTilt = {
+                    Type = 'Toggle',
+                },
+                ClipCursor = {
+                    Type = 'Toggle',
+                },
+                colorblindMode = {
+                    Type = 'Toggle',
+                },
+                cameraBobbingSmoothSpeed = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                },
+                buffDurations = {
+                    Type = 'Toggle',
+                },
+                calendarShowBattlegrounds = {
+                    Type = 'Toggle',
+                },
+                calendarShowDarkmoon = {
+                    Type = 'Toggle',
+                },
+                calendarShowHolidays = {
+                    Type = 'Toggle',
+                },
+                cameraBobbing = {
+                    Type = 'Toggle',
+                },
+                Brightness = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 100,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 10,
+                },
+                autoLootRate = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 50,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 300,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 10,
+                },
+                autoOpenLootHistory = {
+                    Type = 'Toggle',
+                },
+                breakUpLargeNumbers = {
+                    Type = 'Toggle',
+                },
+                ActionButtonUseKeyDown = {
+                    Type = 'Toggle',
+                },
+                advancedCombatLogging = {
+                    Type = 'Toggle',
+                },
+                advancedWatchFrame = {
+                    Type = 'Toggle',
+                },
+                autoDismount = {
+                    Type = 'Toggle',
+                },
+                autoDismountFlying = {
+                    Type = 'Toggle',
+                },
+                autoInteract = {
+                    Type = 'Toggle',
+                },
+                cameraFov = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 50,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 90,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 10,
+                },
+                previewTalents = {
+                    Type = 'Toggle',
+                },
+                graphicsSunshafts = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                },
+                groundEffectAnimation = {
+                    Type = 'Toggle',
+                },
+                showKeyring = {
+                    Type = 'Toggle',
+                },
+                showNewbieTips = {
+                    Type = 'Toggle',
+                },
             };
             self.RegisteredVars = {};
             for VarName,VarData in pairs( RegisteredVars ) do
                 if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
                     VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
                     VarData.DisplayText = Addon.VARS.Dictionary[ string.lower( VarName ) ].DisplayText;
+                else
+                    VarData.Description = 'Info is currently unavailable';
+                    VarData.DisplayText = VarName;
                 end
                 VarData.Name = string.lower( VarName );
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
-            self.db = LibStub( 'AceDB-3.0' ):New( 'jSystem',{ profile = self:GetDefaults() },true );
+            self.db = LibStub( 'AceDB-3.0' ):New( self.Name,{ profile = self:GetDefaults() },true );
             if( not self.db ) then
                 return;
             end
@@ -512,9 +725,9 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.SYSTEM.Run = function( self )
-            self.ScrollChild = Addon.GRID:RegisterGrid( self.Config,self.RegisteredVars,self );
+            self.ScrollChild = Addon.GRID:RegisterGrid( self.RegisteredVars,self );
 
-            self.FilterBox = CreateFrame( 'EditBox','jSystemFilter',self.ScrollChild,'SearchBoxTemplate' );
+            self.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',self.ScrollChild,'SearchBoxTemplate' );
             self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
             self.FilterBox:SetSize( 200,20 );
             self.FilterBox.clearButton:Hide();

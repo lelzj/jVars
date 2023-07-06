@@ -7,7 +7,7 @@
 ## X-Website: https://github.com/jadissa/jVars
 
 ## DefaultState: enabled
-## SavedVariables: jVars,jSystem,jActionBar,jName,jRaid,jMap,jChat,jSound
+## SavedVariables: jVars,jSystem,jActionBar,jDebug,jName,jRaid,jMap,jSocial,jSound
 
 #@retail@
 ## Interface: 90001
