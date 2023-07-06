@@ -384,10 +384,10 @@ Addon.SOCIAL:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.SOCIAL.Run = function( self )
-            self.ScrollChild = Addon.GRID:RegisterGrid( self.RegisteredVars,self );
+            Addon.GRID:RegisterGrid( self.RegisteredVars,self );
 
-            self.FilterBox = CreateFrame( 'EditBox',self.Name..'ChatFilter',self.ScrollChild,'SearchBoxTemplate' );
-            self.FilterBox:SetPoint( 'topleft',self.ScrollChild,'topleft',self.FistColInset,-35 );
+            self.FilterBox = CreateFrame( 'EditBox',self.Name..'ChatFilter',self.Config,'SearchBoxTemplate' );
+            self.FilterBox:SetPoint( 'topleft',self.Config,'topleft',self.FistColInset,-35 );
             self.FilterBox:SetSize( 200,20 );
             self.FilterBox.clearButton:Hide();
             self.FilterBox:ClearFocus();

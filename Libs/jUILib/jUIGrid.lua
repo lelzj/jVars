@@ -6,8 +6,8 @@ Addon.GRID.ColInset = 10;
 
 Addon.GRID.RegisterGrid = function( self,Data,Handler )
     self.ScrollFrame = CreateFrame( 'ScrollFrame',Handler.Name..'ScrollFrame',Handler.Config,'UIPanelScrollFrameTemplate' );
-    self.ScrollFrame:SetPoint( 'TOPLEFT',3,-4 );
-    self.ScrollFrame:SetPoint( 'BOTTOMRIGHT',-27,4 );
+    self.ScrollFrame:SetPoint( 'topleft',Handler.Config,'topleft',5,-70 );
+    self.ScrollFrame:SetPoint( 'bottomright',Handler.Config,'bottomright',-27,5 );
 
     self.ScrollChild = CreateFrame( 'Frame',Handler.Name..'ScrollChild' );
     self.ScrollFrame:SetScrollChild( self.ScrollChild );
