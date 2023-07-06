@@ -38,7 +38,7 @@ Addon.GRID.RegisterGrid = function( self,Parent,Data,Handler )
     for VarName,VarData in Addon:Sort( Data ) do
         local Frame;
         if( VarData.Type == 'Toggle' ) then
-            Frame = self:AddToggle( VarName,VarData.Description,Parent,Handler );
+            Frame = self:AddToggle( VarData,Parent,Handler );
             if( not ColumnElements[ self.Browser[ Iterator ]:GetName() ] ) then
                 ColumnElements[ self.Browser[ Iterator ]:GetName() ] = {};
             end
@@ -59,7 +59,7 @@ Addon.GRID.RegisterGrid = function( self,Parent,Data,Handler )
                 Iterator = 1;
             end
         elseif( VarData.Type == 'Select' ) then
-            Frame = self:AddSelect( VarName,VarData.Description,VarData.KeyPairs,Parent,Handler );
+            Frame = self:AddSelect( VarData,Parent,Handler );
             if( not ColumnElements[ self.Browser[ Iterator ]:GetName() ] ) then
                 ColumnElements[ self.Browser[ Iterator ]:GetName() ] = {};
             end
@@ -78,7 +78,7 @@ Addon.GRID.RegisterGrid = function( self,Parent,Data,Handler )
                 Iterator = 1;
             end
         elseif( VarData.Type == 'Range' ) then
-            Frame = self:AddRange( VarName,VarData.Description,VarData.Step,VarData.KeyPairs,Parent,Handler );
+            Frame = self:AddRange( VarData,Parent,Handler );
             if( not ColumnElements[ self.Browser[ Iterator ]:GetName() ] ) then
                 ColumnElements[ self.Browser[ Iterator ]:GetName() ] = {};
             end
@@ -111,21 +111,21 @@ Addon.GRID.RegisterGrid = function( self,Parent,Data,Handler )
     return self.ScrollChild;
 end
 
-Addon.GRID.AddRange = function( self,Name,Tip,Step,Range,Parent,Handler )
-    Name = string.lower( Name );
+Addon.GRID.AddRange = function( self,VarData,Parent,Handler )
+    local Key = string.lower( VarData.Name );
     local Frame = LibStub( 'Sushi-3.1' ).Slider( Parent );
-    Frame:SetTip( Name,Tip );
-    Frame:SetValue( Handler:GetValue( Name ) );
-    Frame.Edit:SetValue( Addon:SliderRound( Handler:GetValue( Name ),Step ) );
+    Frame:SetTip( VarData.DisplayText,VarData.Description );
+    Frame:SetValue( Handler:GetValue( Key ) );
+    Frame.Edit:SetValue( Addon:SliderRound( Handler:GetValue( Key ),VarData.Step ) );
     Frame:SetRange( 
-        Range.Option1.Value,
-        Range.Option2.Value,
-        Range.Option1.Description,
-        Range.Option2.Description 
+        VarData.KeyPairs.Low.Value,
+        VarData.KeyPairs.High.Value,
+        VarData.KeyPairs.Low.Description,
+        VarData.KeyPairs.High.Description 
     );
-    Frame:SetStep( Step );
-    Frame:SetLabel( Name );
-    Frame.keyValue = Name;
+    Frame:SetStep( VarData.Step );
+    Frame:SetLabel( VarData.DisplayText );
+    Frame.keyValue = Key;
     Frame:SetSmall( true );
     Frame:SetCall( 'OnValue',function( self )
         Handler:SetValue( self.keyValue,self:GetValue() );
@@ -133,34 +133,35 @@ Addon.GRID.AddRange = function( self,Name,Tip,Step,Range,Parent,Handler )
     return Frame;
 end
 
-Addon.GRID.AddToggle = function( self,Name,Tip,Parent,Handler )
-    Name = string.lower( Name );
+Addon.GRID.AddToggle = function( self,VarData,Parent,Handler )
+Addon:Dump( VarData )
+    local Key = string.lower( VarData.Name );
     local Frame = LibStub( 'Sushi-3.1' ).Check( Parent );
-    Frame:SetChecked( Addon:Int2Bool( Handler:GetValue( Name ) ) );
-    Frame:SetTip( Name,Tip );
-    Frame:SetLabel( Name );
+    Frame:SetChecked( Addon:Int2Bool( Handler:GetValue( Key ) ) );
+    Frame:SetTip( VarData.DisplayText,VarData.Description );
+    Frame:SetLabel( VarData.DisplayText );
     Frame:SetSmall( true );
-    Frame.keyValue = Name;
+    Frame.keyValue = Key;
     Frame:SetCall( 'OnClick',function( self )
         Handler:SetValue( self.keyValue,Addon:BoolToInt( self:GetValue() ) );
     end );
     return Frame;
 end
 
-Addon.GRID.AddSelect = function( self,Name,Tip,Choices,Parent,Handler )
-    Name = string.lower( Name );
+Addon.GRID.AddSelect = function( self,VarData,Parent,Handler )
+    local Key = string.lower( VarData.Name );
     local Frame = LibStub( 'Sushi-3.1' ).DropChoice( Parent );
-    Frame:SetValue( Handler:GetValue( Name ) );
-    Frame:SetTip( Name,Tip );
-    Frame:SetLabel( Name );
+    Frame:SetValue( Handler:GetValue( Key ) );
+    Frame:SetTip( VarData.DisplayText,VarData.Description );
+    Frame:SetLabel( VarData.DisplayText );
     Frame:SetSmall( true );
-    Frame.keyValue = Name;
-    if( tonumber( Handler:GetValue( Name ) ) ~= nil ) then
-        Frame:SetValue( tonumber( Handler:GetValue( Name ) ) );
+    Frame.keyValue = Key;
+    if( tonumber( Handler:GetValue( Key ) ) ~= nil ) then
+        Frame:SetValue( tonumber( Handler:GetValue( Key ) ) );
     else
-        Frame:SetValue( Handler:GetValue( Name ) );
+        Frame:SetValue( Handler:GetValue( Key ) );
     end
-    for i,v in pairs( Choices ) do
+    for i,v in pairs( VarData.KeyPairs ) do
         Frame:Add( v.Value,v.Description );
     end
     Frame:SetCall( 'OnInput',function( self )

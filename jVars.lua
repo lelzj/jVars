@@ -90,11 +90,13 @@ Addon.VARS:SetScript( 'OnEvent',function( self,Event,AddonName )
         Addon.VARS.Init = function( self )
             self.Dictionary,self.Modules = {},{};
             for i,Row in pairs( C_Console.GetAllCommands() ) do
+                Row.DisplayText = Row.command;
                 Row.command = string.lower( Row.command );
                 local CurrentValue,DefaultValue,AccountWide,PerCharacter,_,Secure,ReadOnly = GetCVarInfo( Row.command );
                 self.Dictionary[ Row.command ] = {
                     CurrentValue    = CurrentValue,
                     DefaultValue    = DefaultValue,
+                    DisplayText     = Row.DisplayText,
                     ReadOnly        = ReadOnly,
                     Secure          = Secure,
                     Name            = Row.command,

@@ -211,15 +211,15 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 findYourselfMode = {
                     Type = 'Select',
                     KeyPairs = {
-                        Option1 = {
+                        {
                             Value = 0,
                             Description = 'Circle',
                         },
-                        Option2 = {
+                        {
                             Value = 1,
                             Description = 'Circle & Outline',
                         },
-                        Option3 = {
+                        {
                             Value = 2,
                             Description = 'Outline',
                         },
@@ -231,11 +231,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateClassResourceTopInset = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -245,11 +245,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 NamePlateHorizontalScale = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -259,11 +259,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateLargerScale = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 2.0,
                             Description = 'High',
                         },
@@ -273,11 +273,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateMaxScaleDistance = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 20,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 60,
                             Description = 'High',
                         },
@@ -288,11 +288,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateMotionSpeed = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -304,11 +304,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 NamePlateVerticalScale = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -318,11 +318,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 NameplatePersonalHideDelaySeconds = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 3,
                             Description = 'High',
                         },
@@ -332,11 +332,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateSelectedScale = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 2.0,
                             Description = 'High',
                         },
@@ -346,11 +346,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateNotSelectedAlpha = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -360,11 +360,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateMaxDistance = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 20,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 60,
                             Description = 'High',
                         },
@@ -374,11 +374,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateSelfScale = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 2.0,
                             Description = 'High',
                         },
@@ -418,15 +418,15 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateTargetRadialPosition = {
                     Type = 'Select',
                     KeyPairs = {
-                        Option1 = {
+                        {
                             Value = 0,
                             Description = 'None',
                         },
-                        Option2 = {
+                        {
                             Value = 1,
                             Description = 'Target Only',
                         },
-                        Option3 = {
+                        {
                             Value = 3,
                             Description = 'All In Combat',
                         },
@@ -435,15 +435,15 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 NameplatePersonalShowWithTarget = {
                     Type = 'Select',
                     KeyPairs = {
-                        Option1 = {
+                        {
                             Value = 0,
                             Description = 'None',
                         },
-                        Option2 = {
+                        {
                             Value = 1,
                             Description = 'Hostile Target',
                         },
-                        Option3 = {
+                        {
                             Value = 2,
                             Description = 'Any Target',
                         },
@@ -467,15 +467,15 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 statusTextDisplay = {
                     Type = 'Select',
                     KeyPairs = {
-                        Option1 = {
+                        {
                             Value = 'NONE',
                             Description = 'None',
                         },
-                        Option2 = {
+                        {
                             Value = 'NUMERIC',
                             Description = 'Numeric',
                         },
-                        Option3 = {
+                        {
                             Value = 'PERCENT',
                             Description = 'Percent',
                         },
@@ -500,11 +500,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateSelfAlpha = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -514,11 +514,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateOtherBottomInset = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -528,11 +528,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateMinAlphaDistance = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 20,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 60,
                             Description = 'High',
                         },
@@ -542,11 +542,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateMinScaleDistance = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 20,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 60,
                             Description = 'High',
                         },
@@ -556,11 +556,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateSelfAlpha = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -570,11 +570,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateMaxAlpha = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -584,11 +584,11 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
                 NameplatePersonalHideDelayAlpha = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -601,7 +601,9 @@ Addon.NAME:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,VarData in pairs( RegisteredVars ) do
                 if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
                     VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
+                    VarData.DisplayText = Addon.VARS.Dictionary[ string.lower( VarName ) ].DisplayText;
                 end
+                VarData.Name = string.lower( VarName );
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
             self.db = LibStub( 'AceDB-3.0' ):New( 'jName',{ profile = self:GetDefaults() },true );

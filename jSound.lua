@@ -185,11 +185,11 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Sound_AmbienceVolume = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -199,11 +199,11 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Sound_DialogVolume = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -213,11 +213,11 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Sound_MasterVolume = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -227,11 +227,11 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Sound_MusicVolume = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -241,11 +241,11 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Sound_SFXVolume = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -257,7 +257,9 @@ Addon.SOUND:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,VarData in pairs( RegisteredVars ) do
                 if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
                     VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
+                    VarData.DisplayText = Addon.VARS.Dictionary[ string.lower( VarName ) ].DisplayText;
                 end
+                VarData.Name = string.lower( VarName );
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
             self.db = LibStub( 'AceDB-3.0' ):New( 'jSound',{ profile = self:GetDefaults() },true );

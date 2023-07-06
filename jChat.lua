@@ -208,7 +208,9 @@ Addon.CHAT:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,VarData in pairs( RegisteredVars ) do
                 if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
                     VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
+                    VarData.DisplayText = Addon.VARS.Dictionary[ string.lower( VarName ) ].DisplayText;
                 end
+                VarData.Name = string.lower( VarName );
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
             self.db = LibStub( 'AceDB-3.0' ):New( 'jChat',{ profile = self:GetDefaults() },true );

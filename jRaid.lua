@@ -181,11 +181,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 RAIDfarclip = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1300,
                             Description = 'High',
                         },
@@ -201,19 +201,19 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidFramesHealthText = {
                     Type = 'Select',
                     KeyPairs = {
-                        Option1 = {
+                        {
                             Value = 'none',
                             Description = 'None',
                         },
-                        Option2 = {
+                        {
                             Value = 'health',
                             Description = 'Health Remaining',
                         },
-                        Option3 = {
+                        {
                             Value = 'losthealth',
                             Description = 'Health Lost (ie Deficit)',
                         },
-                        Option4 = {
+                        {
                             Value = 'perc',
                             Description = 'Health Percentage',
                         },
@@ -222,11 +222,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidFramesHeight = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 75,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 200,
                             Description = 'High',
                         },
@@ -236,11 +236,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidFramesWidth = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 75,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 200,
                             Description = 'High',
                         },
@@ -250,11 +250,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidGraphicsEnvironmentDetail = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 1,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 7,
                             Description = 'High',
                         },
@@ -264,11 +264,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidGraphicsGroundClutter = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 1,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 7,
                             Description = 'High',
                         },
@@ -278,11 +278,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidGraphicsLiquidDetail = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 1,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 7,
                             Description = 'High',
                         },
@@ -292,11 +292,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidGraphicsParticleDensity = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 10,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 100,
                             Description = 'High',
                         },
@@ -306,11 +306,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidGraphicsShadowQuality = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 5,
                             Description = 'High',
                         },
@@ -320,11 +320,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidGraphicsSSAO = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 4,
                             Description = 'High',
                         },
@@ -334,11 +334,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 RAIDgraphicsQuality = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 1,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 10,
                             Description = 'High',
                         },
@@ -360,11 +360,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidOptionSortMode = {
                     Type = 'Select',
                     KeyPairs = {
-                        Option1 = {
+                        {
                             Value = 'role',
                             Description = 'Role',
                         },
-                        Option2 = {
+                        {
                             Value = 'group',
                             Description = 'Group',
                         },
@@ -373,11 +373,11 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
                 RAIDweatherDensity = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 3,
                             Description = 'High',
                         },
@@ -392,7 +392,9 @@ Addon.RAID:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,VarData in pairs( RegisteredVars ) do
                 if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
                     VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
+                    VarData.DisplayText = Addon.VARS.Dictionary[ string.lower( VarName ) ].DisplayText;
                 end
+                VarData.Name = string.lower( VarName );
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
             self.db = LibStub( 'AceDB-3.0' ):New( 'jRaid',{ profile = self:GetDefaults() },true );

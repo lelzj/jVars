@@ -46,6 +46,7 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 lootUnderMouse = GetCVar( 'raidFramesDisplayOnlyDispellableDebuffs' ),
                 instantQuestText = GetCVar( 'instantQuestText' ),
                 timeMgrUseLocalTime = GetCVar( 'timeMgrUseLocalTime' ),
+                consolidateBuffs = GetCVar( 'consolidateBuffs' ),
             };
             for i,v in pairs( Defaults ) do
                 Defaults[ string.lower( i ) ] = v;
@@ -189,6 +190,12 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return void
         Addon.SYSTEM.Init = function( self )
             local RegisteredVars = {
+                equipmentManager = {
+                    Type = 'Toggle',
+                },
+                consolidateBuffs = {
+                    Type = 'Toggle',
+                },
                 autoClearAFK = {
                     Type = 'Toggle',
                 },
@@ -201,11 +208,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 cameraDistanceMaxZoomFactor = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 1.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 3.4,
                             Description = 'High',
                         },
@@ -215,19 +222,19 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 cameraSmoothStyle = {
                     Type = 'Select',
                     KeyPairs = {
-                        Option1 = {
+                        {
                             Value = 0,
                             Description = 'Never adjust camera',
                         },
-                        Option2 = {
+                        {
                             Value = 1,
                             Description = 'Adjust camera only horizontal when moving',
                         },
-                        Option3 = {
+                        {
                             Value = 2,
                             Description = 'Always adjust camera',
                         },
-                        Option4 = {
+                        {
                             Value = 4,
                             Description = 'Adjust camera only when moving',
                         },
@@ -245,11 +252,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 farclip = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1300,
                             Description = 'High',
                         },
@@ -265,11 +272,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 graphicsEnvironmentDetail = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 1,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 7,
                             Description = 'High',
                         },
@@ -279,11 +286,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 graphicsGroundClutter = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 1,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 7,
                             Description = 'High',
                         },
@@ -293,11 +300,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 graphicsLiquidDetail = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 1,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 7,
                             Description = 'High',
                         },
@@ -307,11 +314,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 graphicsShadowQuality = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 5,
                             Description = 'High',
                         },
@@ -321,11 +328,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 graphicsSSAO = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 4,
                             Description = 'High',
                         },
@@ -335,11 +342,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 graphicsQuality = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 1,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 10,
                             Description = 'High',
                         },
@@ -349,11 +356,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 groundEffectDensity = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 16,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 256,
                             Description = 'High',
                         },
@@ -372,11 +379,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 particleDensity = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 10,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 100,
                             Description = 'High',
                         },
@@ -389,11 +396,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 RenderScale = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 3,
                             Description = 'High',
                         },
@@ -409,11 +416,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 SkyCloudLOD = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 3,
                             Description = 'High',
                         },
@@ -423,11 +430,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 SpellQueueWindow = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 400,
                             Description = 'High',
                         },
@@ -440,11 +447,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 uiScale = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0.0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 1.0,
                             Description = 'High',
                         },
@@ -454,11 +461,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 violencelevel = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 5,
                             Description = 'High',
                         },
@@ -468,11 +475,11 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
                 weatherDensity = {
                     Type = 'Range',
                     KeyPairs = {
-                        Option1 = {
+                        Low = {
                             Value = 0,
                             Description = 'Low',
                         },
-                        Option2 = {
+                        High = {
                             Value = 3,
                             Description = 'High',
                         },
@@ -484,7 +491,9 @@ Addon.SYSTEM:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,VarData in pairs( RegisteredVars ) do
                 if( Addon.VARS.Dictionary[ string.lower( VarName ) ] ) then
                     VarData.Description = Addon.VARS.Dictionary[ string.lower( VarName ) ].Description;
+                    VarData.DisplayText = Addon.VARS.Dictionary[ string.lower( VarName ) ].DisplayText;
                 end
+                VarData.Name = string.lower( VarName );
                 self.RegisteredVars[ string.lower( VarName ) ] = VarData;
             end
             self.db = LibStub( 'AceDB-3.0' ):New( 'jSystem',{ profile = self:GetDefaults() },true );
