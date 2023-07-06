@@ -16,8 +16,8 @@ Addon.DEBUG:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,_ in pairs( self.RegisteredVars ) do
                 Defaults[ string.lower( VarName ) ] = GetCVar( VarName );
                 if( Defaults[ string.lower( VarName ) ] == nil ) then
+                    self.RegisteredVars[ string.lower( VarName ) ].Flagged = true;
                     Defaults[ string.lower( VarName ) ] = 0;
-                    print( AddonName..' Flagging '..VarName );
                 end
             end
             return Defaults;

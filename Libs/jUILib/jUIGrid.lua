@@ -130,6 +130,9 @@ Addon.GRID.AddRange = function( self,VarData,Parent,Handler )
     Frame:SetCall( 'OnValue',function( self )
         Handler:SetValue( self.keyValue,self:GetValue() );
     end );
+    if( VarData.Flagged ) then
+        Frame:Disable();
+    end
     return Frame;
 end
 
@@ -144,6 +147,9 @@ Addon.GRID.AddToggle = function( self,VarData,Parent,Handler )
     Frame:SetCall( 'OnClick',function( self )
         Handler:SetValue( self.keyValue,Addon:BoolToInt( self:GetValue() ) );
     end );
+    if( VarData.Flagged ) then
+        Frame:Disable();
+    end
     return Frame;
 end
 
@@ -166,5 +172,8 @@ Addon.GRID.AddSelect = function( self,VarData,Parent,Handler )
     Frame:SetCall( 'OnInput',function( self )
         Handler:SetValue( self.keyValue,self:GetValue() );
     end );
+    if( VarData.Flagged ) then
+        Frame:Disable();
+    end
     return Frame;
 end

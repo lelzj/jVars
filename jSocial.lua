@@ -16,9 +16,8 @@ Addon.SOCIAL:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,_ in pairs( self.RegisteredVars ) do
                 Defaults[ string.lower( VarName ) ] = GetCVar( VarName );
                 if( Defaults[ string.lower( VarName ) ] == nil ) then
-                    Defaults[ string.lower( VarName ) ] = 0;
                     self.RegisteredVars[ string.lower( VarName ) ].Flagged = true;
-                    print( AddonName..' Flagging '..VarName );
+                    Defaults[ string.lower( VarName ) ] = 0;
                 end
             end
             return Defaults;
