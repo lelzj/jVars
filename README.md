@@ -23,5 +23,5 @@ https://github.com/jadissa/jVars/issues
 
 ## Screenshots
 <p float="left">
-  <img src="VarsSettings.png" width="400" /> 
+  <img src="IMG_3863.jpg" width="500" /> 
 </p>

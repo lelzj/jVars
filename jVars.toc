@@ -1,4 +1,4 @@
-## Title: |cffffffffj|cfffed000Vars|r
+## Title: |cff009bffj|cffffffffVars|r
 ## Notes: j's Vars Mod
 ## X-Category: system
 
@@ -7,7 +7,7 @@
 ## X-Website: https://github.com/jadissa/jVars
 
 ## DefaultState: enabled
-## SavedVariables: jVars,jSystem,jActionBar,jDebug,jName,jRaid,jMap,jSocial,jSound
+## SavedVariables: jVars
 
 #@retail@
 ## Interface: 90001

@@ -1,12 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-	<Script file="jVars.lua"/>
-	<Script file="jActionBar.lua"/>
-	<Script file="jDebug.lua"/>
-	<Script file="jMap.lua"/>
-	<Script file="jName.lua"/>
-	<Script file="jRaid.lua"/>
-	<Script file="jSocial.lua"/>
-	<Script file="jSound.lua"/>
-	<Script file="jSystem.lua"/>
+	<Script file="Registry.lua"/>
+	<Script file="Dictionary.lua"/>
+	<Script file="Database.lua"/>
+	<Script file="App.lua"/>
 </Ui>
