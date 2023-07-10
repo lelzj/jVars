@@ -34,6 +34,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Defaults.Vars[ string.lower( VarName ) ] = {
                     Flagged = Dict.Flagged or false,
                     Value = Dict.CurrentValue,
+                    Indexed = false,
                 };
             end
             return Defaults;
@@ -57,11 +58,15 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         Addon.DB.GetModified = function( self,Index )
-            Addon:Dump( {
-                Func = 'Addon.DB.GetModified',
-                Index = Index,
-                Data = self:GetPersistence().Vars[ string.lower( Index ) ]
-            } )
+            --[[
+            if( string.lower( Index ) == 'autojoinpartyvoice' ) then
+                Addon:Dump( {
+                    Func = 'Addon.DB.GetModified',
+                    Index = Index,
+                    Data = self:GetPersistence().Vars[ string.lower( Index ) ]
+                } )
+            end
+            ]]
             if( self:GetPersistence().Vars[ string.lower( Index ) ] ) then
                 return self:GetPersistence().Vars[ string.lower( Index ) ].Modified;
             end
@@ -109,11 +114,15 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                     end
                 end
             end
-            Addon:Dump( {
-                Func = 'Addon.DB.SetValue',
-                Index = Index,
-                Data = self:GetPersistence().Vars[ string.lower( Index ) ]
-            } )
+            --[[
+            if( string.lower( Index ) == 'autojoinpartyvoice' ) then
+                Addon:Dump( {
+                    Func = 'Addon.DB.SetValue',
+                    Index = Index,
+                    Data = self:GetPersistence().Vars[ string.lower( Index ) ]
+                } )
+            end
+            ]]
             Addon.APP:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',self:GetPersistence().Vars[ string.lower( Index ) ].Value );
             return true;
         end
@@ -149,14 +158,35 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( not self.persistence ) then
                 return;
             end
-            for VarName,VarData in pairs( self:GetPersistence().Vars ) do
-                if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ) then
-                    if( self:GetPersistence().Vars[ string.lower( VarName ) ].Value ~= Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DefaultValue ) then
-                        self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = true;
-                    else
-                        self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = false;
+            for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
+                if( self:GetPersistence().Vars[ string.lower( VarName ) ] and not self:GetPersistence().Vars[ string.lower( VarName ) ].Indexed ) then
+                    print( VarName,'was not indeded yet' )
+                    if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ) then
+                        if( VarData.Type == 'Toggle' ) then
+                            if( tonumber( self:GetPersistence().Vars[ string.lower( VarName ) ].Value ) ~= tonumber( Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DefaultValue ) ) then
+                                self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = true;
+                            else
+                                self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = false
+                            end
+                        else
+                            if( self:GetPersistence().Vars[ string.lower( VarName ) ].Value ~= Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DefaultValue ) then
+                                self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = true;
+                            else
+                                self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = false;
+                            end
+                        end
                     end
+                    self:GetPersistence().Vars[ string.lower( VarName ) ].Indexed = true;
                 end
+                --[[
+                if( string.lower( VarName ) == 'autojoinpartyvoice' ) then
+                    Addon:Dump( {
+                        Func = 'Addon.DB.Init',
+                        Index = VarName,
+                        Data = self:GetPersistence().Vars[ string.lower( VarName ) ]
+                    } )
+                end
+                ]]
             end
         end
 

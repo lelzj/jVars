@@ -69,7 +69,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  string  Value
         --  @return bool
         Addon.APP.SetValue = function( self,Index,Value )
-            return Addon.DB:SetValue( Index,Value );
+            local Result = Addon.DB:SetValue( Index,Value );
+            --self:Query( self.Heading.FilterBox:GetText() );
+            return Result;
         end
 
         --
@@ -199,6 +201,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             return Addon.DB:GetModified( Data.Name );
         end
 
+        Addon.APP.Query = function( self,Search )
+            local FilteredList = Addon.APP:Filter( Search:GetText() );
+            Addon.GRID:RegisterList( FilteredList,Addon.APP );
+            Addon.GRID:GetStats( FilteredList,Addon.APP );
+        end
+
         --
         --  Module init
         --
@@ -266,9 +274,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 self:HighlightText();
             end );
             self.Heading.FilterBox:SetScript( 'OnTextChanged',function( self )
-                local FilteredList = Addon.APP:Filter( self:GetText() );
-                Addon.GRID:RegisterList( FilteredList,Addon.APP );
-                Addon.GRID:GetStats( FilteredList,Addon.APP );
+                Addon.APP:Query( self )
             end );
 
             self.Heading.Name = Addon.GRID:AddLabel( { DisplayText = 'Name' },self.Heading );
