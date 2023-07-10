@@ -1,5 +1,4 @@
 local _,Addon = ...;
-local _G = _G;
 
 Addon.GRID = CreateFrame( 'Frame' );
 
