@@ -5,7 +5,6 @@ Addon.GRID = CreateFrame( 'Frame' );
 Addon.GRID.GetModified = function( self,Data,Handler )
     return Handler:GetModified( Data,Handler );
 end
-
 Addon.GRID.GetStats = function( self,Data,Handler )
     local Stats = {
         Locked = 0,
@@ -147,6 +146,7 @@ Addon.GRID.RegisterList = function( self,Data,Handler )
                 Row.Value = Addon.GRID:AddRange( Data,Row,Handler );
             elseif( Data.Type == 'Select' ) then
                 Row.Value = Addon.GRID:AddSelect( Data,Row,Handler );
+                Row.Value:SetValue( Handler:GetValue( Data.Name ) );
             end
         else
             if( Data.Type == 'Toggle' ) then
@@ -155,6 +155,7 @@ Addon.GRID.RegisterList = function( self,Data,Handler )
                 Row.Value = Addon.GRID:AddRange( Data,Row,Handler );
             elseif( Data.Type == 'Select' ) then
                 Row.Value = Addon.GRID:AddSelect( Data,Row,Handler );
+                Row.Value:SetValue( Handler:GetValue( Data.Name ) );
             end
         end
         if( Data.Type == 'Select' ) then
@@ -350,25 +351,45 @@ end
 Addon.GRID.AddRange = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
     local Frame = CreateFrame( 'Slider',Key..'Range',Parent,'OptionsSliderTemplate' );
+    --[[
+    local SliderBackdrop  = {
+        bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
+        edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
+        tile = true, tileSize = 8, edgeSize = 8,
+        insets = { left = 3, right = 3, top = 6, bottom = 6 }
+    };
+    ]]
     Frame:SetMinMaxValues( VarData.KeyPairs.Low.Value,VarData.KeyPairs.High.Value );
     Frame:SetValueStep( VarData.Step );
+    Frame:SetHeight( 15 );
+    Frame:SetHitRectInsets( 0,0,-10,0 );
+    --Frame:SetBackdrop( SliderBackdrop );
+    Frame:SetThumbTexture( "Interface\\Buttons\\UI-SliderBar-Button-Horizontal" );
     Frame:SetOrientation( 'HORIZONTAL' );
     Frame.minValue, Frame.maxValue = Frame:GetMinMaxValues();
     Frame.textLow = _G[ Key..'Range'..'Low' ];
     Frame.textHigh = _G[ Key..'Range'..'High' ];
     Frame.textLow:SetText( floor( VarData.KeyPairs.Low.Value ) );
     Frame.textHigh:SetText( floor( VarData.KeyPairs.High.Value ) );
+    Frame:SetValue( Handler:GetValue( Key ) );
     Frame.keyValue = Key;
     if( VarData.Flagged ) then
         Frame:Disable();
     end
-    Frame.EditBox = CreateFrame( 'EditBox',Key..'SliderEditBox',Frame,'InputBoxTemplate' );
-    Frame.EditBox:SetSize( 100,20 );
+    --[[
+    local ManualBackdrop = {
+        bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+        edgeFile = "Interface\\ChatFrame\\ChatFrameBackground",
+        tile = true, edgeSize = 1, tileSize = 5,
+    };
+    ]]
+    Frame.EditBox = CreateFrame( 'EditBox',Key..'SliderEditBox',Frame,'InputBoxTemplate' --[[and BackdropTemplate]] );
+    Frame.EditBox:SetSize( 40,15 );
     --Frame.EditBox:GetFontString():SetJustifyH( 'center' );
     Frame.EditBox:ClearAllPoints();
     Frame.EditBox:SetPoint( 'top',Frame,'bottom',0,2 );
     Frame.EditBox:SetText( Handler:GetValue( Key ) );
-
+    --Frame.EditBox:SetBackdrop( ManualBackdrop );
     --[[
     Frame.EditBox:HookScript( 'OnTextChanged',function( self )
         local Value = self:GetText();
@@ -400,6 +421,15 @@ Addon.GRID.AddToggle = function( self,VarData,Parent,Handler )
     return Frame;
 end
 
+Addon.GRID.AddEdit = function( self,VarData,Parent,Handler )
+    local Key = string.lower( VarData.Name );
+    local Frame = CreateFrame( 'Frame',Key..'Edit',Parent,'InputBoxTemplate' );
+    Frame:SetMultiLine( true );
+    Frame:SetTextInsets( 0,0,3,3);
+    Frame:SetHeight( 20 );
+    return Frame;
+end
+
 Addon.GRID.AddSelect = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
     local Frame = CreateFrame( 'Frame',Key..'Select',Parent,'UIDropDownMenuTemplate' );
@@ -407,28 +437,31 @@ Addon.GRID.AddSelect = function( self,VarData,Parent,Handler )
         local Info = UIDropDownMenu_CreateInfo();
         Info.func = function( self )
             UIDropDownMenu_SetSelectedValue( Frame,self.value );
+            Handler:SetValue( Key,self.value );
         end
         for i,v in pairs( VarData.KeyPairs ) do
             Info.text = v.Description;
             Info.value = v.Value;
-            Info.func = function( self )
-                Handler:SetValue( Key,self.value );
-                self.selectedValue = self.value;
-                if( self.value == Handler:GetValue( Key ) ) then
-                    UIDropDownMenu_SetText( Frame,v.Description );
-                end
-            end;
-            Info.checked = v.Value == Handler:GetValue( Key );
+            Info.checked = false;
+            Info.isNotRadio = true;
+            Info.justifyH = 'right';
             UIDropDownMenu_AddButton( Info );
         end
     end );
-    for i,v in pairs( VarData.KeyPairs ) do
-        if( v.Value == Handler:GetValue( Key ) ) then
-            UIDropDownMenu_SetText( Frame,v.Description );
+    Frame.SetValue = function( self,value )
+        local SelectedText;
+        self.selectedValue = value;
+        for i,v in pairs( VarData.KeyPairs ) do
+            if( tonumber( value ) == tonumber( Handler:GetValue( Key ) ) and tonumber( value ) == tonumber( v.Value ) ) then
+                SelectedText = v.Description;
+            elseif( value == Handler:GetValue( Key ) and value == v.Value ) then
+                SelectedText = v.Description;
+            end
+        end
+        if( SelectedText ) then
+            UIDropDownMenu_SetText( self,SelectedText );
         end
     end
-    if( VarData.Flagged ) then
-        Frame:Disable();
-    end
+    _G[Frame:GetName()..'Text']:SetWordWrap( true )
     return Frame;
 end

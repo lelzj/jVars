@@ -160,7 +160,6 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
                 if( self:GetPersistence().Vars[ string.lower( VarName ) ] and not self:GetPersistence().Vars[ string.lower( VarName ) ].Indexed ) then
-                    print( VarName,'was not indeded yet' )
                     if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ) then
                         if( VarData.Type == 'Toggle' ) then
                             if( tonumber( self:GetPersistence().Vars[ string.lower( VarName ) ].Value ) ~= tonumber( Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DefaultValue ) ) then

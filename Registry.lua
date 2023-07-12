@@ -25,6 +25,24 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return table
         Addon.REG.GetRegistry = function( self )
             local Registry = {
+                chatClassColorOverride = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Always',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Never',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Legacy',
+                        },
+                    },
+                    Category = 'Social',
+                },
                 useUiScale = {
                     Type = 'Toggle',
                     Category = 'Hud',
@@ -542,7 +560,21 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Category = 'Debug',
                 },
                 taintLog = {
-                    Type = 'Toggle',
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Disabled',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Blocked Actions Logged',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Blocked and Globals',
+                        },
+                    },
                     Category = 'Debug',
                 },
                 mapFade = {
