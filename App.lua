@@ -70,6 +70,8 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         Addon.APP.SetValue = function( self,Index,Value )
             local Result = Addon.DB:SetValue( Index,Value );
             --self:Query( self.Heading.FilterBox:GetText() );
+            SetCVar( Index,Value );
+            RestartGx();
             return Result;
         end
 
@@ -225,7 +227,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Config.parent = self.Name;
 
             self.Config.okay = function( self )
-                Addon.APP:Refresh();
                 RestartGx();
             end
 

@@ -25,6 +25,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return table
         Addon.REG.GetRegistry = function( self )
             local Registry = {
+                autoRangedCombat = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
                 chatClassColorOverride = {
                     Type = 'Select',
                     KeyPairs = {
@@ -378,6 +382,24 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 clampTargetNameplateToScreen = {
                     Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                --[[
+                floatingCombatTextAuraFade = {
+                },
+                ]]
+                GamePadEmulateEsc = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 'NONE',
+                            Description = 'None',
+                        },
+                        {
+                            Value = 'PADBACK',
+                            Description = 'PADBACK',
+                        },
+                    },
                     Category = 'Hud',
                 },
                 ColorNameplateNameBySelection = {
@@ -840,6 +862,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
+                },
+                bspcache = {
+                    Type = 'Toggle',
+                    Category = 'System',
                 },
                 showPartyBackground = {
                     Type = 'Toggle',
@@ -1800,7 +1826,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 groundEffectAnimation = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Graphics',
                 },
                 showKeyring = {
                     Type = 'Toggle',
@@ -1817,6 +1843,454 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 ShowClassColorInNameplate = {
                     Type = 'Toggle',
                     Category = 'Hud',
+                },
+                ShowAllSpellRanks = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                --[[trackerFilter = {
+                },]]
+                --[[trackerSorting = {
+                },]]
+                --[[watchFrameWidth = {
+                },]]
+                heardChoiceSFX = {
+                    Type = 'Toggle',
+                    Category = 'Sound',
+                },
+                hideOutdoorWorldState = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                minimumAutomaticUiScale = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.64,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 0.9,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Hud',
+                },
+                nameplateCommentatorMaxDistance = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 200,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1000,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 200,
+                    Category = 'Hud',
+                },
+                RAIDgroundEffectAnimation = {
+                    Type = 'Toggle',
+                    Category = 'Graphics',
+                },
+                showUnactivatedCharacters = {
+                    Type = 'Toggle',
+                    Category = 'System',
+                },
+                spellClutterDefaultTargetScalar = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 3.000000,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'System',
+                },
+                spellClutterHostileScalar = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.001,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 0.500000,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.001,
+                    Category = 'System',
+                },
+                spellClutterMinSpellCount = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'System',
+                },
+                spellClutterMinWeaponTrailCount = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'System',
+                },
+                spellClutterPartySizeScalar = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 20.000000,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'System',
+                },
+                spellClutterPlayerScalarMultiplier = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1.666667,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'System',
+                },
+                spellClutterRangeConstant = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 30.000000,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1.0,
+                    Category = 'System',
+                },
+                spellClutterRangeConstantRaid = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 30.000000,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1.0,
+                    Category = 'System',
+                },
+                twitterCharactersPerMedia = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 23,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'System',
+                },
+                worldEntityLinkMode = {
+                    Type = 'Toggle',
+                    Category = 'System',
+                },
+                Sound_EnableDSPEffects = {
+                    Type = 'Toggle',
+                    Category = 'Sound',
+                },
+                textureErrorColors = {
+                    Type = 'Toggle',
+                    Category = 'Debug',
+                },
+                threatPlaySounds = {
+                    Type = 'Toggle',
+                    Category = 'Sound',
+                },
+                threatShowNumeric = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                threatWarning = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                threatWorldText = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                addFriendInfoShown = {
+                    Type = 'Toggle',
+                    Category = 'Social',
+                },
+                --[[
+                activeCUFProfile = {
+                    Type = 'Edit',
+                    Category = 'System',
+                },
+                agentUID = {
+                    Type = 'Edit',
+                    Category = 'System',
+                },
+                ]]
+                allowCompareWithToggle = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                alwaysCompareItems = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                animFrameSkipLOD = {
+                    Type = 'Toggle',
+                    Category = 'Graphics',
+                },
+                assaoAdaptiveQualityLimit = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assaoBlurPassCount = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 6,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                },
+                assaoDetailShadowStrength = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 5.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assaoFadeOutFrom = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 50.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assaoFadeOutTo = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 300.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assaoHorizonAngleThresh = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 0.4,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assaoNormals = {
+                    Type = 'Toggle',
+                    Category = 'Graphics',
+                },
+                assaoRadius = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1.85,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assaoShadowClamp = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = .10,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assaoShadowMult = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 5.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assaoShadowPower = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.5,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 5.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assaoSharpness = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assaoTemporalSSAngleOffset = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 3.14,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assaoTemporalSSRadiusOffset = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 2.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                assistAttack = {
+                    Type = 'Toggle',
+                    Category = 'System',
                 },
             };
             for VarName,VarData in pairs( Registry ) do
