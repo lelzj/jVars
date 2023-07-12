@@ -160,11 +160,15 @@ Addon.GRID.RegisterList = function( self,Data,Handler )
         if( Data.Type == 'Select' ) then
             Row.Value:SetPoint( 'topleft',Row.Default,'topright',-19,7 );
         elseif( Data.Type == 'Toggle' ) then
-            Row.Value:SetPoint( 'topleft',Row.Default,'topright',-5,0 );
+            Row.Value:SetPoint( 'topleft',Row.Default,'topright',-5,5 );
+        elseif( Data.Type == 'Range' ) then
+            Row.Value:SetPoint( 'topleft',Row.Default,'topright',0,5 );
         else
             Row.Value:SetPoint( 'topleft',Row.Default,'topright',0,0 );
         end
-        Row.Value:SetSize( 150,Addon.APP.Heading.FieldHeight );
+        if( Data.Type ~= 'Toggle' ) then
+            Row.Value:SetSize( 150,Addon.APP.Heading.FieldHeight );
+        end
 
         Row.Sep = self:AddSeperator( Row );
         Row.Sep:SetPoint( 'topleft',Row,'bottomleft',10,0 );
@@ -345,36 +349,50 @@ end
 
 Addon.GRID.AddRange = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
-    local Frame = LibStub( 'Sushi-3.1' ).Slider( Parent );
-    Frame:SetValue( Handler:GetValue( Key ) or 0 );
-    Frame.Edit:SetValue( Addon:SliderRound( Handler:GetValue( Key ) or 0,VarData.Step ) );
-    if( VarData.Flagged ) then
-        Frame.Edit:Disable();
-    end
-    Frame:SetRange( 
-        VarData.KeyPairs.Low.Value,
-        VarData.KeyPairs.High.Value,
-        VarData.KeyPairs.Low.Description,
-        VarData.KeyPairs.High.Description 
-    );
-    Frame:SetStep( VarData.Step );
+    local Frame = CreateFrame( 'Slider',Key..'Range',Parent,'OptionsSliderTemplate' );
+    Frame:SetMinMaxValues( VarData.KeyPairs.Low.Value,VarData.KeyPairs.High.Value );
+    Frame:SetValueStep( VarData.Step );
+    Frame:SetOrientation( 'HORIZONTAL' );
+    Frame.minValue, Frame.maxValue = Frame:GetMinMaxValues();
+    Frame.textLow = _G[ Key..'Range'..'Low' ];
+    Frame.textHigh = _G[ Key..'Range'..'High' ];
+    Frame.textLow:SetText( floor( VarData.KeyPairs.Low.Value ) );
+    Frame.textHigh:SetText( floor( VarData.KeyPairs.High.Value ) );
     Frame.keyValue = Key;
-    Frame:SetCall( 'OnValue',function( self )
-        Handler:SetValue( self.keyValue,self:GetValue() );
-    end );
     if( VarData.Flagged ) then
         Frame:Disable();
     end
+    Frame.EditBox = CreateFrame( 'EditBox',Key..'SliderEditBox',Frame,'InputBoxTemplate' );
+    Frame.EditBox:SetSize( 100,20 );
+    --Frame.EditBox:GetFontString():SetJustifyH( 'center' );
+    Frame.EditBox:ClearAllPoints();
+    Frame.EditBox:SetPoint( 'top',Frame,'bottom',0,2 );
+    Frame.EditBox:SetText( Handler:GetValue( Key ) );
+
+    --[[
+    Frame.EditBox:HookScript( 'OnTextChanged',function( self )
+        local Value = self:GetText();
+        if( tonumber( Value ) ) then
+            self:GetParent():SetValue( Value );
+        end
+    end );
+    ]]
+    Frame:HookScript( 'OnValueChanged',function( self,Value )
+        self.EditBox:SetText( Addon:SliderRound( self:GetValue(),VarData.Step ) );
+        Handler:SetValue( self.keyValue,Addon:SliderRound( self:GetValue(),VarData.Step ) );
+    end );
+    Frame.EditBox:Disable();
     return Frame;
 end
 
 Addon.GRID.AddToggle = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
-    local Frame = LibStub( 'Sushi-3.1' ).Check( Parent );
+    local Frame = CreateFrame( 'CheckButton',Key..'Toggle',Parent,'UICheckButtonTemplate' );
     Frame:SetChecked( Addon:Int2Bool( Handler:GetValue( Key ) ) );
+    Frame:SetSize( 25,25 );
     Frame.keyValue = Key;
-    Frame:SetCall( 'OnClick',function( self )
-        Handler:SetValue( self.keyValue,Addon:BoolToInt( self:GetValue() ) );
+    Frame:HookScript( 'OnClick',function( self )
+        Handler:SetValue( self.keyValue,Addon:BoolToInt( self:GetChecked() ) );
     end );
     if( VarData.Flagged ) then
         Frame:Disable();
@@ -384,20 +402,31 @@ end
 
 Addon.GRID.AddSelect = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
-    local Frame = LibStub( 'Sushi-3.1' ).DropChoice( Parent );
-    Frame:SetValue( Handler:GetValue( Key ) );
-    Frame.keyValue = Key;
-    if( tonumber( Handler:GetValue( Key ) ) ~= nil ) then
-        Frame:SetValue( tonumber( Handler:GetValue( Key ) ) );
-    else
-        Frame:SetValue( Handler:GetValue( Key ) );
-    end
-    for i,v in pairs( VarData.KeyPairs ) do
-        Frame:Add( v.Value,v.Description );
-    end
-    Frame:SetCall( 'OnInput',function( self )
-        Handler:SetValue( self.keyValue,self:GetValue() );
+    local Frame = CreateFrame( 'Frame',Key..'Select',Parent,'UIDropDownMenuTemplate' );
+    UIDropDownMenu_Initialize( Frame,function( Frame,Level,MenuList )
+        local Info = UIDropDownMenu_CreateInfo();
+        Info.func = function( self )
+            UIDropDownMenu_SetSelectedValue( Frame,self.value );
+        end
+        for i,v in pairs( VarData.KeyPairs ) do
+            Info.text = v.Description;
+            Info.value = v.Value;
+            Info.func = function( self )
+                Handler:SetValue( Key,self.value );
+                self.selectedValue = self.value;
+                if( self.value == Handler:GetValue( Key ) ) then
+                    UIDropDownMenu_SetText( Frame,v.Description );
+                end
+            end;
+            Info.checked = v.Value == Handler:GetValue( Key );
+            UIDropDownMenu_AddButton( Info );
+        end
     end );
+    for i,v in pairs( VarData.KeyPairs ) do
+        if( v.Value == Handler:GetValue( Key ) ) then
+            UIDropDownMenu_SetText( Frame,v.Description );
+        end
+    end
     if( VarData.Flagged ) then
         Frame:Disable();
     end

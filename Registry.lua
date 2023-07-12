@@ -25,6 +25,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return table
         Addon.REG.GetRegistry = function( self )
             local Registry = {
+                useUiScale = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
                 countdownForCooldowns = {
                     Type = 'Toggle',
                     Category = 'Hud',
