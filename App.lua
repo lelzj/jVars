@@ -222,7 +222,18 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 end
             end
 
-            self.Config = CreateFrame( 'Frame',self.Name);
+            self.Config = nil;
+            if( not Addon:IsClassic() ) then
+                LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self.Name ),{
+                    type = 'group',
+                    name = self.Name,
+                    args = {},
+                } );
+                self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self.Name ),self.Name );
+            else
+                self.Config = CreateFrame( 'Frame',self.Name);
+                InterfaceOptions_AddCategory( self.Config );
+            end
             self.Config.name = self.Name;
             self.Config.parent = self.Name;
 
@@ -234,8 +245,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Addon.DB:Reset();
                 RestartGx();
             end
-
-            InterfaceOptions_AddCategory(self.Config);
 
             self.RowHeight = 30;
 
