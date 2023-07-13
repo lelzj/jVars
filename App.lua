@@ -222,39 +222,29 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 end
             end
 
-            self.Config = nil;
-            if( not Addon:IsClassic() ) then
-                LibStub( 'AceConfigRegistry-3.0' ):RegisterOptionsTable( string.upper( self.Name ),{
-                    type = 'group',
-                    name = self.Name,
-                    args = {},
-                } );
-                self.Config = LibStub( 'AceConfigDialog-3.0' ):AddToBlizOptions( string.upper( self.Name ),self.Name );
-            else
-                self.Config = CreateFrame( 'Frame',self.Name);
-                InterfaceOptions_AddCategory( self.Config );
-            end
-            self.Config.name = self.Name;
-            self.Config.parent = self.Name;
+            Addon.APP.Config = CreateFrame( 'Frame',self.Name);
+            Addon.APP.Config.name = self.Name;
 
-            self.Config.okay = function( self )
+            Addon.APP.Config.okay = function( self )
                 RestartGx();
             end
 
-            self.Config.default = function( self )
+            Addon.APP.Config.default = function( self )
                 Addon.DB:Reset();
                 RestartGx();
             end
 
+            InterfaceOptions_AddCategory( Addon.APP.Config );
+
             self.RowHeight = 30;
 
-            self.Heading = CreateFrame( 'Frame',self.Name..'Heading',self.Config );
-            self.Heading:SetPoint( 'topleft',self.Config,'topleft',10,-10 );
+            self.Heading = CreateFrame( 'Frame',self.Name..'Heading',Addon.APP.Config );
+            self.Heading:SetPoint( 'topleft',Addon.APP.Config,'topleft',10,-10 );
             self.Heading:SetSize( 580,100 );
             self.Heading.FieldHeight = 10;
             self.Heading.ColInset = 15;
 
-            self.Heading.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',self.Config,'SearchBoxTemplate' );
+            self.Heading.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',Addon.APP.Config,'SearchBoxTemplate' );
             self.Heading.FilterBox:SetPoint( 'topleft',self.Heading,'topleft',15,-35 );
             self.Heading.FilterBox:SetSize( 200,20 );
             self.Heading.FilterBox.clearButton:Hide();
@@ -309,7 +299,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Heading.Art:SetTexture( 'Interface\\Addons\\'..Addon.AddonName..'\\Textures\\frame' );
             self.Heading.Art:SetAllPoints( self.Heading );
 
-            self.Browser = CreateFrame( 'Frame',self.Name..'Browser',self.Config );
+            self.Browser = CreateFrame( 'Frame',self.Name..'Browser',Addon.APP.Config );
             self.Browser:SetSize( self.Heading:GetWidth(),400 );
             self.Browser:SetPoint( 'topleft',self.Heading,'bottomleft',0,-10 );
 
@@ -325,7 +315,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
             self.ScrollChild:SetHeight( 20 );
 
-            self.Footer = CreateFrame( 'Frame',self.Name..'Footer',self.Config );
+            self.Footer = CreateFrame( 'Frame',self.Name..'Footer',Addon.APP.Config );
             self.Footer:SetSize( self.Browser:GetWidth(),25 );
             self.Footer:SetPoint( 'topleft',self.Browser,'bottomleft',0,-10 );
 
