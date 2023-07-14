@@ -69,10 +69,13 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return bool
         Addon.APP.SetValue = function( self,Index,Value )
             local Result = Addon.DB:SetValue( Index,Value );
-            --self:Query( self.Heading.FilterBox:GetText() );
-            SetCVar( Index,Value );
-            RestartGx();
-            return Result;
+            if( Result ) then
+                --self:Query( Addon.APP.FilterBox:GetText() );
+                SetCVar( Index,Value );
+                RestartGx();
+                return true;
+            end
+            return false;
         end
 
         --
@@ -213,7 +216,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.APP.Init = function( self )
-            
+
             self.Name = AddonName;
 
             for Key,Data in pairs( self.Theme ) do
@@ -296,7 +299,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Heading.Adjustment:SetJustifyH( 'left' );
 
             self.Heading.Art = self.Heading:CreateTexture( nil,'ARTWORK', nil,0 );
-            self.Heading.Art:SetTexture( 'Interface\\Addons\\'..Addon.AddonName..'\\Textures\\frame' );
+            self.Heading.Art:SetTexture( 'Interface\\Addons\\'..self.Name..'\\Textures\\frame' );
             self.Heading.Art:SetAllPoints( self.Heading );
 
             self.Browser = CreateFrame( 'Frame',self.Name..'Browser',Addon.APP.Config );
@@ -320,8 +323,101 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Footer:SetPoint( 'topleft',self.Browser,'bottomleft',0,-10 );
 
             self.Footer.Art = self.Footer:CreateTexture( nil,'ARTWORK', nil,0 );
-            self.Footer.Art:SetTexture( 'Interface\\Addons\\'..AddonName..'\\Textures\\frame' );
+            self.Footer.Art:SetTexture( 'Interface\\Addons\\'..self.Name..'\\Textures\\frame' );
             self.Footer.Art:SetAllPoints( self.Footer );
+
+            --[[
+            local fontSizeDropdown = CreateFrame( 'Frame',self.Name..'DropDown',self.Browser,'UIDropDownMenuTemplate' );
+            fontSizeDropdown.initialize = function()
+                local Info = {};
+                local VarData = {
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Circle',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Circle & Outline',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Outline',
+                        },
+                    },
+                    -- findYourselfMode
+                };
+                for i,Data in pairs( VarData.KeyPairs ) do
+                    Info.text = Data.Description;
+                    Info.value = Data.Value;
+                    Info.func = function( self )
+                        print( self.value );
+                    end
+                    if( tonumber( Addon.APP:GetValue( 'findYourselfMode' ) ) == tonumber( Data.Value ) ) then 
+                        Info.checked = true;
+                    elseif ( Addon.APP:GetValue( 'findYourselfMode' ) == Data.Value ) then
+                        Info.checked = true;
+                    else
+                        Info.checked = false;
+                    end
+                    UIDropDownMenu_AddButton( Info );
+                end
+            end
+            fontSizeDropdown:SetPoint( 'topleft',self.Footer,'topleft' );
+            fontSizeDropdown:SetHeight( 20 );
+            ]]
+
+            --[[
+            local TestData;
+
+            TestData = {
+                Name = 'nameplateClassResourceTopInset',
+                KeyPairs = {
+                    Low = {
+                        Value = 0.0,
+                        Description = 'Low',
+                    },
+                    High = {
+                        Value = 1.0,
+                        Description = 'High',
+                    },
+                },
+                Step = 0.1,
+            };
+
+            local Range = Addon.GRID:AddRange( TestData,self.Footer,self );
+            Range:SetPoint( 'topleft',self.Footer,'topleft' );
+            Range:SetSize( 100,20 );
+
+            TestData = {
+                Name = 'chatClassColorOverride'
+            };
+
+            local Toggle = Addon.GRID:AddToggle( TestData,self.Footer,self );
+            Toggle:SetPoint( 'topleft',Range,'topright' );
+            Toggle:SetSize( 100,20 );
+
+            TestData = {
+                Name = 'findYourselfMode',
+                KeyPairs = {
+                    {
+                        Value = 0,
+                        Description = 'Circle',
+                    },
+                    {
+                        Value = 1,
+                        Description = 'Circle & Outline',
+                    },
+                    {
+                        Value = 2,
+                        Description = 'Outline',
+                    },
+                },
+            };
+            local Select = Addon.GRID:AddSelect( TestData,self.Footer,self );
+            Select:SetPoint( 'topleft',Toggle,'topright' );
+            Select:SetSize( 100,20 );
+            ]]
         end
 
         Addon.APP:Init();

@@ -114,15 +114,6 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                     end
                 end
             end
-            --[[
-            if( string.lower( Index ) == 'autojoinpartyvoice' ) then
-                Addon:Dump( {
-                    Func = 'Addon.DB.SetValue',
-                    Index = Index,
-                    Data = self:GetPersistence().Vars[ string.lower( Index ) ]
-                } )
-            end
-            ]]
             Addon.APP:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',self:GetPersistence().Vars[ string.lower( Index ) ].Value );
             return true;
         end
@@ -133,9 +124,12 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  string  Index
         --  @return mixed
         Addon.DB.GetValue = function( self,Index )
+            return GetCVar( Index );
+            --[[
             if( self:GetPersistence().Vars[ string.lower( Index ) ].Value ~= nil ) then
                 return self:GetPersistence().Vars[ string.lower( Index ) ].Value;
             end
+            ]]
         end
 
         Addon.DB.Reset = function( self )
@@ -177,15 +171,6 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                     end
                     self:GetPersistence().Vars[ string.lower( VarName ) ].Indexed = true;
                 end
-                --[[
-                if( string.lower( VarName ) == 'autojoinpartyvoice' ) then
-                    Addon:Dump( {
-                        Func = 'Addon.DB.Init',
-                        Index = VarName,
-                        Data = self:GetPersistence().Vars[ string.lower( VarName ) ]
-                    } )
-                end
-                ]]
             end
         end
 
