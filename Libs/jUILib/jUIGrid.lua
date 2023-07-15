@@ -347,27 +347,6 @@ Addon.GRID.AddSeperator = function( self,Parent )
   return Texture;
 end
 
-Addon.GRID.AddRange = function( self,VarData,Parent,Handler )
-    local Key = string.lower( VarData.Name );
-    local Frame = self.AceGUI:Create( 'Slider' );
-    Frame:SetParent( Parent );
-    Frame:SetSliderValues( floor( VarData.KeyPairs.Low.Value ),floor( VarData.KeyPairs.High.Value ),VarData.Step );
-    Frame.label:SetSize( 0,0 );
-    Frame.frame:SetHeight( 10 );
-    Frame.editbox:SetHeight( 10 );
-    Frame:SetValue( Handler:GetValue( Key ) );
-    Frame.keyValue = Key;
-    Frame:SetCallback( 'OnValueChanged',function( self )
-        Handler:SetValue( self.keyValue,Addon:SliderRound( self:GetValue(),VarData.Step ) );
-    end );
-    if( VarData.Flagged ) then
-        Frame.frame:Disable();
-    end
-    Frame.frame:SetFrameStrata( 'DIALOG' );
-    Frame.frame:Show();
-    return Frame.frame;
-end
-
 Addon.GRID.AddRange2 = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
     local Frame = CreateFrame( 'Slider',Key..'Range',Parent,'OptionsSliderTemplate' );
@@ -426,24 +405,6 @@ Addon.GRID.AddRange2 = function( self,VarData,Parent,Handler )
     return Frame;
 end
 
-Addon.GRID.AddToggle = function( self,VarData,Parent,Handler )
-    local Key = string.lower( VarData.Name );
-    local Frame = self.AceGUI:Create( 'CheckBox' );
-    Frame:SetParent( Parent );
-    Frame:SetValue( Addon:Int2Bool( Handler:GetValue( Key ) ) );
-    Frame.frame:SetSize( 25,25 );
-    Frame.keyValue = Key;
-    Frame:SetCallback( 'OnValueChanged',function( self )
-        Handler:SetValue( self.keyValue,Addon:BoolToInt( self:GetValue() ) );
-    end );
-    if( VarData.Flagged ) then
-        Frame.frame:Disable();
-    end
-    Frame.frame:SetFrameStrata( 'DIALOG' );
-    Frame.frame:Show();
-    return Frame.frame;
-end
-
 Addon.GRID.AddToggle2 = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
     local Frame = CreateFrame( 'CheckButton',Key..'Toggle',Parent,'UICheckButtonTemplate' );
@@ -451,7 +412,7 @@ Addon.GRID.AddToggle2 = function( self,VarData,Parent,Handler )
     Frame:SetSize( 25,25 );
     Frame.keyValue = Key;
     Frame:HookScript( 'OnClick',function( self )
-        Handler:SetValue( self.keyValue,Addon:BoolToInt( self:GetChecked() ) );
+         Handler:SetValue( self.keyValue,Addon:BoolToInt( self:GetChecked() ) );
     end );
     if( VarData.Flagged ) then
         Frame:Disable();
@@ -466,28 +427,6 @@ Addon.GRID.AddEdit = function( self,VarData,Parent,Handler )
     Frame:SetTextInsets( 0,0,3,3);
     Frame:SetHeight( 20 );
     return Frame;
-end
-
-Addon.GRID.AddSelect = function( self,VarData,Parent,Handler )
-    local Key = string.lower( VarData.Name );
-    local Frame = self.AceGUI:Create( 'Dropdown' );
-    local List = {};
-    for i,v in pairs( VarData.KeyPairs ) do
-        List[v.Value] = v.Description;
-    end
-    Frame:SetParent( Parent );
-    Frame:SetList( List );
-    Frame:SetValue( Handler:GetValue( Key ) );
-    Frame.keyValue = Key;
-    Frame:SetCallback( 'OnValueChanged',function( self )
-        Handler:SetValue( self.keyValue,self:GetValue() );
-    end );
-    if( VarData.Flagged ) then
-        Frame.frame:Disable();
-    end
-    Frame.frame:SetFrameStrata( 'DIALOG' );
-    Frame.frame:Show();
-    return Frame.frame;
 end
 
 Addon.GRID.AddSelect2 = function( self,VarData,Parent,Handler )

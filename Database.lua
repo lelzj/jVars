@@ -58,19 +58,9 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         Addon.DB.GetModified = function( self,Index )
-            --[[
-            if( string.lower( Index ) == 'autojoinpartyvoice' ) then
-                Addon:Dump( {
-                    Func = 'Addon.DB.GetModified',
-                    Index = Index,
-                    Data = self:GetPersistence().Vars[ string.lower( Index ) ]
-                } )
-            end
-            ]]
             if( self:GetPersistence().Vars[ string.lower( Index ) ] ) then
                 return self:GetPersistence().Vars[ string.lower( Index ) ].Modified;
             end
-
         end
 
         --
@@ -124,12 +114,9 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  string  Index
         --  @return mixed
         Addon.DB.GetValue = function( self,Index )
-            return GetCVar( Index );
-            --[[
             if( self:GetPersistence().Vars[ string.lower( Index ) ].Value ~= nil ) then
                 return self:GetPersistence().Vars[ string.lower( Index ) ].Value;
             end
-            ]]
         end
 
         Addon.DB.Reset = function( self )
