@@ -366,10 +366,10 @@ Addon.GRID.AddRange2 = function( self,VarData,Parent,Handler )
     Frame:SetThumbTexture( "Interface\\Buttons\\UI-SliderBar-Button-Horizontal" );
     Frame:SetOrientation( 'HORIZONTAL' );
     Frame.minValue,Frame.maxValue = Frame:GetMinMaxValues();
-    Frame.textLow = _G[ Key..'Range'..'Low' ];
-    Frame.textHigh = _G[ Key..'Range'..'High' ];
-    Frame.textLow:SetText( floor( VarData.KeyPairs.Low.Value ) );
-    Frame.textHigh:SetText( floor( VarData.KeyPairs.High.Value ) );
+
+    Frame.Low:SetText( VarData.KeyPairs.Low.Value );
+    Frame.High:SetText( VarData.KeyPairs.High.Value );
+
     Frame:SetValue( Handler:GetValue( Key ) );
     Frame.keyValue = Key;
     if( VarData.Flagged ) then
