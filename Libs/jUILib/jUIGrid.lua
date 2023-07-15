@@ -30,7 +30,7 @@ Addon.GRID.GetStats = function( self,Data,Handler )
         Row.LockedValue = self:AddLabel( { DisplayText = Data.Locked },Row );
 
         Row.ModifiedLabel = self:AddModified( { DisplayText = 'Modified,' },Row );
-        Row.ModifiedValue = Addon.GRID:AddLabel( { DisplayText = Data.Modified },Row );
+        Row.ModifiedValue = self:AddLabel( { DisplayText = Data.Modified },Row );
 
         Row.TotalLabel = self:AddLabel( { DisplayText = 'Total,' },Row );
         Row.TotalValue = self:AddLabel( { DisplayText = Data.Total },Row );

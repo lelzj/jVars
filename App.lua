@@ -70,7 +70,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         Addon.APP.SetValue = function( self,Index,Value )
             local Result = Addon.DB:SetValue( Index,Value );
             if( Result ) then
-                --self:Query( Addon.APP.FilterBox:GetText() );
+                self:Query();
                 SetCVar( Index,Value );
                 RestartGx();
                 return true;
@@ -205,8 +205,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             return Addon.DB:GetModified( Data.Name );
         end
 
-        Addon.APP.Query = function( self,Search )
-            local FilteredList = Addon.APP:Filter( Search:GetText() );
+        Addon.APP.Query = function( self )
+            local SearchQuery = self.Heading.FilterBox:GetText();
+            local FilteredList = Addon.APP:Filter( SearchQuery );
             Addon.GRID:RegisterList( FilteredList,Addon.APP );
             Addon.GRID:GetStats( FilteredList,Addon.APP );
         end
@@ -270,7 +271,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 self:HighlightText();
             end );
             self.Heading.FilterBox:SetScript( 'OnTextChanged',function( self )
-                Addon.APP:Query( self )
+                Addon.APP:Query();
             end );
 
             self.Heading.Name = Addon.GRID:AddLabel( { DisplayText = 'Name' },self.Heading );
@@ -325,99 +326,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Footer.Art = self.Footer:CreateTexture( nil,'ARTWORK', nil,0 );
             self.Footer.Art:SetTexture( 'Interface\\Addons\\'..self.Name..'\\Textures\\frame' );
             self.Footer.Art:SetAllPoints( self.Footer );
-
-            --[[
-            local fontSizeDropdown = CreateFrame( 'Frame',self.Name..'DropDown',self.Browser,'UIDropDownMenuTemplate' );
-            fontSizeDropdown.initialize = function()
-                local Info = {};
-                local VarData = {
-                    KeyPairs = {
-                        {
-                            Value = 0,
-                            Description = 'Circle',
-                        },
-                        {
-                            Value = 1,
-                            Description = 'Circle & Outline',
-                        },
-                        {
-                            Value = 2,
-                            Description = 'Outline',
-                        },
-                    },
-                    -- findYourselfMode
-                };
-                for i,Data in pairs( VarData.KeyPairs ) do
-                    Info.text = Data.Description;
-                    Info.value = Data.Value;
-                    Info.func = function( self )
-                        print( self.value );
-                    end
-                    if( tonumber( Addon.APP:GetValue( 'findYourselfMode' ) ) == tonumber( Data.Value ) ) then 
-                        Info.checked = true;
-                    elseif ( Addon.APP:GetValue( 'findYourselfMode' ) == Data.Value ) then
-                        Info.checked = true;
-                    else
-                        Info.checked = false;
-                    end
-                    UIDropDownMenu_AddButton( Info );
-                end
-            end
-            fontSizeDropdown:SetPoint( 'topleft',self.Footer,'topleft' );
-            fontSizeDropdown:SetHeight( 20 );
-            ]]
-
-            --[[
-            local TestData;
-
-            TestData = {
-                Name = 'nameplateClassResourceTopInset',
-                KeyPairs = {
-                    Low = {
-                        Value = 0.0,
-                        Description = 'Low',
-                    },
-                    High = {
-                        Value = 1.0,
-                        Description = 'High',
-                    },
-                },
-                Step = 0.1,
-            };
-
-            local Range = Addon.GRID:AddRange( TestData,self.Footer,self );
-            Range:SetPoint( 'topleft',self.Footer,'topleft' );
-            Range:SetSize( 100,20 );
-
-            TestData = {
-                Name = 'chatClassColorOverride'
-            };
-
-            local Toggle = Addon.GRID:AddToggle( TestData,self.Footer,self );
-            Toggle:SetPoint( 'topleft',Range,'topright' );
-            Toggle:SetSize( 100,20 );
-
-            TestData = {
-                Name = 'findYourselfMode',
-                KeyPairs = {
-                    {
-                        Value = 0,
-                        Description = 'Circle',
-                    },
-                    {
-                        Value = 1,
-                        Description = 'Circle & Outline',
-                    },
-                    {
-                        Value = 2,
-                        Description = 'Outline',
-                    },
-                },
-            };
-            local Select = Addon.GRID:AddSelect( TestData,self.Footer,self );
-            Select:SetPoint( 'topleft',Toggle,'topright' );
-            Select:SetSize( 100,20 );
-            ]]
         end
 
         Addon.APP:Init();
