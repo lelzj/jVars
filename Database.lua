@@ -116,7 +116,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         Addon.DB.GetValue = function( self,Index )
             if( self:GetPersistence().Vars[ string.lower( Index ) ].Value ~= nil ) then
                 return self:GetPersistence().Vars[ string.lower( Index ) ].Value;
-            end
+            end; return GetCVar( Index );
         end
 
         Addon.DB.Reset = function( self )

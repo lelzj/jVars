@@ -360,7 +360,6 @@ Addon.GRID.AddRange2 = function( self,VarData,Parent,Handler )
     ]]
     Frame:SetMinMaxValues( VarData.KeyPairs.Low.Value,VarData.KeyPairs.High.Value );
     Frame:SetValueStep( VarData.Step );
-    Frame:SetHeight( 15 );
     Frame:SetHitRectInsets( 0,0,-10,0 );
     --Frame:SetBackdrop( SliderBackdrop );
     Frame:SetThumbTexture( "Interface\\Buttons\\UI-SliderBar-Button-Horizontal" );
@@ -369,6 +368,12 @@ Addon.GRID.AddRange2 = function( self,VarData,Parent,Handler )
 
     Frame.Low:SetText( VarData.KeyPairs.Low.Value );
     Frame.High:SetText( VarData.KeyPairs.High.Value );
+
+    local Point,RelativeFrame,RelativePoint,X,Y = Frame.Low:GetPoint();
+    Frame.Low:SetPoint( Point,RelativeFrame,RelativePoint,X+5,Y-5 );
+
+    local Point,RelativeFrame,RelativePoint,X,Y = Frame.High:GetPoint();
+    Frame.High:SetPoint( Point,RelativeFrame,RelativePoint,X-5,Y-5 );
 
     Frame:SetValue( Handler:GetValue( Key ) );
     Frame.keyValue = Key;
@@ -402,6 +407,7 @@ Addon.GRID.AddRange2 = function( self,VarData,Parent,Handler )
         Handler:SetValue( self.keyValue,Addon:SliderRound( self:GetValue(),VarData.Step ) );
     end );
     Frame.EditBox:Disable();
+    Frame:SetHeight( 15 );
     return Frame;
 end
 
@@ -409,7 +415,6 @@ Addon.GRID.AddToggle2 = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
     local Frame = CreateFrame( 'CheckButton',Key..'Toggle',Parent,'UICheckButtonTemplate' );
     Frame:SetChecked( Addon:Int2Bool( Handler:GetValue( Key ) ) );
-    Frame:SetSize( 25,25 );
     Frame.keyValue = Key;
     Frame:HookScript( 'OnClick',function( self )
          Handler:SetValue( self.keyValue,Addon:BoolToInt( self:GetChecked() ) );
@@ -417,6 +422,7 @@ Addon.GRID.AddToggle2 = function( self,VarData,Parent,Handler )
     if( VarData.Flagged ) then
         Frame:Disable();
     end
+    Frame:SetSize( 25,25 );
     return Frame;
 end
 
@@ -435,6 +441,7 @@ Addon.GRID.AddSelect2 = function( self,VarData,Parent,Handler )
     Frame.initialize = function()
         local Info = {};
         for i,Data in pairs( VarData.KeyPairs ) do
+            Info.isNotRadio = true;
             Info.text = Data.Description;
             Info.value = Data.Value;
             Info.func = function( self )
