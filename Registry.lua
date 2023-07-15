@@ -47,17 +47,21 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Social',
                 },
+                digSites = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
                 useUiScale = {
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
                 countdownForCooldowns = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 findyourselfanywhere = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 findYourselfMode = {
                     Type = 'Select',
@@ -75,7 +79,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Outline',
                         },
                     },
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 nameplateRemovalAnimation = {
                     Type = 'Toggle',
@@ -184,7 +188,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Step = 1,
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 nameplateSelectedScale = {
                     Type = 'Range',
@@ -244,15 +248,15 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Step = 0.1,
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 NameplatePersonalShowAlways = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 NameplatePersonalShowInCombat = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 nameplateShowAll = {
                     Type = 'Toggle',
@@ -320,7 +324,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Any Target',
                         },
                     },
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 nameplateShowFriendlyNPCs = {
                     Type = 'Toggle',
@@ -423,7 +427,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Step = 0.1,
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 nameplateOtherBottomInset = {
                     Type = 'Range',
@@ -483,7 +487,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Step = 0.1,
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 nameplateMaxAlpha = {
                     Type = 'Range',
@@ -513,6 +517,21 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Step = 0.1,
+                    Category = 'Character',
+                },
+                Contrast = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 100,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 10,
                     Category = 'Hud',
                 },
                 showArenaEnemyCastbar = {
@@ -875,6 +894,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
+                calendarShowWeeklyHolidays = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
                 enablePVPNotifyAFK = {
                     Type = 'Toggle',
                     Category = 'System',
@@ -905,6 +928,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
+                hwDetect = {
+                    Type = 'Toggle',
+                    Category = 'System',
+                },
                 raidFramesDisplayOnlyDispellableDebuffs = {
                     Type = 'Toggle',
                     Category = 'Hud',
@@ -918,6 +945,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Category = 'Social',
                 },
                 guildMemberNotify = {
+                    Type = 'Toggle',
+                    Category = 'Social',
+                },
+                guildShowOffline = {
                     Type = 'Toggle',
                     Category = 'Social',
                 },
@@ -1130,6 +1161,36 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Sound',
                 },
+                ChatMusicVolume = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Sound',
+                },
+                ChatSoundVolume = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Sound',
+                },
                 Sound_EnableErrorSpeech = {
                     Type = 'Toggle',
                     Category = 'Sound',
@@ -1231,7 +1292,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 consolidateBuffs = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 autoClearAFK = {
                     Type = 'Toggle',
@@ -1239,11 +1300,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 autoLootDefault = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 autoSelfCast = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 cameraDistanceMaxZoomFactor = {
                     Type = 'Range',
@@ -1292,7 +1353,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 emphasizeMySpellEffects = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 farclip = {
                     Type = 'Range',
@@ -1623,6 +1684,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 displayFreeBagSlots = {
                     Type = 'Toggle',
+                    Category = 'Hud',
                 },
                 maxFPS = {
                     Type = 'Range',
@@ -1638,6 +1700,54 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 10,
                     Category = 'Graphics',
+                },
+                displayWorldPVPObjectives = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                dontShowEquipmentSetsOnItems = {
+                    Type = 'Toggle',
+                    Category = 'Character',
+                },
+                enableWowMouse = {
+                    Type = 'Toggle',
+                    Category = 'System',
+                },
+                floatingCombatTextAuras = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                floatingCombatTextCombatDamage = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                floatingCombatTextCombatDamageAllAutos = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                floatingCombatTextCombatHealing = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                floatingCombatTextComboPoints = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                floatingCombatTextEnergyGains = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                floatingCombatTextHonorGains = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                floatingCombatTextLowManaHealth = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                forceEnglishNames = {
+                    Type = 'Toggle',
+                    Category = 'Social',
                 },
                 cursorSizePreferred = {
                     Type = 'Select',
@@ -1675,6 +1785,21 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 CameraKeepCharacterCentered = {
                     Type = 'Toggle',
+                    Category = 'Character',
+                },
+                cameraYawSmoothSpeed = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 90,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 270,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 10,
                     Category = 'Hud',
                 },
                 cameraPivot = {
@@ -1710,7 +1835,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 buffDurations = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 calendarShowBattlegrounds = {
                     Type = 'Toggle',
@@ -1756,11 +1881,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Step = 10,
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 autoOpenLootHistory = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 breakUpLargeNumbers = {
                     Type = 'Toggle',
@@ -1780,15 +1905,15 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 autoDismount = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 autoDismountFlying = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 autoInteract = {
                     Type = 'Toggle',
-                    Category = 'Hud',
+                    Category = 'Character',
                 },
                 cameraFov = {
                     Type = 'Range',
@@ -2290,7 +2415,35 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 assistAttack = {
                     Type = 'Toggle',
+                    Category = 'Character',
+                },
+                asyncThreadSleep = {
+                    Type = 'Toggle',
                     Category = 'System',
+                },
+                auctionDisplayOnCharacter = {
+                    Type = 'Toggle',
+                    Category = 'Character',
+                },
+                autoFilledMultiCastSlots = {
+                    Type = 'Toggle',
+                    Category = 'System',
+                },
+                autoQuestProgress = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                autoQuestWatch = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                autoStand = {
+                    Type = 'Toggle',
+                    Category = 'Character',
+                },
+                autoUnshift = {
+                    Type = 'Toggle',
+                    Category = 'Character',
                 },
             };
             for VarName,VarData in pairs( Registry ) do
