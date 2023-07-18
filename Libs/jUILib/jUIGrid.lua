@@ -24,7 +24,7 @@ Addon.GRID.GetStats = function( self,Data,Handler )
 
     self.AddRow = function( self,Data,Handler )
 
-        local Row = CreateFrame( 'Frame',Handler.Footer:GetName()..'StatsRow',Handler.Footer );
+        local Row = CreateFrame( 'Frame',Handler.Stats:GetName()..'StatsRow',Handler.Stats );
 
         Row.LockedLabel = self:AddLocked( { DisplayText = 'Locked' },Row );
         Row.LockedValue = self:AddLabel( { DisplayText = Data.Locked },Row );
@@ -36,7 +36,7 @@ Addon.GRID.GetStats = function( self,Data,Handler )
         Row.TotalValue = self:AddLabel( { DisplayText = Data.Total },Row );
 
 
-        Row.LockedLabel:SetPoint( 'topright',Handler.Footer,'topright',-10,-7 );
+        Row.LockedLabel:SetPoint( 'topright',Handler.Stats,'topright',-10,-7 );
         Row.LockedValue:SetPoint( 'topright',Row.LockedLabel,'topleft',0,0 );
 
         Row.ModifiedLabel:SetPoint( 'topright',Row.LockedValue,'topleft',0,0 );
@@ -142,7 +142,7 @@ Addon.GRID.RegisterList = function( self,Data,Handler )
         -- Adjust
         if( Data.Scope == 'Locked' ) then
             if( Data.Type == 'Toggle' ) then
-                Row.Value = Addon.GRID:AddToggle2( Data,Row,Handler );
+                Row.Value = Addon.GRID:AddVarToggle( Data,Row,Handler );
             elseif( Data.Type == 'Range' ) then
                 Row.Value = Addon.GRID:AddRange2( Data,Row,Handler );
             elseif( Data.Type == 'Select' ) then
@@ -150,7 +150,7 @@ Addon.GRID.RegisterList = function( self,Data,Handler )
             end
         else
             if( Data.Type == 'Toggle' ) then
-                Row.Value = Addon.GRID:AddToggle2( Data,Row,Handler );
+                Row.Value = Addon.GRID:AddVarToggle( Data,Row,Handler );
             elseif( Data.Type == 'Range' ) then
                 Row.Value = Addon.GRID:AddRange2( Data,Row,Handler );
             elseif( Data.Type == 'Select' ) then
@@ -326,7 +326,6 @@ Addon.GRID.AddTip = function( self,VarData,Parent )
         Parent = FontString
     };
     Parent:SetScript( 'OnEnter',function( self )
-        self.Label.Tip = CreateFrame( 'GameTooltip',self.DataKeys.Name..'ToolTip',UIParent,'GameTooltipTemplate' );
         GameTooltip:SetOwner( self.DataKeys.Parent,'ANCHOR_NONE',0,0 );
         GameTooltip:AddLine( self.DataKeys.DisplayText,nil,nil,nil,false );
         GameTooltip:AddLine( self.DataKeys.Description,1,1,1,false );
@@ -375,7 +374,7 @@ Addon.GRID.AddRange2 = function( self,VarData,Parent,Handler )
     local Point,RelativeFrame,RelativePoint,X,Y = Frame.High:GetPoint();
     Frame.High:SetPoint( Point,RelativeFrame,RelativePoint,X-5,Y-5 );
 
-    Frame:SetValue( Handler:GetValue( Key ) );
+    Frame:SetValue( Handler:GetVarValue( Key ) );
     Frame.keyValue = Key;
     if( VarData.Flagged ) then
         Frame:Disable();
@@ -392,7 +391,7 @@ Addon.GRID.AddRange2 = function( self,VarData,Parent,Handler )
     --Frame.EditBox:GetFontString():SetJustifyH( 'center' );
     Frame.EditBox:ClearAllPoints();
     Frame.EditBox:SetPoint( 'top',Frame,'bottom',0,2 );
-    Frame.EditBox:SetText( Handler:GetValue( Key ) );
+    Frame.EditBox:SetText( Handler:GetVarValue( Key ) );
     --Frame.EditBox:SetBackdrop( ManualBackdrop );
     --[[
     Frame.EditBox:HookScript( 'OnTextChanged',function( self )
@@ -404,20 +403,30 @@ Addon.GRID.AddRange2 = function( self,VarData,Parent,Handler )
     ]]
     Frame:HookScript( 'OnValueChanged',function( self,Value )
         self.EditBox:SetText( Addon:SliderRound( self:GetValue(),VarData.Step ) );
-        Handler:SetValue( self.keyValue,Addon:SliderRound( self:GetValue(),VarData.Step ) );
+        Handler:SetVarValue( self.keyValue,Addon:SliderRound( self:GetValue(),VarData.Step ) );
     end );
     Frame.EditBox:Disable();
     Frame:SetHeight( 15 );
     return Frame;
 end
 
-Addon.GRID.AddToggle2 = function( self,VarData,Parent,Handler )
+Addon.GRID.AddToggle = function( self,VarData,Parent )
     local Key = string.lower( VarData.Name );
     local Frame = CreateFrame( 'CheckButton',Key..'Toggle',Parent,'UICheckButtonTemplate' );
-    Frame:SetChecked( Addon:Int2Bool( Handler:GetValue( Key ) ) );
+    if( VarData.Flagged ) then
+        Frame:Disable();
+    end
+    Frame:SetSize( 25,25 );
+    return Frame;
+end
+
+Addon.GRID.AddVarToggle = function( self,VarData,Parent,Handler )
+    local Key = string.lower( VarData.Name );
+    local Frame = CreateFrame( 'CheckButton',Key..'Toggle',Parent,'UICheckButtonTemplate' );
+    Frame:SetChecked( Addon:Int2Bool( Handler:GetVarValue( Key ) ) );
     Frame.keyValue = Key;
     Frame:HookScript( 'OnClick',function( self )
-         Handler:SetValue( self.keyValue,Addon:BoolToInt( self:GetChecked() ) );
+         Handler:SetVarValue( self.keyValue,Addon:BoolToInt( self:GetChecked() ) );
     end );
     if( VarData.Flagged ) then
         Frame:Disable();
@@ -428,9 +437,9 @@ end
 
 Addon.GRID.AddEdit = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
-    local Frame = CreateFrame( 'Frame',Key..'Edit',Parent,'InputBoxTemplate' );
-    Frame:SetMultiLine( true );
-    Frame:SetTextInsets( 0,0,3,3);
+    local Frame = CreateFrame( 'EditBox',Key..'Edit',Parent,'InputBoxTemplate' );
+    --Frame:SetMultiLine( true );
+    --Frame:SetTextInsets( 0,0,3,3);
     Frame:SetHeight( 20 );
     return Frame;
 end
@@ -445,10 +454,10 @@ Addon.GRID.AddSelect2 = function( self,VarData,Parent,Handler )
             Info.text = Data.Description;
             Info.value = Data.Value;
             Info.func = function( self )
-                Handler:SetValue( Key,self.value );
+                Handler:SetVarValue( Key,self.value );
                 Frame:initialize();
             end
-            if ( tostring( Addon.APP:GetValue( Key ) ) == tostring( Data.Value ) ) then
+            if ( tostring( Addon.APP:GetVarValue( Key ) ) == tostring( Data.Value ) ) then
                 Info.checked = true;
                 Frame.Text:SetText( Info.text );
             else

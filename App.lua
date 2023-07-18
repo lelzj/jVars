@@ -62,13 +62,13 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         --
-        --  Set module setting
+        --  Set cvar setting
         --
         --  @param  string  Index
         --  @param  string  Value
         --  @return bool
-        Addon.APP.SetValue = function( self,Index,Value )
-            local Result = Addon.DB:SetValue( Index,Value );
+        Addon.APP.SetVarValue = function( self,Index,Value )
+            local Result = Addon.DB:SetVarValue( Index,Value );
             if( Result ) then
                 self:Query();
                 SetCVar( Index,Value );
@@ -76,6 +76,25 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 return true;
             end
             return false;
+        end
+
+        --
+        --  Get cvar setting
+        --
+        --  @param  string  Index
+        --  @return mixed
+        Addon.APP.GetVarValue = function( self,Index )
+            return Addon.DB:GetVarValue( Index,Value );
+        end
+
+        --
+        --  Set module setting
+        --
+        --  @param  string  Index
+        --  @param  string  Value
+        --  @return bool
+        Addon.APP.SetValue = function( self,Index,Value )
+            return Addon.DB:SetValue( Index,Value );
         end
 
         --
@@ -95,9 +114,18 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( not Addon.DB:GetPersistence() ) then
                 return;
             end
-            for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
-                SetCVar( string.lower( VarName ),VarData.Value );
-            end
+            self:Notify( 'Refreshing all settings...' );
+            C_Timer.After( 2.5,function()
+                for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
+                    --/script print( GetCVar( 'cameradistancemaxzoomfactor' ) );
+                    if( string.lower( VarName ) == 'cameradistancemaxzoomfactor' ) then
+                        local Updated = SetCVar( string.lower( VarName ),VarData.Value );
+                        --print( Updated, VarName,VarData.Value );
+                    else
+                        SetCVar( string.lower( VarName ),VarData.Value );
+                    end
+                end; self:Notify( 'Done' );
+            end );
         end
 
         Addon.APP.FrameRegister = function( self,FrameData )
@@ -149,7 +177,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
 
                 local Key = string.lower( VarName );
-                local Value = Addon.DB:GetValue( Key );
+                local Value = self:GetVarValue( Key );
                 local Flagged = Addon.DB:GetFlagged( Key );
                 local Dict = Addon.DICT:GetDictionary()[ Key ];
 
@@ -226,29 +254,29 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 end
             end
 
-            Addon.APP.Config = CreateFrame( 'Frame',self.Name);
-            Addon.APP.Config.name = self.Name;
+            self.Config = CreateFrame( 'Frame',self.Name);
+            self.Config.name = self.Name;
 
-            Addon.APP.Config.okay = function( self )
+            self.Config.okay = function( self )
                 RestartGx();
             end
 
-            Addon.APP.Config.default = function( self )
+            self.Config.default = function( self )
                 Addon.DB:Reset();
                 RestartGx();
             end
 
-            InterfaceOptions_AddCategory( Addon.APP.Config );
+            InterfaceOptions_AddCategory( self.Config );
 
             self.RowHeight = 30;
 
-            self.Heading = CreateFrame( 'Frame',self.Name..'Heading',Addon.APP.Config );
-            self.Heading:SetPoint( 'topleft',Addon.APP.Config,'topleft',10,-10 );
+            self.Heading = CreateFrame( 'Frame',self.Name..'Heading',self.Config );
+            self.Heading:SetPoint( 'topleft',self.Config,'topleft',10,-10 );
             self.Heading:SetSize( 580,100 );
             self.Heading.FieldHeight = 10;
             self.Heading.ColInset = 15;
 
-            self.Heading.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',Addon.APP.Config,'SearchBoxTemplate' );
+            self.Heading.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',self.Config,'SearchBoxTemplate' );
             self.Heading.FilterBox:SetPoint( 'topleft',self.Heading,'topleft',15,-35 );
             self.Heading.FilterBox:SetSize( 200,20 );
             self.Heading.FilterBox.clearButton:Hide();
@@ -303,7 +331,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Heading.Art:SetTexture( 'Interface\\Addons\\'..self.Name..'\\Textures\\frame' );
             self.Heading.Art:SetAllPoints( self.Heading );
 
-            self.Browser = CreateFrame( 'Frame',self.Name..'Browser',Addon.APP.Config );
+            self.Browser = CreateFrame( 'Frame',self.Name..'Browser',self.Config );
             self.Browser:SetSize( self.Heading:GetWidth(),400 );
             self.Browser:SetPoint( 'topleft',self.Heading,'bottomleft',0,-10 );
 
@@ -319,13 +347,45 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
             self.ScrollChild:SetHeight( 20 );
 
-            self.Footer = CreateFrame( 'Frame',self.Name..'Footer',Addon.APP.Config );
+            self.Footer = CreateFrame( 'Frame',self.Name..'Footer',self.Config );
             self.Footer:SetSize( self.Browser:GetWidth(),25 );
             self.Footer:SetPoint( 'topleft',self.Browser,'bottomleft',0,-10 );
 
             self.Footer.Art = self.Footer:CreateTexture( nil,'ARTWORK', nil,0 );
             self.Footer.Art:SetTexture( 'Interface\\Addons\\'..self.Name..'\\Textures\\frame' );
             self.Footer.Art:SetAllPoints( self.Footer );
+
+            self.Stats = CreateFrame( 'Frame',self.Name..'FooterStats',self.Footer );
+            self.Stats:SetSize( self.Footer:GetWidth()/2,self.Footer:GetHeight() );
+            self.Stats:SetPoint( 'topright',self.Footer,'topright',0,0 );
+
+            self.Controls = CreateFrame( 'Frame',self.Name..'FooterConfig',self.Footer );
+            self.Controls:SetSize( self.Footer:GetWidth()/2,self.Footer:GetHeight() );
+            self.Controls:SetPoint( 'topright',self.Stats,'topleft',0,0 );
+
+            local RefreshData = {
+                Name = 'Refresh',
+                DisplayText = 'Re-Apply settings on reload',
+            };
+            self.Apply = Addon.GRID:AddToggle( RefreshData,self.Controls );
+            self.Apply:SetChecked( Addon:Int2Bool( self:GetValue( self.Apply.keyValue ) ) );
+            self.Apply.keyValue = RefreshData.Name;
+            self.Apply:SetPoint( 'topleft',self.Controls,'topleft',0,0 );
+            self.Apply.Label = Addon.GRID:AddLabel( RefreshData,self.Apply );
+            self.Apply.Label:SetPoint( 'topleft',self.Apply,'topright',0,-3 );
+            self.Apply.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.Apply.Label:SetJustifyH( 'left' );
+
+            self.Apply:HookScript( 'OnClick',function( self )
+                Addon.APP:SetValue( self.keyValue,Addon:BoolToInt( self:GetChecked() ) );
+            end );
+
+            if( Addon:Int2Bool( self:GetValue( self.Apply.keyValue ) ) ) then
+                self:Refresh();
+            end
+
+            --self.Controls.Import = Addon.GRID:AddEdit( { Name=self.Name..'Import' },self.Controls,self );
+            --self.Controls.Import:SetPoint( 'topleft',self.Controls,'topleft',0,0 );
         end
 
         Addon.APP:Init();

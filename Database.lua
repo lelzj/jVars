@@ -23,6 +23,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                     UI = false,
                     GX = true,
                 },
+                Refresh = false,
                 Vars = {},
             };
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
@@ -64,12 +65,12 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         --
-        --  Set module setting
+        --  Set cvar setting
         --
         --  @param  string  Index
         --  @param  string  Value
         --  @return bool
-        Addon.DB.SetValue = function( self,Index,Value )
+        Addon.DB.SetVarValue = function( self,Index,Value )
             if( InCombatLockdown() ) then
                 Addon.APP:Warn( 'Leave combat before updating' );
                 return false;
@@ -109,14 +110,37 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         --
+        --  Get cvar setting
+        --
+        --  @param  string  Index
+        --  @return mixed
+        Addon.DB.GetVarValue = function( self,Index )
+            if( self:GetPersistence().Vars[ string.lower( Index ) ].Value ~= nil ) then
+                return self:GetPersistence().Vars[ string.lower( Index ) ].Value;
+            end; return GetCVar( Index );
+        end
+
+        --
+        --  Set module setting
+        --
+        --  @param  string  Index
+        --  @param  string  Value
+        --  @return bool
+        Addon.DB.SetValue = function( self,Index,Value )
+            if( self:GetPersistence().Index ~= nil ) then
+                self:GetPersistence().Index = Value;
+            end
+        end
+
+        --
         --  Get module setting
         --
         --  @param  string  Index
         --  @return mixed
         Addon.DB.GetValue = function( self,Index )
-            if( self:GetPersistence().Vars[ string.lower( Index ) ].Value ~= nil ) then
-                return self:GetPersistence().Vars[ string.lower( Index ) ].Value;
-            end; return GetCVar( Index );
+            if( self:GetPersistence().Index ~= nil ) then
+                return self:GetPersistence().Index;
+            end
         end
 
         Addon.DB.Reset = function( self )
