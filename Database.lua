@@ -14,15 +14,8 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Modified = {
                     Total = 0,
                 },
-                Search = {
-                    Query = nil,
-                    Category = 'Game',
-                    Direction = 'asc',
-                },
-                Reload = {
-                    UI = false,
-                    GX = true,
-                },
+                ReloadUI = false,
+                ReloadGX = true,
                 Refresh = false,
                 Vars = {},
             };
@@ -127,9 +120,10 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  string  Value
         --  @return bool
         Addon.DB.SetValue = function( self,Index,Value )
-            if( self:GetPersistence().Index ~= nil ) then
-                self:GetPersistence().Index = Value;
-            end
+            if( self:GetPersistence()[Index] ~= nil ) then
+                self:GetPersistence()[Index] = Value;
+                return true;
+            end; return false;
         end
 
         --
@@ -138,8 +132,8 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  string  Index
         --  @return mixed
         Addon.DB.GetValue = function( self,Index )
-            if( self:GetPersistence().Index ~= nil ) then
-                return self:GetPersistence().Index;
+            if( self:GetPersistence()[Index] ~= nil ) then
+                return self:GetPersistence()[Index];
             end
         end
 

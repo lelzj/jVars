@@ -72,7 +72,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( Result ) then
                 self:Query();
                 SetCVar( Index,Value );
-                RestartGx();
+                if( Addon.DB:GetValue( 'ReloadGX' ) ) then
+                    RestartGx();
+                end
+                if( Addon.DB:GetValue( 'ReloadUI' ) ) then
+                    ReloadUI();
+                end
                 return true;
             end
             return false;
@@ -103,7 +108,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  string  Index
         --  @return mixed
         Addon.APP.GetValue = function( self,Index )
-            return Addon.DB:GetValue( Index,Value );
+            return Addon.DB:GetValue( Index );
         end
 
         --
@@ -368,21 +373,51 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 DisplayText = 'Re-Apply settings on reload',
             };
             self.Apply = Addon.GRID:AddToggle( RefreshData,self.Controls );
-            self.Apply:SetChecked( Addon:Int2Bool( self:GetValue( self.Apply.keyValue ) ) );
             self.Apply.keyValue = RefreshData.Name;
+            self.Apply:SetChecked( self:GetValue( self.Apply.keyValue ) );
             self.Apply:SetPoint( 'topleft',self.Controls,'topleft',0,0 );
             self.Apply.Label = Addon.GRID:AddLabel( RefreshData,self.Apply );
             self.Apply.Label:SetPoint( 'topleft',self.Apply,'topright',0,-3 );
             self.Apply.Label:SetSize( self.Controls:GetWidth()/3,20 );
             self.Apply.Label:SetJustifyH( 'left' );
-
             self.Apply:HookScript( 'OnClick',function( self )
-                Addon.APP:SetValue( self.keyValue,Addon:BoolToInt( self:GetChecked() ) );
+                Addon.APP:SetValue( self.keyValue,self:GetChecked() );
             end );
-
-            if( Addon:Int2Bool( self:GetValue( self.Apply.keyValue ) ) ) then
+            if( self:GetValue( self.Apply.keyValue ) ) then
                 self:Refresh();
             end
+
+            local ReloadUIData = {
+                Name = 'ReloadUI',
+                DisplayText = 'Reload UI for each update',
+            };
+            self.ReloadUI = Addon.GRID:AddToggle( ReloadUIData,self.Controls );
+            self.ReloadUI.keyValue = ReloadUIData.Name;
+            self.ReloadUI:SetChecked( self:GetValue( self.ReloadUI.keyValue ) );
+            self.ReloadUI:SetPoint( 'topleft',self.Apply.Label,'topright',0,3 );
+            self.ReloadUI.Label = Addon.GRID:AddLabel( ReloadUIData,self.ReloadUI );
+            self.ReloadUI.Label:SetPoint( 'topleft',self.ReloadUI,'topright',0,-3 );
+            self.ReloadUI.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.ReloadUI.Label:SetJustifyH( 'left' );
+            self.ReloadUI:HookScript( 'OnClick',function( self )
+                Addon.APP:SetValue( self.keyValue,self:GetChecked() );
+            end );
+
+            local ReloadGXData = {
+                Name = 'ReloadGX',
+                DisplayText = 'Reload GX for each update',
+            };
+            self.ReloadGX = Addon.GRID:AddToggle( ReloadGXData,self.Controls );
+            self.ReloadGX.keyValue = ReloadGXData.Name;
+            self.ReloadGX:SetChecked( self:GetValue( self.ReloadGX.keyValue ) );
+            self.ReloadGX:SetPoint( 'topleft',self.ReloadUI.Label,'topright',0,3 );
+            self.ReloadGX.Label = Addon.GRID:AddLabel( ReloadGXData,self.ReloadGX );
+            self.ReloadGX.Label:SetPoint( 'topleft',self.ReloadGX,'topright',0,-3 );
+            self.ReloadGX.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.ReloadGX.Label:SetJustifyH( 'left' );
+            self.ReloadGX:HookScript( 'OnClick',function( self )
+                Addon.APP:SetValue( self.keyValue,self:GetChecked() );
+            end );
 
             --self.Controls.Import = Addon.GRID:AddEdit( { Name=self.Name..'Import' },self.Controls,self );
             --self.Controls.Import:SetPoint( 'topleft',self.Controls,'topleft',0,0 );
