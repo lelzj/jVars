@@ -28,7 +28,6 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Defaults.Vars[ string.lower( VarName ) ] = {
                     Flagged = Dict.Flagged or false,
                     Value = Dict.CurrentValue,
-                    Indexed = false,
                 };
             end
             return Defaults;
@@ -158,23 +157,20 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                 return;
             end
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
-                if( self:GetPersistence().Vars[ string.lower( VarName ) ] and not self:GetPersistence().Vars[ string.lower( VarName ) ].Indexed ) then
-                    if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ) then
+                if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ) then
+                    if( tostring( self:GetPersistence().Vars[ string.lower( VarName ) ].Value ) == tostring( Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DefaultValue ) ) then
+                         self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = false;
+                    else
                         if( VarData.Type == 'Toggle' ) then
                             if( tonumber( self:GetPersistence().Vars[ string.lower( VarName ) ].Value ) ~= tonumber( Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DefaultValue ) ) then
                                 self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = true;
-                            else
-                                self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = false
                             end
                         else
                             if( self:GetPersistence().Vars[ string.lower( VarName ) ].Value ~= Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DefaultValue ) then
                                 self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = true;
-                            else
-                                self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = false;
                             end
                         end
                     end
-                    self:GetPersistence().Vars[ string.lower( VarName ) ].Indexed = true;
                 end
             end
         end
