@@ -125,7 +125,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     --/script print( GetCVar( 'cameradistancemaxzoomfactor' ) );
                     if( string.lower( VarName ) == 'cameradistancemaxzoomfactor' ) then
                         local Updated = SetCVar( string.lower( VarName ),VarData.Value );
-                        --print( Updated, VarName,VarData.Value );
                     else
                         SetCVar( string.lower( VarName ),VarData.Value );
                     end
@@ -203,8 +202,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     };
                 end
             end
-
-            Addon.REG:FillSpeechOptions();
 
             if( not SearchQuery or not ( string.len( SearchQuery ) >= 3 ) ) then
                 return AllData;

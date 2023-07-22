@@ -2449,6 +2449,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,VarData in pairs( Registry ) do
                 self.Registry[ string.lower( VarName ) ] = VarData;
             end
+            self:FillSpeechOptions();
             return self.Registry;
         end
 
