@@ -122,12 +122,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self:Notify( 'Refreshing all settings...' );
             C_Timer.After( 2.5,function()
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
-                    --/script print( GetCVar( 'cameradistancemaxzoomfactor' ) );
-                    if( string.lower( VarName ) == 'cameradistancemaxzoomfactor' ) then
-                        local Updated = SetCVar( string.lower( VarName ),VarData.Value );
-                    else
-                        SetCVar( string.lower( VarName ),VarData.Value );
-                    end
+                local Updated = SetCVar( string.lower( VarName ),VarData.Value );
                 end; self:Notify( 'Done' );
             end );
         end
@@ -421,6 +416,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         Addon.APP:Init();
+        Addon.APP:Refresh();
         Addon.APP:UnregisterEvent( 'ADDON_LOADED' );
     end
 end );

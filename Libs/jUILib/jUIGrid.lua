@@ -146,7 +146,7 @@ Addon.GRID.RegisterList = function( self,Data,Handler )
             elseif( Data.Type == 'Range' ) then
                 Row.Value = Addon.GRID:AddRange2( Data,Row,Handler );
             elseif( Data.Type == 'Select' ) then
-                Row.Value = Addon.GRID:AddSelect2( Data,Row,Handler );
+                Row.Value = Addon.GRID:AddSelect( Data,Row,Handler );
             end
         else
             if( Data.Type == 'Toggle' ) then
@@ -154,7 +154,7 @@ Addon.GRID.RegisterList = function( self,Data,Handler )
             elseif( Data.Type == 'Range' ) then
                 Row.Value = Addon.GRID:AddRange2( Data,Row,Handler );
             elseif( Data.Type == 'Select' ) then
-                Row.Value = Addon.GRID:AddSelect2( Data,Row,Handler );
+                Row.Value = Addon.GRID:AddSelect( Data,Row,Handler );
             end
         end
         if( Data.Type == 'Select' ) then
@@ -437,14 +437,14 @@ end
 
 Addon.GRID.AddEdit = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
-    local Frame = CreateFrame( 'EditBox',Key..'Edit',Parent,'InputBoxTemplate' );
-    --Frame:SetMultiLine( true );
-    --Frame:SetTextInsets( 0,0,3,3);
+    local Frame = CreateFrame( 'EditBox',Key..'Edit',Parent--[[,'InputBoxTemplate']] );
+    Frame:SetMultiLine( true );
+    Frame:SetTextInsets( 0,0,3,3);
     Frame:SetHeight( 20 );
     return Frame;
 end
 
-Addon.GRID.AddSelect2 = function( self,VarData,Parent,Handler )
+Addon.GRID.AddSelect = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
     local Frame = CreateFrame( 'Frame',Key..'Select',Parent,'UIDropDownMenuTemplate' );
     Frame.initialize = function()
