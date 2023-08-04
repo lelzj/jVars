@@ -375,9 +375,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Apply:HookScript( 'OnClick',function( self )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
             end );
-            if( self:GetValue( self.Apply.keyValue ) ) then
-                self:Refresh();
-            end
 
             local ReloadUIData = {
                 Name = 'ReloadUI',
@@ -416,7 +413,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         Addon.APP:Init();
-        Addon.APP:Refresh();
+        if( Addon.APP:GetValue( 'Refresh' ) ) then
+            Addon.APP:Refresh();
+        end
         Addon.APP:UnregisterEvent( 'ADDON_LOADED' );
     end
 end );
