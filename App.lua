@@ -412,10 +412,10 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             --self.Controls.Import:SetPoint( 'topleft',self.Controls,'topleft',0,0 );
         end
 
-        Addon.APP:Init();
-        if( Addon.APP:GetValue( 'Refresh' ) ) then
-            Addon.APP:Refresh();
+        self:Init();
+        if( self:GetValue( 'Refresh' ) ) then
+            self:Refresh();
         end
-        Addon.APP:UnregisterEvent( 'ADDON_LOADED' );
+        self:UnregisterEvent( 'ADDON_LOADED' );
     end
 end );
