@@ -122,7 +122,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self:Notify( 'Refreshing all settings...' );
             C_Timer.After( 2.5,function()
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
-                local Updated = SetCVar( string.lower( VarName ),VarData.Value );
+                if( not VarData.Flagged ) then
+                    local Updated = SetCVar( string.lower( VarName ),VarData.Value );
+                end
                 end; self:Notify( 'Done' );
             end );
         end
