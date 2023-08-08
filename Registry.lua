@@ -1575,7 +1575,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Range',
                     KeyPairs = {
                         Low = {
-                            Value = 0.4,
+                            Value = 0.5,
                             Description = 'Low',
                         },
                         High = {
