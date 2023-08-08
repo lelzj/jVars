@@ -16,7 +16,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 ReloadUI = false,
                 ReloadGX = true,
-                Refresh = false,
+                Refresh = true,
                 Vars = {},
             };
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
