@@ -140,23 +140,16 @@ Addon.GRID.RegisterList = function( self,Data,Handler )
         Row.Default:SetJustifyH( 'left' );
 
         -- Adjust
-        if( Data.Scope == 'Locked' ) then
-            if( Data.Type == 'Toggle' ) then
-                Row.Value = Addon.GRID:AddVarToggle( Data,Row,Handler );
-            elseif( Data.Type == 'Range' ) then
-                Row.Value = Addon.GRID:AddRange2( Data,Row,Handler );
-            elseif( Data.Type == 'Select' ) then
-                Row.Value = Addon.GRID:AddSelect( Data,Row,Handler );
-            end
-        else
-            if( Data.Type == 'Toggle' ) then
-                Row.Value = Addon.GRID:AddVarToggle( Data,Row,Handler );
-            elseif( Data.Type == 'Range' ) then
-                Row.Value = Addon.GRID:AddRange2( Data,Row,Handler );
-            elseif( Data.Type == 'Select' ) then
-                Row.Value = Addon.GRID:AddSelect( Data,Row,Handler );
-            end
+        if( Data.Type == 'Toggle' ) then
+            Row.Value = Addon.GRID:AddVarToggle( Data,Row,Handler );
+        elseif( Data.Type == 'Range' ) then
+            Row.Value = Addon.GRID:AddRange2( Data,Row,Handler );
+        elseif( Data.Type == 'Select' ) then
+            Row.Value = Addon.GRID:AddSelect( Data,Row,Handler );
+        elseif( Data.Type == 'Edit' ) then
+            Row.Value = Addon.GRID:AddEdit( Data,Row,Handler );
         end
+
         if( Data.Type == 'Select' ) then
             Row.Value:SetPoint( 'topleft',Row.Default,'topright',-19,7 );
         elseif( Data.Type == 'Toggle' ) then
@@ -437,11 +430,39 @@ end
 
 Addon.GRID.AddEdit = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
-    local Frame = CreateFrame( 'EditBox',Key..'Edit',Parent--[[,'InputBoxTemplate']] );
-    Frame:SetMultiLine( true );
-    Frame:SetTextInsets( 0,0,3,3);
-    Frame:SetHeight( 20 );
+    local Frame = CreateFrame( 'EditBox',Key..'Edit',Parent,'InputBoxTemplate' );
+    Frame:SetAutoFocus( false );
+    Frame:ClearFocus();
+    Frame:SetText( VarData.Value );
+    Frame.keyValue = Key;
+    Frame:HookScript( 'OnEnterPressed',function( self )
+        local Value = self:GetText();
+        if( Value ) then
+            Handler:SetVarValue( self.keyValue,Value );
+        end
+    end );
     return Frame;
+    --[[
+    local Frame = CreateFrame( 'ScrollFrame',Key..'ScrollFrame',Parent,'UIPanelScrollFrameTemplate' );
+    Frame:SetPoint( 'topleft',Parent,'topleft',0,0 );
+
+    Frame.Input = CreateFrame( 'EditBox',Key..'Edit',Parent,'InputBoxTemplate' );
+    Frame.Input:DisableDrawLayer( 'BACKGROUND' );
+    Frame.Input:SetAllPoints( Frame );
+    Frame.Input:SetAutoFocus( false );
+    Frame.Input:SetMultiLine( true );
+    Frame.Input:SetTextInsets( 0,0,3,3);
+    Frame.Input:SetSize( 20,20 );
+    Frame.Input:ClearFocus();
+    Frame.Input:HookScript( 'OnTextChanged',function( self )
+        local Value = self:GetText();
+        if( Value ) then
+
+        end
+    end );
+    Frame:SetScrollChild( Frame.Input );
+    return Frame.Input;
+    ]]
 end
 
 Addon.GRID.AddSelect = function( self,VarData,Parent,Handler )

@@ -233,7 +233,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         Addon.APP.Query = function( self )
-            local SearchQuery = self.Heading.FilterBox:GetText();
+            local SearchQuery = self.FilterBox:GetText();
             local FilteredList = Addon.APP:Filter( SearchQuery );
             Addon.GRID:RegisterList( FilteredList,Addon.APP );
             Addon.GRID:GetStats( FilteredList,Addon.APP );
@@ -274,14 +274,20 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Heading:SetSize( 580,100 );
             self.Heading.FieldHeight = 10;
             self.Heading.ColInset = 15;
-
-            self.Heading.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',self.Config,'SearchBoxTemplate' );
-            self.Heading.FilterBox:SetPoint( 'topleft',self.Heading,'topleft',15,-35 );
-            self.Heading.FilterBox:SetSize( 200,20 );
-            self.Heading.FilterBox.clearButton:Hide();
-            self.Heading.FilterBox:ClearFocus();
-            self.Heading.FilterBox:SetAutoFocus( false );
-            self.Heading.FilterBox:SetScript( 'OnEscapePressed',function( self )
+            --[[[]
+            self.Heading.Import = Addon.GRID:AddEdit( { Name=self.Name..'Import' },self.Heading,self );
+            self.Heading.Import:GetParent():SetPoint( 'topleft',self.Heading,'topleft',10,-10 );
+            self.Heading.Import:GetParent():SetSize( self.Heading:GetWidth()-20,45 );
+            self.Heading.Import:SetText( 'asdf wtf yo is this shit lmao woah fuck ass' );
+            self.Heading.Import:SetWidth( self.Heading:GetWidth()-20 );
+            ]]
+            self.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',self.Config,'SearchBoxTemplate' );
+            self.FilterBox:SetPoint( 'topleft',self.Heading,'topleft',15,( ( self.Heading:GetHeight() )*-1 )+25 );
+            self.FilterBox:SetSize( 145,20 );
+            self.FilterBox.clearButton:Hide();
+            self.FilterBox:ClearFocus();
+            self.FilterBox:SetAutoFocus( false );
+            self.FilterBox:SetScript( 'OnEscapePressed',function( self )
                 self:SetAutoFocus( false );
                 if( self.Instructions ) then
                     self.Instructions:Show();
@@ -290,14 +296,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 self:SetText( '' );
                 Addon.APP:ShowAll();
             end );
-            self.Heading.FilterBox:SetScript( 'OnEditFocusGained',function( self ) 
+            self.FilterBox:SetScript( 'OnEditFocusGained',function( self ) 
                 self:SetAutoFocus( true );
                 if( self.Instructions ) then
                     self.Instructions:Hide();
                 end
                 self:HighlightText();
             end );
-            self.Heading.FilterBox:SetScript( 'OnTextChanged',function( self )
+            self.FilterBox:SetScript( 'OnTextChanged',function( self )
                 Addon.APP:Query();
             end );
 
@@ -409,9 +415,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ReloadGX:HookScript( 'OnClick',function( self )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
             end );
-
-            --self.Controls.Import = Addon.GRID:AddEdit( { Name=self.Name..'Import' },self.Controls,self );
-            --self.Controls.Import:SetPoint( 'topleft',self.Controls,'topleft',0,0 );
         end
 
         self:Init();

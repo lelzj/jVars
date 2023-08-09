@@ -550,12 +550,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
-                --[[
                 ConsoleKey = {
                     Type = 'Edit',
                     Category = 'System',
                 },
-                ]]
                 checkAddonVersion = {
                     Type = 'Toggle',
                     Category = 'System',
@@ -1080,12 +1078,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Social',
                 },
-                --[[
-                lastTalkedToGM = {
-                    Type = 'Edit',
-                    Category = 'Social',
-                },
-                ]]
                 lfgAutoFill = {
                     Type = 'Toggle',
                     Category = 'Social',
@@ -2192,16 +2184,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Social',
                 },
-                --[[
-                activeCUFProfile = {
-                    Type = 'Edit',
-                    Category = 'System',
-                },
-                agentUID = {
-                    Type = 'Edit',
-                    Category = 'System',
-                },
-                ]]
                 allowCompareWithToggle = {
                     Type = 'Toggle',
                     Category = 'Hud',
