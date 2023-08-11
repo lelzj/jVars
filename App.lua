@@ -235,8 +235,8 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         Addon.APP.Query = function( self )
             local SearchQuery = self.FilterBox:GetText();
             local FilteredList = Addon.APP:Filter( SearchQuery );
-            Addon.GRID:RegisterList( FilteredList,Addon.APP );
-            Addon.GRID:GetStats( FilteredList,Addon.APP );
+            Addon.VIEW:RegisterList( FilteredList,Addon.APP );
+            Addon.VIEW:GetStats( FilteredList,Addon.APP );
         end
 
         --
@@ -265,7 +265,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 RestartGx();
             end
 
-            InterfaceOptions_AddCategory( self.Config );
+            InterfaceOptions_AddCategory( self.Config,self.Name );
 
             self.RowHeight = 30;
 
