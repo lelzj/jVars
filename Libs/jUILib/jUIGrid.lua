@@ -4,12 +4,12 @@ Addon.GRID = CreateFrame( 'Frame' );
 
 Addon.GRID.AddLocked = function( self,VarData,Parent )
     local FontString = Parent:CreateFontString( nil,'ARTWORK','GameFontHighlightSmall' );
-    FontString:SetFont( Addon.APP.Theme.Font.Family, Addon.APP.Theme.Font.Normal, Addon.APP.Theme.Font.Flags );
+    FontString:SetFont( Addon.VIEW.Theme.Font.Family, Addon.VIEW.Theme.Font.Normal, Addon.VIEW.Theme.Font.Flags );
     FontString:SetText( VarData.DisplayText );
     FontString:SetTextColor( 
-        Addon.APP.Theme.Error.r,
-        Addon.APP.Theme.Error.g,
-        Addon.APP.Theme.Error.b
+        Addon.VIEW.Theme.Error.r,
+        Addon.VIEW.Theme.Error.g,
+        Addon.VIEW.Theme.Error.b
     );
     FontString:SetJustifyH( 'left' );
     FontString:SetJustifyV( 'top' );
@@ -18,12 +18,12 @@ end
 
 Addon.GRID.AddModified = function( self,VarData,Parent )
     local FontString = Parent:CreateFontString( nil,'ARTWORK','GameFontHighlightSmall' );
-    FontString:SetFont( Addon.APP.Theme.Font.Family, Addon.APP.Theme.Font.Normal, Addon.APP.Theme.Font.Flags );
+    FontString:SetFont( Addon.VIEW.Theme.Font.Family, Addon.VIEW.Theme.Font.Normal, Addon.VIEW.Theme.Font.Flags );
     FontString:SetText( VarData.DisplayText );
     FontString:SetTextColor( 
-        Addon.APP.Theme.Notify.r,
-        Addon.APP.Theme.Notify.g,
-        Addon.APP.Theme.Notify.b
+        Addon.VIEW.Theme.Notify.r,
+        Addon.VIEW.Theme.Notify.g,
+        Addon.VIEW.Theme.Notify.b
     );
     FontString:SetJustifyH( 'left' );
     FontString:SetJustifyV( 'top' );
@@ -32,19 +32,19 @@ end
 
 Addon.GRID.AddLabel = function( self,VarData,Parent )
     local FontString = Parent:CreateFontString( nil,'ARTWORK','GameFontHighlightSmall' );
-    FontString:SetFont( Addon.APP.Theme.Font.Family, Addon.APP.Theme.Font.Normal, Addon.APP.Theme.Font.Flags );
+    FontString:SetFont( Addon.VIEW.Theme.Font.Family, Addon.VIEW.Theme.Font.Normal, Addon.VIEW.Theme.Font.Flags );
     FontString:SetText( VarData.DisplayText );
     if( VarData.Flagged ) then
         FontString:SetTextColor( 
-            Addon.APP.Theme.Disabled.r,
-            Addon.APP.Theme.Disabled.g,
-            Addon.APP.Theme.Disabled.b
+            Addon.VIEW.Theme.Disabled.r,
+            Addon.VIEW.Theme.Disabled.g,
+            Addon.VIEW.Theme.Disabled.b
         );
     else
         FontString:SetTextColor( 
-            Addon.APP.Theme.Text.r,
-            Addon.APP.Theme.Text.g,
-            Addon.APP.Theme.Text.b
+            Addon.VIEW.Theme.Text.r,
+            Addon.VIEW.Theme.Text.g,
+            Addon.VIEW.Theme.Text.b
         );
     end
     FontString:SetJustifyH( 'left' );
@@ -54,19 +54,19 @@ end
 
 Addon.GRID.AddModifiedTip = function( self,VarData,Parent )
     local FontString = Parent:CreateFontString( nil,'ARTWORK','GameFontHighlightSmall' );
-    FontString:SetFont( Addon.APP.Theme.Font.Family, Addon.APP.Theme.Font.Normal, Addon.APP.Theme.Font.Flags );
+    FontString:SetFont( Addon.VIEW.Theme.Font.Family, Addon.VIEW.Theme.Font.Normal, Addon.VIEW.Theme.Font.Flags );
     FontString:SetText( VarData.DisplayText );
     if( VarData.Flagged ) then
         FontString:SetTextColor( 
-            Addon.APP.Theme.Disabled.r,
-            Addon.APP.Theme.Disabled.g,
-            Addon.APP.Theme.Disabled.b
+            Addon.VIEW.Theme.Disabled.r,
+            Addon.VIEW.Theme.Disabled.g,
+            Addon.VIEW.Theme.Disabled.b
         );
     else
         FontString:SetTextColor( 
-            Addon.APP.Theme.Notify.r,
-            Addon.APP.Theme.Notify.g,
-            Addon.APP.Theme.Notify.b
+            Addon.VIEW.Theme.Notify.r,
+            Addon.VIEW.Theme.Notify.g,
+            Addon.VIEW.Theme.Notify.b
         );
     end
     FontString:SetJustifyH( 'left' );
@@ -93,19 +93,19 @@ end
 
 Addon.GRID.AddTip = function( self,VarData,Parent )
     local FontString = Parent:CreateFontString( nil,'ARTWORK','GameFontHighlightSmall' );
-    FontString:SetFont( Addon.APP.Theme.Font.Family, Addon.APP.Theme.Font.Normal, Addon.APP.Theme.Font.Flags );
+    FontString:SetFont( Addon.VIEW.Theme.Font.Family, Addon.VIEW.Theme.Font.Normal, Addon.VIEW.Theme.Font.Flags );
     FontString:SetText( VarData.DisplayText );
     if( VarData.Flagged ) then
         FontString:SetTextColor( 
-            Addon.APP.Theme.Disabled.r,
-            Addon.APP.Theme.Disabled.g,
-            Addon.APP.Theme.Disabled.b
+            Addon.VIEW.Theme.Disabled.r,
+            Addon.VIEW.Theme.Disabled.g,
+            Addon.VIEW.Theme.Disabled.b
         );
     else
         FontString:SetTextColor( 
-            Addon.APP.Theme.Text.r,
-            Addon.APP.Theme.Text.g,
-            Addon.APP.Theme.Text.b
+            Addon.VIEW.Theme.Text.r,
+            Addon.VIEW.Theme.Text.g,
+            Addon.VIEW.Theme.Text.b
         );
     end
     FontString:SetJustifyH( 'left' );
@@ -226,11 +226,23 @@ Addon.GRID.AddVarToggle = function( self,VarData,Parent,Handler )
     return Frame;
 end
 
+Addon.GRID.AddButton = function( self,VarData,Parent )
+    local Key = string.lower( VarData.Name );
+    local Frame = CreateFrame( 'Button',Key..'Toggle',Parent,'UIPanelButtonNoTooltipTemplate' );
+    if( VarData.Flagged ) then
+        Frame:Disable();
+    end
+    Frame:SetText( VarData.DisplayText );
+    Frame:SetSize( 25,25 );
+    return Frame;
+end
+
 Addon.GRID.AddEdit = function( self,VarData,Parent,Handler )
     local Key = string.lower( VarData.Name );
     local Frame = CreateFrame( 'EditBox',Key..'Edit',Parent,'InputBoxTemplate' );
     Frame:SetAutoFocus( false );
     Frame:ClearFocus();
+    Frame:SetFont( Addon.VIEW.Theme.Font.Family, Addon.VIEW.Theme.Font.Normal, Addon.VIEW.Theme.Font.Flags );
     Frame:SetText( VarData.Value );
     Frame.keyValue = Key;
     Frame:HookScript( 'OnEnterPressed',function( self )
@@ -240,18 +252,27 @@ Addon.GRID.AddEdit = function( self,VarData,Parent,Handler )
         end
     end );
     return Frame;
-    --[[
+end
+
+Addon.GRID.AddMultiEdit = function( self,VarData,Parent,Handler )
+    local Key = string.lower( VarData.Name );
     local Frame = CreateFrame( 'ScrollFrame',Key..'ScrollFrame',Parent,'UIPanelScrollFrameTemplate' );
     Frame:SetPoint( 'topleft',Parent,'topleft',0,0 );
 
     Frame.Input = CreateFrame( 'EditBox',Key..'Edit',Parent,'InputBoxTemplate' );
-    Frame.Input:DisableDrawLayer( 'BACKGROUND' );
-    Frame.Input:SetAllPoints( Frame );
+    --Frame.Input:DisableDrawLayer( 'BACKGROUND' );
+    Frame.Input:SetPoint( 'topleft',Frame,'topleft',10,-10 );
     Frame.Input:SetAutoFocus( false );
     Frame.Input:SetMultiLine( true );
-    Frame.Input:SetTextInsets( 0,0,3,3);
+    Frame.Input:SetTextInsets( 0,0,3,3 );
+    if( VarData.Flagged ) then
+        Frame.Input:Disable();
+    end
     Frame.Input:SetSize( 20,20 );
     Frame.Input:ClearFocus();
+    Frame.Input:SetFont( Addon.VIEW.Theme.Font.Family, Addon.VIEW.Theme.Font.Normal, Addon.VIEW.Theme.Font.Flags );
+    Frame.Input:SetText( VarData.Value );
+    Frame.Input.keyValue = Key;
     Frame.Input:HookScript( 'OnTextChanged',function( self )
         local Value = self:GetText();
         if( Value ) then
@@ -260,7 +281,6 @@ Addon.GRID.AddEdit = function( self,VarData,Parent,Handler )
     end );
     Frame:SetScrollChild( Frame.Input );
     return Frame.Input;
-    ]]
 end
 
 Addon.GRID.AddSelect = function( self,VarData,Parent,Handler )

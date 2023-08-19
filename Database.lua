@@ -64,7 +64,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return bool
         Addon.DB.SetVarValue = function( self,Index,Value )
             if( InCombatLockdown() ) then
-                Addon.APP:Warn( 'Leave combat before updating' );
+                Addon.VIEW:Warn( 'Leave combat before updating' );
                 return false;
             end
             if( Addon.REG:GetRegistry()[ string.lower( Index ) ] ) then
@@ -97,7 +97,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                     end
                 end
             end
-            Addon.APP:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',self:GetPersistence().Vars[ string.lower( Index ) ].Value );
+            Addon.VIEW:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',self:GetPersistence().Vars[ string.lower( Index ) ].Value );
             return true;
         end
 

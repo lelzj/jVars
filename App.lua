@@ -6,60 +6,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
     if( AddonName == 'jVars' ) then
 
         Addon.APP.RegisteredFrames = {};
-        Addon.APP.Theme = {
-            Text = {
-                Hex = 'ffffff',
-            },
-            Notify = {
-                Hex = '009bff',
-            },
-            Warn = {
-                Hex = 'ffbf00',
-            },
-            Error = {
-                Hex = 'ff2d00',
-            },
-            Disabled = {
-                Hex = '999999',
-            },
-            Font = {
-                Family = 'Fonts\\FRIZQT__.TTF',
-                Flags = 'OUTLINE, MONOCHROME',
-                Large = 14,
-                Normal = 10,
-                Small = 8,
-            },
-        };
-
-        Addon.APP.Notify = function( self,... )
-            local prefix = CreateColor(
-                self.Theme.Notify.r,
-                self.Theme.Notify.g,
-                self.Theme.Notify.b
-            ):WrapTextInColorCode( AddonName );
-
-            _G[ 'DEFAULT_CHAT_FRAME' ]:AddMessage( string.join( ' ', prefix, ... ) );
-        end
-
-        Addon.APP.Warn = function( self,... )
-            local prefix = CreateColor(
-                self.Theme.Warn.r,
-                self.Theme.Warn.g,
-                self.Theme.Warn.b
-            ):WrapTextInColorCode( AddonName );
-
-            _G[ 'DEFAULT_CHAT_FRAME' ]:AddMessage( string.join( ' ', prefix, ... ) );
-        end
-
-        Addon.APP.Error = function( self,... )
-            local prefix = CreateColor(
-                self.Theme.Error.r,
-                self.Theme.Error.g,
-                self.Theme.Error.b
-            ):WrapTextInColorCode( AddonName );
-
-            _G[ 'DEFAULT_CHAT_FRAME' ]:AddMessage( string.join( ' ', prefix, ... ) );
-        end
 
         --
         --  Set cvar setting
@@ -119,13 +65,18 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( not Addon.DB:GetPersistence() ) then
                 return;
             end
-            self:Notify( 'Refreshing all settings...' );
+            Addon.VIEW:Notify( 'Refreshing all settings...' );
             C_Timer.After( 2.5,function()
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
                 if( not VarData.Flagged ) then
                     local Updated = SetCVar( string.lower( VarName ),VarData.Value );
                 end
-                end; self:Notify( 'Done' );
+                if( tonumber( GetCVar( 'nameplatepersonalshowalways' ) ) > 0 ) then
+                    SetCVar( 'unitnameown',1 );
+                else
+                    SetCVar( 'unitnameown',0 );
+                end
+                end; Addon.VIEW:Notify( 'Done' );
             end );
         end
 
@@ -246,12 +197,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         Addon.APP.Init = function( self )
 
             self.Name = AddonName;
-
-            for Key,Data in pairs( self.Theme ) do
-                if( Key ~= 'Font' ) then
-                    self.Theme[ Key ].r,self.Theme[ Key ].g,self.Theme[ Key ].b = Addon:Hex2RGB( Data.Hex );
-                end
-            end
 
             self.Config = CreateFrame( 'Frame',self.Name);
             self.Config.name = self.Name;
