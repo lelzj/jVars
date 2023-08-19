@@ -19,8 +19,6 @@ Addon.PORTS:SetScript( 'OnEvent',function( self,Event,AddonName )
             return Data;
         end
 
-        
-
         --
         --  Module implode
         --
@@ -36,8 +34,6 @@ Addon.PORTS:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
             return VarData;
         end
-
-
 
         --
         --  Module validate
@@ -63,12 +59,17 @@ Addon.PORTS:SetScript( 'OnEvent',function( self,Event,AddonName )
             return Valid;
         end
 
+        --
+        --  Module import
+        --
+        --  @return void
         Addon.PORTS.Import = function( self,Input )
             Addon.VIEW:Notify( 'Importing...' );
-            Addon.DB:GetPersistence().Vars = self:Implode( Input );
-            Addon.DB:Init();
+            Addon:Dump( self:Implode( Input ) );
+            --Addon.DB:GetPersistence().Vars = self:Implode( Input );
+            --Addon.DB:Init();
             --Addon.APP:Refresh();
-            Addon:Dump( Addon.DB:GetPersistence().Vars )
+            --Addon:Dump( Addon.DB:GetPersistence().Vars )
             Addon.View:Notify( 'Done' );
         end
 
@@ -157,15 +158,11 @@ Addon.PORTS:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ImportButton:SetSize( 100,20 );
             self.ImportButton:SetScript( 'OnClick',function( self )
                 local Valid = Addon.PORTS:Validate( Addon.PORTS.ImportText:GetText() );
-                if( Valid ) then
-                    Addon.VIEW:Notify( 'Valid' );
-                else
+                if( not Valid ) then
                     Addon.VIEW:Error( 'Invalid' );
+                    return;
                 end
-
-                if( Valid ) then
-                    Addon.PORTS:Import( Addon.PORTS.ImportText:GetText() );
-                end
+                Addon.PORTS:Import( Addon.PORTS.ImportText:GetText() );
             end );
         end
         self:Init();
