@@ -23,7 +23,7 @@ Addon.PORTS:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  Module implode
         --
         --  @return table
-        Addon.PORTS.Implode = function( self,Input )
+        Addon.PORTS.Explode = function( self,Input )
             local VarData = {};
             
             local Vars = Addon:Explode( Input,';' );
@@ -65,7 +65,7 @@ Addon.PORTS:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return void
         Addon.PORTS.Import = function( self,Input )
             Addon.VIEW:Notify( 'Importing...' );
-            Addon:Dump( self:Implode( Input ) );
+            Addon:Dump( self:Explode( Input ) );
             --Addon.DB:GetPersistence().Vars = self:Implode( Input );
             --Addon.DB:Init();
             --Addon.APP:Refresh();
