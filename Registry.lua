@@ -29,6 +29,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
+                autoRangedCombat = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
                 chatClassColorOverride = {
                     Type = 'Select',
                     KeyPairs = {
@@ -1607,10 +1611,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Grapics',
-                },
-                useIPv6 = {
-                    Type = 'Toggle',
-                    Category = 'System',
                 },
                 xpBarText = {
                     Type = 'Toggle',
