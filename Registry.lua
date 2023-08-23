@@ -29,10 +29,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
-                autoRangedCombat = {
-                    Type = 'Toggle',
-                    Category = 'Hud',
-                },
                 chatClassColorOverride = {
                     Type = 'Select',
                     KeyPairs = {
@@ -467,7 +463,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Range',
                     KeyPairs = {
                         Low = {
-                            Value = 20,
+                            Value = 10,
                             Description = 'Low',
                         },
                         High = {
@@ -475,7 +471,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'High',
                         },
                     },
-                    Step = 20,
+                    Step = 10,
                     Category = 'Hud',
                 },
                 nameplateSelfAlpha = {
