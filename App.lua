@@ -24,6 +24,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 if( Addon.DB:GetValue( 'ReloadUI' ) ) then
                     ReloadUI();
                 end
+                Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',Addon.APP:GetVarValue( Index ) );
                 return true;
             end
             return false;
@@ -65,18 +66,18 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( not Addon.DB:GetPersistence() ) then
                 return;
             end
-            Addon.VIEW:Notify( 'Refreshing all settings...' );
+            Addon.FRAMES:Notify( 'Refreshing all settings...' );
             C_Timer.After( 2.5,function()
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
                 if( not VarData.Flagged ) then
-                    local Updated = SetCVar( string.lower( VarName ),VarData.Value );
+                    local Updated = C_CVar.SetCVar( string.lower( VarName ),VarData.Value );
                 end
                 if( tonumber( GetCVar( 'nameplatepersonalshowalways' ) ) > 0 ) then
                     SetCVar( 'unitnameown',1 );
                 else
                     SetCVar( 'unitnameown',0 );
                 end
-                end; Addon.VIEW:Notify( 'Done' );
+                end; Addon.FRAMES:Notify( 'Done' );
             end );
         end
 
@@ -202,7 +203,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Config.name = self.Name;
 
             self.Config.okay = function( self )
-                RestartGx();
+                --N/A
             end
 
             self.Config.default = function( self )
@@ -216,11 +217,11 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
             self.Heading = CreateFrame( 'Frame',self.Name..'Heading',self.Config );
             self.Heading:SetPoint( 'topleft',self.Config,'topleft',10,-10 );
-            self.Heading:SetSize( 580,100 );
+            self.Heading:SetSize( 610,100 );
             self.Heading.FieldHeight = 10;
             self.Heading.ColInset = 15;
             --[[[]
-            self.Heading.Import = Addon.GRID:AddEdit( { Name=self.Name..'Import' },self.Heading,self );
+            self.Heading.Import = Addon.FRAMES:AddEdit( { Name=self.Name..'Import' },self.Heading,self );
             self.Heading.Import:GetParent():SetPoint( 'topleft',self.Heading,'topleft',10,-10 );
             self.Heading.Import:GetParent():SetSize( self.Heading:GetWidth()-20,45 );
             self.Heading.Import:SetText( 'asdf wtf yo is this shit lmao woah fuck ass' );
@@ -252,27 +253,27 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Addon.APP:Query();
             end );
 
-            self.Heading.Name = Addon.GRID:AddLabel( { DisplayText = 'Name' },self.Heading );
+            self.Heading.Name = Addon.FRAMES:AddLabel( { DisplayText = 'Name' },self.Heading );
             self.Heading.Name:SetPoint( 'topleft',self.Heading,'topleft',self.Heading.ColInset+3,( ( self.Heading:GetHeight() )*-1 )+20 );
             self.Heading.Name:SetSize( 180,self.Heading.FieldHeight );
             self.Heading.Name:SetJustifyH( 'right' );
 
-            self.Heading.Scope = Addon.GRID:AddLabel( { DisplayText = 'Scope' },self.Heading );
+            self.Heading.Scope = Addon.FRAMES:AddLabel( { DisplayText = 'Scope' },self.Heading );
             self.Heading.Scope:SetPoint( 'topleft',self.Heading.Name,'topright',self.Heading.ColInset,0 );
             self.Heading.Scope:SetSize( 50,self.Heading.FieldHeight );
             self.Heading.Scope:SetJustifyH( 'left' );
 
-            self.Heading.Category = Addon.GRID:AddLabel( { DisplayText = 'Category' },self.Heading );
+            self.Heading.Category = Addon.FRAMES:AddLabel( { DisplayText = 'Category' },self.Heading );
             self.Heading.Category:SetPoint( 'topleft',self.Heading.Scope,'topright',self.Heading.ColInset,0 );
             self.Heading.Category:SetSize( 50,self.Heading.FieldHeight );
             self.Heading.Category:SetJustifyH( 'left' );
 
-            self.Heading.Default = Addon.GRID:AddLabel( { DisplayText = 'Default' },self.Heading );
+            self.Heading.Default = Addon.FRAMES:AddLabel( { DisplayText = 'Default' },self.Heading );
             self.Heading.Default:SetPoint( 'topleft',self.Heading.Category,'topright',self.Heading.ColInset,0 );
             self.Heading.Default:SetSize( 50,self.Heading.FieldHeight );
             self.Heading.Default:SetJustifyH( 'left' );
 
-            self.Heading.Adjustment = Addon.GRID:AddLabel( { DisplayText = 'Adjustment' },self.Heading );
+            self.Heading.Adjustment = Addon.FRAMES:AddLabel( { DisplayText = 'Adjustment' },self.Heading );
             self.Heading.Adjustment:SetPoint( 'topleft',self.Heading.Default,'topright',0,0 );
             self.Heading.Adjustment:SetSize( 150,self.Heading.FieldHeight );
             self.Heading.Adjustment:SetJustifyH( 'left' );
@@ -291,9 +292,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ScrollChild = CreateFrame( 'Frame',self.Name..'ScrollChild' );
             self.ScrollFrame:SetScrollChild( self.ScrollChild );
             if( Addon:IsClassic() ) then
-                self.ScrollChild:SetWidth( InterfaceOptionsFramePanelContainer:GetWidth()-18 );
+                self.ScrollChild:SetWidth( InterfaceOptionsFramePanelContainer:GetWidth() );
             else
-                self.ScrollChild:SetWidth( SettingsPanel:GetWidth()-18 );
+                self.ScrollChild:SetWidth( SettingsPanel:GetWidth() );
             end
             self.ScrollChild:SetHeight( 20 );
 
@@ -315,13 +316,13 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
             local RefreshData = {
                 Name = 'Refresh',
-                DisplayText = 'Re-Apply settings on reload',
+                DisplayText = 'Apply settings on each reload',
             };
-            self.Apply = Addon.GRID:AddToggle( RefreshData,self.Controls );
+            self.Apply = Addon.FRAMES:AddToggle( RefreshData,self.Controls );
             self.Apply.keyValue = RefreshData.Name;
             self.Apply:SetChecked( self:GetValue( self.Apply.keyValue ) );
             self.Apply:SetPoint( 'topleft',self.Controls,'topleft',0,0 );
-            self.Apply.Label = Addon.GRID:AddLabel( RefreshData,self.Apply );
+            self.Apply.Label = Addon.FRAMES:AddLabel( RefreshData,self.Apply );
             self.Apply.Label:SetPoint( 'topleft',self.Apply,'topright',0,-3 );
             self.Apply.Label:SetSize( self.Controls:GetWidth()/3,20 );
             self.Apply.Label:SetJustifyH( 'left' );
@@ -333,11 +334,11 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Name = 'ReloadUI',
                 DisplayText = 'Reload UI for each update',
             };
-            self.ReloadUI = Addon.GRID:AddToggle( ReloadUIData,self.Controls );
+            self.ReloadUI = Addon.FRAMES:AddToggle( ReloadUIData,self.Controls );
             self.ReloadUI.keyValue = ReloadUIData.Name;
             self.ReloadUI:SetChecked( self:GetValue( self.ReloadUI.keyValue ) );
             self.ReloadUI:SetPoint( 'topleft',self.Apply.Label,'topright',0,3 );
-            self.ReloadUI.Label = Addon.GRID:AddLabel( ReloadUIData,self.ReloadUI );
+            self.ReloadUI.Label = Addon.FRAMES:AddLabel( ReloadUIData,self.ReloadUI );
             self.ReloadUI.Label:SetPoint( 'topleft',self.ReloadUI,'topright',0,-3 );
             self.ReloadUI.Label:SetSize( self.Controls:GetWidth()/3,20 );
             self.ReloadUI.Label:SetJustifyH( 'left' );
@@ -349,11 +350,11 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Name = 'ReloadGX',
                 DisplayText = 'Reload GX for each update',
             };
-            self.ReloadGX = Addon.GRID:AddToggle( ReloadGXData,self.Controls );
+            self.ReloadGX = Addon.FRAMES:AddToggle( ReloadGXData,self.Controls );
             self.ReloadGX.keyValue = ReloadGXData.Name;
             self.ReloadGX:SetChecked( self:GetValue( self.ReloadGX.keyValue ) );
             self.ReloadGX:SetPoint( 'topleft',self.ReloadUI.Label,'topright',0,3 );
-            self.ReloadGX.Label = Addon.GRID:AddLabel( ReloadGXData,self.ReloadGX );
+            self.ReloadGX.Label = Addon.FRAMES:AddLabel( ReloadGXData,self.ReloadGX );
             self.ReloadGX.Label:SetPoint( 'topleft',self.ReloadGX,'topright',0,-3 );
             self.ReloadGX.Label:SetSize( self.Controls:GetWidth()/3,20 );
             self.ReloadGX.Label:SetJustifyH( 'left' );

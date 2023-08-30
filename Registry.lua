@@ -228,11 +228,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Low',
                         },
                         High = {
-                            Value = 60,
+                            Value = 41,
                             Description = 'High',
                         },
                     },
-                    Step = 20,
+                    Step = 1,
                     Category = 'Hud',
                 },
                 nameplateSelfScale = {
@@ -448,7 +448,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Range',
                     KeyPairs = {
                         Low = {
-                            Value = 20,
+                            Value = 10,
                             Description = 'Low',
                         },
                         High = {
@@ -456,7 +456,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'High',
                         },
                     },
-                    Step = 20,
+                    Step = 10,
                     Category = 'Hud',
                 },
                 nameplateMinScaleDistance = {

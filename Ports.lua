@@ -98,11 +98,11 @@ Addon.PORTS:SetScript( 'OnEvent',function( self,Event,AddonName )
             --https://wowpedia.fandom.com/wiki/Using_the_Interface_Options_Addons_panel
 
             if( Addon:IsClassic() ) then
-                self.Width = InterfaceOptionsFramePanelContainer:GetWidth()-35;
-                self.Height = InterfaceOptionsFramePanelContainer:GetHeight()-25;
+                self.Width = InterfaceOptionsFramePanelContainer:GetWidth();
+                self.Height = InterfaceOptionsFramePanelContainer:GetHeight();
             else
-                self.Width = SettingsPanel:GetWidth()-35;
-                self.Height = SettingsPanel:GetHeight()-25;
+                self.Width = SettingsPanel:GetWidth();
+                self.Height = SettingsPanel:GetHeight();
             end
 
             self.Browser = CreateFrame( 'Frame',self.Name..'Browser'..'Ports',self.Config );
@@ -119,17 +119,17 @@ Addon.PORTS:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ScrollChild:SetHeight( 20 );
 
             local Desc = 'Export current CVar setttings';
-            self.ExportLabel = Addon.GRID:AddTip( {DisplayText='Export Settings',Description=Desc},self.ScrollChild );
+            self.ExportLabel = Addon.FRAMES:AddTip( {DisplayText='Export Settings',Description=Desc},self.ScrollChild );
             self.ExportLabel:SetPoint( 'topleft',self.ScrollChild,'topleft',0,0 );
 
             local Value = 'Exported CVar Settings will appear here';
-            self.ExportText = Addon.GRID:AddMultiEdit( {Name='ExportText',Value=Value,Flagged=false},self.ScrollChild,self );
+            self.ExportText = Addon.FRAMES:AddMultiEdit( {Name='ExportText',Value=Value,Flagged=false},self.ScrollChild,self );
             self.ExportText:GetParent():ClearAllPoints();
             self.ExportText:GetParent():SetPoint( 'topleft',self.ExportLabel,'bottomleft',0,-10 );
             self.ExportText:GetParent():SetSize( self.Width,100 );
             self.ExportText:SetSize( self.Width,100 );
 
-            self.ExportButton = Addon.GRID:AddButton( {Name='Export',DisplayText='Export'},self.ScrollChild );
+            self.ExportButton = Addon.FRAMES:AddButton( {Name='Export',DisplayText='Export'},self.ScrollChild );
             self.ExportButton:SetPoint( 'topleft',self.ExportText:GetParent(),'bottomleft',0,-10 );
             self.ExportButton:SetSize( 100,20 );
             self.ExportButton:SetScript( 'OnClick',function( self )
@@ -143,17 +143,17 @@ Addon.PORTS:SetScript( 'OnEvent',function( self,Event,AddonName )
             end );
 
             local Desc = 'Import CVar setttings';
-            self.ImportLabel = Addon.GRID:AddTip( {DisplayText='Import Settings',Description=Desc},self.ScrollChild );
+            self.ImportLabel = Addon.FRAMES:AddTip( {DisplayText='Import Settings',Description=Desc},self.ScrollChild );
             self.ImportLabel:SetPoint( 'topleft',self.ExportButton,'bottomleft',0,-10 );
 
             local Value = 'Paste Import string here';
-            self.ImportText = Addon.GRID:AddMultiEdit( {Name='ImportText',Value=Value,Flagged=false},self.ScrollChild,self );
+            self.ImportText = Addon.FRAMES:AddMultiEdit( {Name='ImportText',Value=Value,Flagged=false},self.ScrollChild,self );
             self.ImportText:GetParent():ClearAllPoints();
             self.ImportText:GetParent():SetPoint( 'topleft',self.ImportLabel,'bottomleft',0,-10 );
             self.ImportText:GetParent():SetSize( self.Width,100 );
             self.ImportText:SetSize( self.Width,100 );
 
-            self.ImportButton = Addon.GRID:AddButton( {Name='Import',DisplayText='Import'},self.ScrollChild );
+            self.ImportButton = Addon.FRAMES:AddButton( {Name='Import',DisplayText='Import'},self.ScrollChild );
             self.ImportButton:SetPoint( 'topleft',self.ImportText:GetParent(),'bottomleft',0,-10 );
             self.ImportButton:SetSize( 100,20 );
             self.ImportButton:SetScript( 'OnClick',function( self )
