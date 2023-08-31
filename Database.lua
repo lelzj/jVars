@@ -107,7 +107,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         Addon.DB.GetVarValue = function( self,Index )
             if( self:GetPersistence().Vars[ string.lower( Index ) ].Value ~= nil ) then
                 return self:GetPersistence().Vars[ string.lower( Index ) ].Value;
-            end; return GetCVar( Index );
+            end; return BlizzardOptionsPanel_GetCVarSafe( Index );
         end
 
         --

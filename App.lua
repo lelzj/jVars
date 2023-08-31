@@ -14,10 +14,13 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  string  Value
         --  @return bool
         Addon.APP.SetVarValue = function( self,Index,Value )
+            if( InCombatLockdown() ) then
+                return;
+            end
             local Result = Addon.DB:SetVarValue( Index,Value );
             if( Result ) then
                 self:Query();
-                SetCVar( Index,Value );
+                BlizzardOptionsPanel_SetCVarSafe( Index,Value );
                 if( Addon.DB:GetValue( 'ReloadGX' ) ) then
                     RestartGx();
                 end
@@ -66,16 +69,19 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( not Addon.DB:GetPersistence() ) then
                 return;
             end
+            if( InCombatLockdown() ) then
+                return;
+            end
             Addon.FRAMES:Notify( 'Refreshing all settings...' );
             C_Timer.After( 2.5,function()
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
                 if( not VarData.Flagged ) then
-                    local Updated = C_CVar.SetCVar( string.lower( VarName ),VarData.Value );
+                    local Updated = BlizzardOptionsPanel_SetCVarSafe( string.lower( VarName ),VarData.Value );
                 end
-                if( tonumber( GetCVar( 'nameplatepersonalshowalways' ) ) > 0 ) then
-                    SetCVar( 'unitnameown',1 );
+                if( tonumber( BlizzardOptionsPanel_GetCVarSafe( 'nameplatepersonalshowalways' ) ) > 0 ) then
+                    BlizzardOptionsPanel_SetCVarSafe( 'unitnameown',1 );
                 else
-                    SetCVar( 'unitnameown',0 );
+                    BlizzardOptionsPanel_SetCVarSafe( 'unitnameown',0 );
                 end
                 end; Addon.FRAMES:Notify( 'Done' );
             end );
