@@ -206,16 +206,7 @@ Addon.VIEW:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Y = Y-Handler.RowHeight;
             end
         end
-
-        Addon.VIEW.Init = function( self )
-            for Key,Data in pairs( Addon.Theme ) do
-                if( Key ~= 'Font' ) then
-                    Addon.Theme[ Key ].r,Addon.Theme[ Key ].g,Addon.Theme[ Key ].b = Addon:Hex2RGB( Data.Hex );
-                end
-            end
-        end
-
-        self:Init();
+        
         self:UnregisterEvent( 'ADDON_LOADED' );
     end
 end );
