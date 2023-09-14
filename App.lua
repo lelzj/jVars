@@ -20,7 +20,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             local Result = Addon.DB:SetVarValue( Index,Value );
             if( Result ) then
                 self:Query();
-                BlizzardOptionsPanel_SetCVarSafe( Index,Value );
+                SetCVar( Index,Value );
                 if( Addon.DB:GetValue( 'ReloadGX' ) ) then
                     RestartGx();
                 end
@@ -76,15 +76,15 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             C_Timer.After( 2.5,function()
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
                 if( not VarData.Flagged ) then
-                    local Updated = BlizzardOptionsPanel_SetCVarSafe( string.lower( VarName ),VarData.Value );
+                    local Updated = SetCVar( string.lower( VarName ),VarData.Value );
                     if( string.lower( VarName ) == 'raidoptionshowborders' ) then
                         print( VarName,VarData.Value,GetCVar( VarName ) );
                     end
                 end
-                if( tonumber( BlizzardOptionsPanel_GetCVarSafe( 'nameplatepersonalshowalways' ) ) > 0 ) then
-                    BlizzardOptionsPanel_SetCVarSafe( 'unitnameown',1 );
+                if( tonumber( GetCVar( 'nameplatepersonalshowalways' ) ) > 0 ) then
+                    SetCVar( 'unitnameown',1 );
                 else
-                    BlizzardOptionsPanel_SetCVarSafe( 'unitnameown',0 );
+                    SetCVar( 'unitnameown',0 );
                 end
                 end; Addon.FRAMES:Notify( 'Done' );
             end );
