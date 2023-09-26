@@ -2169,7 +2169,18 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Category = 'Hud',
                 },
                 threatWarning = {
-                    Type = 'Toggle',
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
                     Category = 'Hud',
                 },
                 threatWorldText = {
