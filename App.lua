@@ -77,9 +77,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
                 if( not VarData.Flagged ) then
                     local Updated = SetCVar( string.lower( VarName ),VarData.Value );
-                    if( string.lower( VarName ) == 'whispermode' ) then
-                        print( VarName,VarData.Value,GetCVar( VarName ) );
-                    end
                 end
                 if( tonumber( GetCVar( 'nameplatepersonalshowalways' ) ) > 0 ) then
                     SetCVar( 'unitnameown',1 );

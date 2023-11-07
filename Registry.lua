@@ -2187,10 +2187,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
-                addFriendInfoShown = {
-                    Type = 'Toggle',
-                    Category = 'Social',
-                },
                 allowCompareWithToggle = {
                     Type = 'Toggle',
                     Category = 'Hud',

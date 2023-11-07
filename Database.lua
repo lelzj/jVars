@@ -19,6 +19,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Refresh = true,
                 Vars = {},
             };
+            -- Flag missing C_Console.GetAllCommands vars
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
                 local Dict = Addon.DICT:GetDictionary()[ string.lower( VarName ) ] or {
                     CurrentValue = nil,
