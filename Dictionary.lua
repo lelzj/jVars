@@ -17,7 +17,7 @@ Addon.DICT:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Iterator = Iterator + 1;
             end
             if( not( Iterator > 0 ) ) then
-                for i,Row in pairs( C_Console.GetAllCommands() ) do
+                for i,Row in pairs( ConsoleGetAllCommands() ) do
                     local CurrentValue,DefaultValue,AccountWide,PerCharacter,_,Secure,ReadOnly = GetCVarInfo( Row.command );
                     local Scope;
                     if( PerCharacter ) then
