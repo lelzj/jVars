@@ -81,6 +81,21 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Character',
                 },
+                nameplateOtherAtBase = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 2,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Hud',
+                },
                 nameplateRemovalAnimation = {
                     Type = 'Toggle',
                     Category = 'Hud',
