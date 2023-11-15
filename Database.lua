@@ -15,7 +15,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Total = 0,
                 },
                 ReloadUI = false,
-                ReloadGX = true,
+                ReloadGX = false,
                 Refresh = true,
                 Vars = {},
             };

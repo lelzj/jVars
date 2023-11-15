@@ -19,7 +19,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
             local Result = Addon.DB:SetVarValue( Index,Value );
             if( Result ) then
-                self:Query();
+                --self:Query();
                 SetCVar( Index,Value );
                 if( Addon.DB:GetValue( 'ReloadGX' ) ) then
                     RestartGx();
