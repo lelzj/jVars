@@ -17,54 +17,28 @@ Addon.DICT:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Iterator = Iterator + 1;
             end
             if( not( Iterator > 0 ) ) then
-                if( Addon:IsClassic() ) then
-                    for i,Row in pairs( C_Console.GetAllCommands() ) do
-                        local CurrentValue,DefaultValue,AccountWide,PerCharacter,_,Secure,ReadOnly = GetCVarInfo( Row.command );
-                        local Scope;
-                        if( PerCharacter ) then
-                            Scope = 'Character';
-                        elseif( AccountWide ) then
-                            Scope = 'Account';
-                        elseif( ReadOnly ) then
-                            Scope = 'Locked';
-                        else
-                            Scope = 'Unknown';
-                        end
-                        local Key = string.lower( Row.command );
-                        self.Dictionary[ Key ] = {
-                            DefaultValue    = DefaultValue,
-                            DisplayText     = Row.command,
-                            Secure          = Secure,
-                            Key             = Key,
-                            Scope           = Scope,
-                            Description     = Row.help,
-                            CurrentValue    = CurrentValue,
-                        };
+                for i,Row in pairs( ConsoleGetAllCommands() ) do
+                    local CurrentValue,DefaultValue,AccountWide,PerCharacter,_,Secure,ReadOnly = C_CVar.GetCVarInfo( Row.command );
+                    local Scope;
+                    if( PerCharacter ) then
+                        Scope = 'Character';
+                    elseif( AccountWide ) then
+                        Scope = 'Account';
+                    elseif( ReadOnly ) then
+                        Scope = 'Locked';
+                    else
+                        Scope = 'Unknown';
                     end
-                else
-                    for i,Row in pairs( ConsoleGetAllCommands() ) do
-                        local CurrentValue,DefaultValue,AccountWide,PerCharacter,_,Secure,ReadOnly = GetCVarInfo( Row.command );
-                        local Scope;
-                        if( PerCharacter ) then
-                            Scope = 'Character';
-                        elseif( AccountWide ) then
-                            Scope = 'Account';
-                        elseif( ReadOnly ) then
-                            Scope = 'Locked';
-                        else
-                            Scope = 'Unknown';
-                        end
-                        local Key = string.lower( Row.command );
-                        self.Dictionary[ Key ] = {
-                            DefaultValue    = DefaultValue,
-                            DisplayText     = Row.command,
-                            Secure          = Secure,
-                            Key             = Key,
-                            Scope           = Scope,
-                            Description     = Row.help,
-                            CurrentValue    = CurrentValue,
-                        };
-                    end
+                    local Key = string.lower( Row.command );
+                    self.Dictionary[ Key ] = {
+                        DefaultValue    = DefaultValue,
+                        DisplayText     = Row.command,
+                        Secure          = Secure,
+                        Key             = Key,
+                        Scope           = Scope,
+                        Description     = Row.help,
+                        CurrentValue    = CurrentValue,
+                    };
                 end
             end
             return self.Dictionary;
