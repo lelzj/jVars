@@ -62,7 +62,7 @@ Addon.SliderRound = function( self,Val,ValStep )
 end
 
 Addon.IsClassic = function( self )
-  return ( WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE );
+  return ( WOW_PROJECT_ID == WOW_PROJECT_CLASSIC );
 end
 
 Addon.Hex2RGB = function( self,Hex )
