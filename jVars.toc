@@ -3,20 +3,15 @@
 ## X-Category: system
 
 ## Author: jadissa
-## X-Realm: Emerald Dream/Grobbulus/Whitemane
+## X-Realm: Moonguard/Grobbulus/Whitemane
 ## X-Website: https://github.com/jadissa/jVars
 
 ## DefaultState: enabled
 ## SavedVariables: jVars
 
-#@retail@
-## Interface: 100200
-#@end-retail@
-#@non-retail@
-## Interface: 11404
+## Interface: 11500
 #/run print((select(4, GetBuildInfo())));
 #https://markdownlivepreview.com/
-#@end-non-retail@
 
 # Required libs
 Libs\LibStub\LibStub.lua
