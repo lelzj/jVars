@@ -25,6 +25,30 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return table
         Addon.REG.GetRegistry = function( self )
             local Registry = {
+                nameplateShowOnlyNames = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                nameplateHideHealthAndPower = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                NameplatePersonalClickThrough = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                nameplateResourceOnTarget = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                nameplateShowDebuffsOnFriendly = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                nameplateShowSelf = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
                 autoRangedCombat = {
                     Type = 'Toggle',
                     Category = 'Hud',
@@ -1502,6 +1526,46 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
+                autoAcceptQuickJoinRequests = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                autoQuestProgress = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                autoQuestWatch = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                autoQuestPopUps = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                minimapShowQuestBlobs = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                showQuestObjectivesOnMap = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                ShowQuestUnitCircles = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                questLogOpen = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                minimapTrackingShowAll = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                secondaryProfessionsFilter = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
                 particleDensity = {
                     Type = 'Range',
                     KeyPairs = {
@@ -2428,14 +2492,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 autoFilledMultiCastSlots = {
                     Type = 'Toggle',
                     Category = 'System',
-                },
-                autoQuestProgress = {
-                    Type = 'Toggle',
-                    Category = 'Hud',
-                },
-                autoQuestWatch = {
-                    Type = 'Toggle',
-                    Category = 'Hud',
                 },
                 autoStand = {
                     Type = 'Toggle',
