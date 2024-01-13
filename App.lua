@@ -72,18 +72,30 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( InCombatLockdown() ) then
                 return;
             end
-            Addon.FRAMES:Notify( 'Refreshing all settings...' );
-            C_Timer.After( 2.5,function()
+            C_Timer.After( 2,function()
+                Addon.FRAMES:Notify( 'Refreshing all settings...' );
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
-                if( not VarData.Flagged ) then
-                    local Updated = SetCVar( string.lower( VarName ),VarData.Value );
-                end
+                    if( not VarData.Flagged ) then
+                        local Updated = SetCVar( string.lower( VarName ),VarData.Value );
+
+                        --[[
+                        if( Addon:Minify( VarName ):find( 'color' ) ) then
+                            print( VarName,VarData.Value,Updated )
+                        end
+                        ]]
+                    end
+                end;
                 if( tonumber( GetCVar( 'nameplatepersonalshowalways' ) ) > 0 ) then
                     SetCVar( 'unitnameown',1 );
                 else
                     SetCVar( 'unitnameown',0 );
                 end
-                end; Addon.FRAMES:Notify( 'Done' );
+                if( DefaultCompactUnitFrameOptions ) then
+                    DefaultCompactUnitFrameOptions.useClassColors = Addon:Int2Bool( GetCVar( 'raidFramesDisplayClassColor' ) );
+                    DefaultCompactUnitFrameOptions.displayOnlyDispellableDebuffs = Addon:Int2Bool( GetCVar( 'raidFramesDisplayOnlyDispellableDebuffs' ) );
+                    DefaultCompactUnitFrameOptions.healthText = GetCVar( 'raidFramesHealthText' );
+                end
+                Addon.FRAMES:Notify( 'Done' );
             end );
         end
 

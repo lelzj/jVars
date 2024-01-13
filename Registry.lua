@@ -1982,6 +1982,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Character',
                 },
+                ShowAllSpellRanks = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
                 cameraFov = {
                     Type = 'Range',
                     KeyPairs = {
