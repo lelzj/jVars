@@ -21,6 +21,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( Result ) then
                 --self:Query();
                 SetCVar( Index,Value );
+                self:RefeshBlizzOptions();
                 if( Addon.DB:GetValue( 'ReloadGX' ) ) then
                     RestartGx();
                 end
@@ -62,6 +63,24 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         --
+        --  Refresh default blizzard options API values
+        --
+        --  @return bool
+        Addon.APP.RefeshBlizzOptions = function( self )
+            if( DefaultCompactUnitFrameOptions ) then
+                DefaultCompactUnitFrameOptions.useClassColors = Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayClassColor' ) );
+                DefaultCompactUnitFrameOptions.displayOnlyDispellableDebuffs = Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayOnlyDispellableDebuffs' ) );
+                DefaultCompactUnitFrameOptions.healthText = self:GetVarValue( 'raidFramesHealthText' );
+            end
+            if( DefaultCompactUnitFrameSetupOptions ) then
+                DefaultCompactUnitFrameSetupOptions.displayBorder = Addon:Int2Bool( self:GetVarValue( 'raidOptionShowBorders' ) );
+                DefaultCompactUnitFrameSetupOptions.displayPowerBar = Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayPowerBars' ) );
+                DefaultCompactUnitFrameSetupOptions.height = Addon:Int2Bool( self:GetVarValue( 'raidFramesHeight' ) );
+                DefaultCompactUnitFrameSetupOptions.width = Addon:Int2Bool( self:GetVarValue( 'raidFramesWidth' ) );
+            end
+        end
+
+        --
         --  Module refresh
         --
         --  @return void
@@ -90,11 +109,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 else
                     SetCVar( 'unitnameown',0 );
                 end
-                if( DefaultCompactUnitFrameOptions ) then
-                    DefaultCompactUnitFrameOptions.useClassColors = Addon:Int2Bool( GetCVar( 'raidFramesDisplayClassColor' ) );
-                    DefaultCompactUnitFrameOptions.displayOnlyDispellableDebuffs = Addon:Int2Bool( GetCVar( 'raidFramesDisplayOnlyDispellableDebuffs' ) );
-                    DefaultCompactUnitFrameOptions.healthText = GetCVar( 'raidFramesHealthText' );
-                end
+                self:RefeshBlizzOptions();
                 Addon.FRAMES:Notify( 'Done' );
             end );
         end
