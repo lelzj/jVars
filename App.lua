@@ -75,8 +75,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( DefaultCompactUnitFrameSetupOptions ) then
                 DefaultCompactUnitFrameSetupOptions.displayBorder = Addon:Int2Bool( self:GetVarValue( 'raidOptionShowBorders' ) );
                 DefaultCompactUnitFrameSetupOptions.displayPowerBar = Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayPowerBars' ) );
-                DefaultCompactUnitFrameSetupOptions.height = Addon:Int2Bool( self:GetVarValue( 'raidFramesHeight' ) );
-                DefaultCompactUnitFrameSetupOptions.width = Addon:Int2Bool( self:GetVarValue( 'raidFramesWidth' ) );
             end
         end
 
@@ -397,6 +395,22 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         self:Init();
+
+        --[[
+        LibStub( 'AceHook-3.0' ):SecureHook( SettingsPanel,'OnSettingValueChanged',function( self,setting, value, oldValue, originalValue )
+            Addon:Dump( {
+                Variable = setting.variable,
+                VariableType = setting.variableType,
+                value = value,
+                oldValue = oldValue,
+                originalValue = originalValue,
+            } )
+        end )
+        ]]
+
+        -- /Interface/FrameXML/SettingDefinitions/InterfaceOverrides.lua
+        --InterfaceOverrides:SetRaidProfileOption("displayPowerBar", true);
+
         if( self:GetValue( 'Refresh' ) ) then
             self:Refresh();
         end
