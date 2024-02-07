@@ -41,6 +41,10 @@ Addon.DICT:SetScript( 'OnEvent',function( self,Event,AddonName )
                             CurrentValue    = CurrentValue,
                         };
                     end
+                    -- Aggrend feedback: https://youtu.be/H69PDuEaxDc?t=654
+                    if( tonumber( self.Dictionary[ string.lower( 'nameplateMaxDistance' ) ].CurrentValue ) >= 20 ) then
+                        self.Dictionary[ string.lower( 'nameplateMaxDistance' ) ].CurrentValue = 20;
+                    end
                 elseif( Addon:IsWrath() ) then
                     for i,Row in pairs( C_Console.GetAllCommands() ) do
                         local CurrentValue,DefaultValue,AccountWide,PerCharacter,_,Secure,ReadOnly = GetCVarInfo( Row.command );
@@ -64,6 +68,10 @@ Addon.DICT:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description     = Row.help,
                             CurrentValue    = CurrentValue,
                         };
+                    end
+                    -- Aggrend feedback: https://youtu.be/H69PDuEaxDc?t=654
+                    if( tonumber( self.Dictionary[ string.lower( 'nameplateMaxDistance' ) ].CurrentValue ) >= 20 ) then
+                        self.Dictionary[ string.lower( 'nameplateMaxDistance' ) ].CurrentValue = 20;
                     end
                 else
                     for i,Row in pairs( ConsoleGetAllCommands() ) do

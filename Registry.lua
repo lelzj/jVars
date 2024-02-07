@@ -2509,6 +2509,13 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,VarData in pairs( Registry ) do
                 self.Registry[ string.lower( VarName ) ] = VarData;
             end
+
+            -- Aggrend feedback: https://youtu.be/H69PDuEaxDc?t=654
+            if( Addon:IsClassic() ) then 
+                self.Registry[ string.lower( 'nameplateMaxDistance' ) ].KeyPairs.High.Value = 20;
+            else
+                self.Registry[ string.lower( 'nameplateMaxDistance' ) ].KeyPairs.High.Value = 41;
+            end
             self:FillSpeechOptions();
             return self.Registry;
         end
