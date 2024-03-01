@@ -103,9 +103,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     end
                 end;
                 if( tonumber( GetCVar( 'nameplatepersonalshowalways' ) ) > 0 ) then
-                    SetCVar( 'unitnameown',1 );
+                    SetCVar( 'UnitNameOwn',1 );
                 else
-                    SetCVar( 'unitnameown',0 );
+                    SetCVar( 'UnitNameOwn',0 );
+                end
+                if( tonumber( GetCVar( 'nameplateShowFriendlyNPCs' ) ) > 0 ) then
+                    SetCVar( 'UnitNameNPC',1 );
+                else
+                    SetCVar( 'UnitNameNPC',0 );
                 end
                 self:RefeshBlizzOptions();
                 Addon.FRAMES:Notify( 'Done' );

@@ -321,7 +321,19 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
-                nameplateShowFriends ={
+                nameplateShowFriends = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                UnitNamePlayerPVPTitle = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                UnitNamePlayerGuild = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                UnitNameGuildTitle = {
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
@@ -404,10 +416,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Category = 'Hud',
                 },
                 predictedHealth = {
-                    Type = 'Toggle',
-                    Category = 'Hud',
-                },
-                UnitNameGuildTitle = {
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
