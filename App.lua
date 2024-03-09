@@ -4,6 +4,9 @@ Addon.APP = CreateFrame( 'Frame' );
 Addon.APP:RegisterEvent( 'ADDON_LOADED' );
 Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
     if( AddonName == 'jVars' ) then
+        if( InCombatLockdown() ) then
+            return;
+        end
 
         Addon.APP.RegisteredFrames = {};
 
@@ -67,6 +70,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return bool
         Addon.APP.RefeshBlizzOptions = function( self )
+            if( not Addon.DB:GetPersistence() ) then
+                return;
+            end
+            if( InCombatLockdown() ) then
+                return;
+            end
             if( DefaultCompactUnitFrameOptions ) then
                 DefaultCompactUnitFrameOptions.useClassColors = Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayClassColor' ) );
                 DefaultCompactUnitFrameOptions.displayOnlyDispellableDebuffs = Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayOnlyDispellableDebuffs' ) );
@@ -221,6 +230,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         Addon.APP.Query = function( self )
+            if( InCombatLockdown() ) then
+                return;
+            end
             local SearchQuery = self.FilterBox:GetText();
             local FilteredList = Addon.APP:Filter( SearchQuery );
             Addon.VIEW:RegisterList( FilteredList,Addon.APP );
@@ -286,7 +298,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 self:HighlightText();
             end );
             self.FilterBox:SetScript( 'OnTextChanged',function( self )
-                Addon.APP:Query();
+                if( self:IsVisible() ) then
+                    Addon.APP:Query();
+                end
             end );
 
             self.Heading.Name = Addon.FRAMES:AddLabel( { DisplayText = 'Name' },self.Heading );
