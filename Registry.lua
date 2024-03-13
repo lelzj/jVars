@@ -720,10 +720,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Hud',
                 },
-                --[[raidOptionDisplayPets = {
+                raidOptionDisplayPets = {
                     Type = 'Toggle',
                     Category = 'Hud',
-                },]]
+                },
                 raidOptionKeepGroupsTogether = {
                     Type = 'Toggle',
                     Category = 'Hud',

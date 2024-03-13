@@ -22,7 +22,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
             local Result = Addon.DB:SetVarValue( Index,Value );
             if( Result ) then
-                --self:Query();
+                self:Query();
                 SetCVar( Index,Value );
                 self:RefeshBlizzOptions();
                 if( Addon.DB:GetValue( 'ReloadGX' ) ) then
@@ -76,14 +76,20 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( InCombatLockdown() ) then
                 return;
             end
-            if( DefaultCompactUnitFrameOptions ) then
-                DefaultCompactUnitFrameOptions.useClassColors = Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayClassColor' ) );
-                DefaultCompactUnitFrameOptions.displayOnlyDispellableDebuffs = Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayOnlyDispellableDebuffs' ) );
-                DefaultCompactUnitFrameOptions.healthText = self:GetVarValue( 'raidFramesHealthText' );
-            end
-            if( DefaultCompactUnitFrameSetupOptions ) then
-                DefaultCompactUnitFrameSetupOptions.displayBorder = Addon:Int2Bool( self:GetVarValue( 'raidOptionShowBorders' ) );
-                DefaultCompactUnitFrameSetupOptions.displayPowerBar = Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayPowerBars' ) );
+            if( InterfaceOverrides and CompactUnitFrameProfiles and CompactUnitFrameProfiles.selectedProfile ) then
+                InterfaceOverrides.SetRaidProfileOption( 'frameHeight',self:GetVarValue( 'raidFramesHeight' ) );
+                InterfaceOverrides.SetRaidProfileOption( 'frameWidth',self:GetVarValue( 'raidFramesWidth' ) );
+
+                InterfaceOverrides.SetRaidProfileOption( 'displayMainTankAndAssist',Addon:Int2Bool( self:GetVarValue( 'raidOptionDisplayMainTankAndAssist' ) ) );
+                InterfaceOverrides.SetRaidProfileOption( 'displayOnlyDispellableDebuffs',Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayOnlyDispellableDebuffs' ) ) );
+                InterfaceOverrides.SetRaidProfileOption( 'displayPets',Addon:Int2Bool( self:GetVarValue( 'raidOptionDisplayPets' ) ) );
+
+                InterfaceOverrides.SetRaidProfileOption( 'healthText',self:GetVarValue( 'raidFramesHealthText' ) );
+                InterfaceOverrides.SetRaidProfileOption( 'displayPowerBar',Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayPowerBars' ) ) );
+                InterfaceOverrides.SetRaidProfileOption( 'useClassColors',Addon:Int2Bool( self:GetVarValue( 'raidFramesDisplayClassColor' ) ) );
+
+                InterfaceOverrides.SetRaidProfileOption( 'displayBorder',Addon:Int2Bool( self:GetVarValue( 'raidOptionShowBorders' ) ) );
+                InterfaceOverrides.SetRaidProfileOption( 'sortBy',self:GetVarValue( 'raidOptionSortMode' ) );
             end
         end
 
@@ -429,7 +435,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
         -- /Interface/FrameXML/SettingDefinitions/InterfaceOverrides.lua
         --InterfaceOverrides:SetRaidProfileOption("displayPowerBar", true);
-
         if( self:GetValue( 'Refresh' ) ) then
             self:Refresh();
         end
