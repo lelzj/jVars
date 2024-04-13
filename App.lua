@@ -91,6 +91,21 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 InterfaceOverrides.SetRaidProfileOption( 'displayBorder',Addon:Int2Bool( self:GetVarValue( 'raidOptionShowBorders' ) ) );
                 InterfaceOverrides.SetRaidProfileOption( 'sortBy',self:GetVarValue( 'raidOptionSortMode' ) );
             end
+
+            --[[
+            LibStub( 'AceHook-3.0' ):SecureHook( SettingsPanel,'OnSettingValueChanged',function( self,setting, value, oldValue, originalValue )
+                Addon:Dump( {
+                    Variable = setting.variable,
+                    VariableType = setting.variableType,
+                    value = value,
+                    oldValue = oldValue,
+                    originalValue = originalValue,
+                } )
+            end )
+            ]]
+
+            -- /Interface/FrameXML/SettingDefinitions/InterfaceOverrides.lua
+            --InterfaceOverrides:SetRaidProfileOption("displayPowerBar", true);
         end
 
         --
@@ -176,7 +191,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         Addon.APP.Filter = function( self,SearchQuery )
-
             local AllData = {};
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
 
@@ -281,6 +295,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Heading.Import:SetText( 'asdf wtf yo is this shit lmao woah fuck ass' );
             self.Heading.Import:SetWidth( self.Heading:GetWidth()-20 );
             ]]
+
             self.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',self.Config,'SearchBoxTemplate' );
             self.FilterBox:SetPoint( 'topleft',self.Heading,'topleft',15,( ( self.Heading:GetHeight() )*-1 )+25 );
             self.FilterBox:SetSize( 145,20 );
@@ -288,6 +303,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.FilterBox:ClearFocus();
             self.FilterBox:SetAutoFocus( false );
             self.FilterBox:SetScript( 'OnEscapePressed',function( self )
+                if( InCombatLockdown() ) then
+                    return;
+                end
                 self:SetAutoFocus( false );
                 if( self.Instructions ) then
                     self.Instructions:Show();
@@ -297,6 +315,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Addon.APP:ShowAll();
             end );
             self.FilterBox:SetScript( 'OnEditFocusGained',function( self ) 
+                if( InCombatLockdown() ) then
+                    return;
+                end
                 self:SetAutoFocus( true );
                 if( self.Instructions ) then
                     self.Instructions:Hide();
@@ -304,11 +325,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 self:HighlightText();
             end );
             self.FilterBox:SetScript( 'OnTextChanged',function( self )
-                if( self:IsVisible() ) then
-                    Addon.APP:Query();
+                if( InCombatLockdown() ) then
+                    return;
                 end
+                Addon.APP:Query();
             end );
-
+    
             self.Heading.Name = Addon.FRAMES:AddLabel( { DisplayText = 'Name' },self.Heading );
             self.Heading.Name:SetPoint( 'topleft',self.Heading,'topleft',self.Heading.ColInset+3,( ( self.Heading:GetHeight() )*-1 )+20 );
             self.Heading.Name:SetSize( 180,self.Heading.FieldHeight );
@@ -420,21 +442,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         self:Init();
-
-        --[[
-        LibStub( 'AceHook-3.0' ):SecureHook( SettingsPanel,'OnSettingValueChanged',function( self,setting, value, oldValue, originalValue )
-            Addon:Dump( {
-                Variable = setting.variable,
-                VariableType = setting.variableType,
-                value = value,
-                oldValue = oldValue,
-                originalValue = originalValue,
-            } )
-        end )
-        ]]
-
-        -- /Interface/FrameXML/SettingDefinitions/InterfaceOverrides.lua
-        --InterfaceOverrides:SetRaidProfileOption("displayPowerBar", true);
         if( self:GetValue( 'Refresh' ) ) then
             self:Refresh();
         end

@@ -1353,7 +1353,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Low',
                         },
                         High = {
-                            Value = 3.4,
+                            Value = 3.9,
                             Description = 'High',
                         },
                     },
