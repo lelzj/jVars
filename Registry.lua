@@ -683,15 +683,15 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Range',
                     KeyPairs = {
                         Low = {
-                            Value = 0,
+                            Value = 185,
                             Description = 'Low',
                         },
                         High = {
-                            Value = 1300,
+                            Value = 4000,
                             Description = 'High',
                         },
                     },
-                    Step = 100,
+                    Step = 5,
                     Category = 'Hud',
                 },
                 raidFramesDisplayClassColor = {
@@ -1398,15 +1398,15 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Range',
                     KeyPairs = {
                         Low = {
-                            Value = 0,
+                            Value = 185,
                             Description = 'Low',
                         },
                         High = {
-                            Value = 1300,
+                            Value = 4000,
                             Description = 'High',
                         },
                     },
-                    Step = 100,
+                    Step = 5,
                     Category = 'Hud',
                 },
                 ffxDeath = {
