@@ -2509,6 +2509,40 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Character',
                 },
+                worldPreloadHighResTextures = {
+                    Type = 'Toggle',
+                    Category = 'Graphics',
+                },
+                worldPreloadNonCritical = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 2,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                },
+                worldPreloadNonCriticalTimeout = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 45,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                },
             };
             for VarName,VarData in pairs( Registry ) do
                 self.Registry[ string.lower( VarName ) ] = VarData;
