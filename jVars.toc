@@ -13,8 +13,11 @@
 ## SavedVariables: jVars
 
 ## Interface: 100207
-## Interface-Wrath: 30403
+## Interface-Retail: 100207
 ## Interface-Classic: 11502
+## Interface-BCC: 20504
+## Interface-Wrath: 30403
+## Interface-Cata: 40400
 
 #/run print((select(4, GetBuildInfo())));
 #https://markdownlivepreview.com/
