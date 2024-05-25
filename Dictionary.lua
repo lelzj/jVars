@@ -75,7 +75,7 @@ Addon.DICT:SetScript( 'OnEvent',function( self,Event,AddonName )
                     end
                 else
                     for i,Row in pairs( ConsoleGetAllCommands() ) do
-                        local CurrentValue,DefaultValue,AccountWide,PerCharacter,_,Secure,ReadOnly = GetCVarInfo( Row.command );
+                        local CurrentValue,DefaultValue,AccountWide,PerCharacter,_,Secure,ReadOnly = C_CVar.GetCVarInfo( Row.command );
                         local Scope;
                         if( PerCharacter ) then
                             Scope = 'Character';
