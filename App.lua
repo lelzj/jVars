@@ -279,6 +279,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 RestartGx();
             end
 
+            --[[
+            if( InterfaceOptionsFrame ) then
+                Addon:Dump( InterfaceOptionsFrame )
+                -- set background color to transparent... 
+                InterfaceOptionsFrame:SetBackdropColor(1,1,1,0)
+            end
+            ]]
+
             InterfaceOptions_AddCategory( self.Config,self.Name );
 
             self.RowHeight = 30;
@@ -288,13 +296,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Heading:SetSize( 610,100 );
             self.Heading.FieldHeight = 10;
             self.Heading.ColInset = 15;
-            --[[[]
-            self.Heading.Import = Addon.FRAMES:AddEdit( { Name=self.Name..'Import' },self.Heading,self );
-            self.Heading.Import:GetParent():SetPoint( 'topleft',self.Heading,'topleft',10,-10 );
-            self.Heading.Import:GetParent():SetSize( self.Heading:GetWidth()-20,45 );
-            self.Heading.Import:SetText( 'asdf wtf yo is this shit lmao woah fuck ass' );
-            self.Heading.Import:SetWidth( self.Heading:GetWidth()-20 );
-            ]]
+
+            self.Heading.BookEnd = self.Heading:CreateTexture( nil,'ARTWORK',nil,3 );
+            self.Heading.BookEnd:SetTexture( 'Interface\\azerite\\azeritecenterbggold' );
+            self.Heading.BookEnd:SetSize( 65,self.Heading:GetHeight() );
+            self.Heading.BookEnd:SetVertTile( true );
+            self.Heading.BookEnd:SetPoint( 'topright',self.Heading,'topright',0,5 );
 
             self.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',self.Config,'SearchBoxTemplate' );
             self.FilterBox:SetPoint( 'topleft',self.Heading,'topleft',15,( ( self.Heading:GetHeight() )*-1 )+25 );
@@ -356,13 +363,20 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Heading.Adjustment:SetSize( 150,self.Heading.FieldHeight );
             self.Heading.Adjustment:SetJustifyH( 'left' );
 
-            self.Heading.Art = self.Heading:CreateTexture( nil,'ARTWORK', nil,0 );
-            self.Heading.Art:SetTexture( 'Interface\\Addons\\'..self.Name..'\\Textures\\frame' );
+            self.Heading.Art = Addon.FRAMES:AddBackGround( self.Heading );
             self.Heading.Art:SetAllPoints( self.Heading );
 
             self.Browser = CreateFrame( 'Frame',self.Name..'Browser',self.Config );
             self.Browser:SetSize( self.Heading:GetWidth(),400 );
             self.Browser:SetPoint( 'topleft',self.Heading,'bottomleft',0,-10 );
+
+            self.Browser.Art = Addon.FRAMES:AddBackGround( self.Browser );
+            self.Browser.Art:SetAllPoints( self.Browser );
+  
+            self.Browser.BookEnd = self.Browser:CreateTexture( nil,'ARTWORK',nil,3 );
+            self.Browser.BookEnd:SetTexture( 'Interface\\azerite\\azeritecenterbggold' );
+            self.Browser.BookEnd:SetSize( 65,self.Browser:GetHeight() );
+            self.Browser.BookEnd:SetPoint( 'topright',self.Browser,'topright',0,0 );
 
             self.ScrollFrame = CreateFrame( 'ScrollFrame',self.Name..'ScrollFrame',self.Browser,'UIPanelScrollFrameTemplate' );
             self.ScrollFrame:SetAllPoints( self.Browser );
@@ -380,8 +394,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Footer:SetSize( self.Browser:GetWidth(),25 );
             self.Footer:SetPoint( 'topleft',self.Browser,'bottomleft',0,-10 );
 
-            self.Footer.Art = self.Footer:CreateTexture( nil,'ARTWORK', nil,0 );
-            self.Footer.Art:SetTexture( 'Interface\\Addons\\'..self.Name..'\\Textures\\frame' );
+            self.Footer.Art = Addon.FRAMES:AddBackGround( self.Footer );
             self.Footer.Art:SetAllPoints( self.Footer );
 
             self.Stats = CreateFrame( 'Frame',self.Name..'FooterStats',self.Footer );
