@@ -25,3 +25,5 @@ https://github.com/jadissa/jVars/issues
 <p float="left">
   <img src="IMG_3863.jpg" width="500" /> 
 </p>
+
+This is a test
