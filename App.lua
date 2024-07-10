@@ -191,6 +191,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         Addon.APP.Filter = function( self,SearchQuery )
+            if( InCombatLockdown() ) then
+                return;
+            end
             local AllData = {};
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
 
@@ -264,6 +267,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.APP.Init = function( self )
+            if( InCombatLockdown() ) then
+                return;
+            end
 
             self.Name = AddonName;
 
