@@ -2543,6 +2543,36 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 1,
                     Category = 'Graphics',
                 },
+                showTimestamps = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 'none',
+                            Description = 'None',
+                        },
+                        {
+                            Value = '%I:%M ',
+                            Description = '03:27',
+                        },
+                        {
+                            Value = '%I:%M %p ',
+                            Description = '03:27 PM',
+                        },
+                        {
+                            Value = '%I:%M:%S %p ',
+                            Description = '03:27:32 PM',
+                        },
+                        {
+                            Value = '%H:%M ',
+                            Description = '15:27',
+                        },
+                        {
+                            Value = '%H:%M:%S ',
+                            Description = '15:27:32',
+                        },
+                    },
+                    Category = 'Social',
+                },
             };
             for VarName,VarData in pairs( Registry ) do
                 self.Registry[ string.lower( VarName ) ] = VarData;

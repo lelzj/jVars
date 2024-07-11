@@ -218,6 +218,11 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         Dict = Dict,
                     };
                 end
+                --[[
+                if( Key == 'showtimestamps' ) then
+                    Addon:Dump( AllData['showtimestamps'] );
+                end
+                ]]
             end
 
             if( not SearchQuery or not ( string.len( SearchQuery ) >= 3 ) ) then
