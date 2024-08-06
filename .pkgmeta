@@ -23,3 +23,4 @@ externals:
   Libs/AceConfig-3.0: https://repos.wowace.com/wow/ace3/trunk/AceConfig-3.0
   Libs/LibWindow-1.1: https://repos.wowace.com/wow/libwindow-1-1/trunk/LibWindow-1.1
   Libs/jUI: https://github.com/jadissa/jUI.git
+  Libs/Taintless: https://github.com/jadissa/Taintless.git

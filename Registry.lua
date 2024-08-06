@@ -292,6 +292,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 NameplatePersonalShowAlways = {
                     Type = 'Toggle',
                     Category = 'Character',
+                    Cascade = {
+                        UnitNameOwn = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 NameplatePersonalShowInCombat = {
                     Type = 'Toggle',
@@ -380,6 +385,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateShowFriendlyNPCs = {
                     Type = 'Toggle',
                     Category = 'Hud',
+                    Cascade = {
+                        UnitNameNPC = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 nameplateShowFriendlyTotems = {
                     Type = 'Toggle',
@@ -679,24 +689,22 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
-                RAIDfarclip = {
-                    Type = 'Range',
-                    KeyPairs = {
-                        Low = {
-                            Value = 185,
-                            Description = 'Low',
-                        },
-                        High = {
-                            Value = 4000,
-                            Description = 'High',
+                --[[
+                useCompactPartyFrames = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
                         },
                     },
-                    Step = 5,
-                    Category = 'Hud',
                 },
                 raidFramesDisplayClassColor = {
                     Type = 'Toggle',
                     Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
                 },
                 raidFramesHealthText = {
                     Type = 'Select',
@@ -719,18 +727,50 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
+                },
+                raidFramesDisplayOnlyDispellableDebuffs = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
+                },
+                raidFramesDisplayPowerBars = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
                 },
                 raidOptionDisplayPets = {
                     Type = 'Toggle',
                     Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
                 },
                 raidOptionKeepGroupsTogether = {
                     Type = 'Toggle',
                     Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
                 },
                 raidOptionShowBorders = {
                     Type = 'Toggle',
                     Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
                 },
                 raidOptionSortMode = {
                     Type = 'Select',
@@ -745,14 +785,18 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Hud',
-                },
-                raidFramesDisplayPowerBars = {
-                    Type = 'Toggle',
-                    Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
                 },
                 raidOptionDisplayMainTankAndAssist = {
                     Type = 'Toggle',
                     Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
                 },
                 raidOptionLocked = {
                     Type = 'Select',
@@ -767,39 +811,25 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Hud',
+                    Protected = {
+                        RefreshRaid = {
+                        },
+                    },
                 },
-                raidFramesDisplayOnlyDispellableDebuffs = {
-                    Type = 'Toggle',
-                    Category = 'Hud',
-                },
-                raidFramesHeight = {
+                ]]
+                RAIDfarclip = {
                     Type = 'Range',
                     KeyPairs = {
                         Low = {
-                            Value = 75,
+                            Value = 185,
                             Description = 'Low',
                         },
                         High = {
-                            Value = 200,
+                            Value = 4000,
                             Description = 'High',
                         },
                     },
-                    Step = 25,
-                    Category = 'Hud',
-                },
-                raidFramesWidth = {
-                    Type = 'Range',
-                    KeyPairs = {
-                        Low = {
-                            Value = 75,
-                            Description = 'Low',
-                        },
-                        High = {
-                            Value = 200,
-                            Description = 'High',
-                        },
-                    },
-                    Step = 25,
+                    Step = 5,
                     Category = 'Hud',
                 },
                 RAIDgroundEffectAnimation = {
@@ -940,14 +970,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
-                },
-                useCompactPartyFrames = {
-                    Type = 'Toggle',
-                    Category = 'Hud',
-                },
-                showPartyBackground = {
-                    Type = 'Toggle',
-                    Category = 'Hud',
                 },
                 lfgNewPlayerFriendly = {
                     Type = 'Toggle',

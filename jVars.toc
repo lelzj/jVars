@@ -12,8 +12,8 @@
 ## DefaultState: disabled
 ## SavedVariables: jVars
 
-## Interface: 100207
-## Interface-Retail: 100207
+## Interface: 110000
+## Interface-Retail: 110000
 ## Interface-Classic: 11503
 ## Interface-BCC: 20504
 ## Interface-Wrath: 30403
@@ -23,6 +23,7 @@
 #https://markdownlivepreview.com/
 
 # Required libs
+Libs\Taintless\Taintless.xml
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 

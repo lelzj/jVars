@@ -27,7 +27,9 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                 };
 
                 Defaults.Vars[ string.lower( VarName ) ] = {
+                    Protected = VarData.Protected or {},
                     Flagged = Dict.Flagged or false,
+                    Cascade = VarData.Cascade or {},
                     Value = Dict.CurrentValue,
                 };
             end
@@ -155,6 +157,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( not self.persistence ) then
                 return;
             end
+            --self:Reset();
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
                 if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ) then
                     if( tostring( self:GetPersistence().Vars[ string.lower( VarName ) ].Value ) == tostring( Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DefaultValue ) ) then
