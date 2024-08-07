@@ -341,7 +341,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             C_Timer.After( 5,function()
                 Addon.FRAMES:Notify( 'Refreshing all settings...' );
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
-                    if( not VarData.Flagged and not VarData.Protected ) then
+                    if( not VarData.Flagged ) then
                         local Updated = SetCVar( string.lower( VarName ),VarData.Value );
                         if( Updated and VarData.Cascade ) then
                             for Name,Data in pairs( VarData.Cascade ) do
