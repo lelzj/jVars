@@ -17,7 +17,7 @@ Addon.DICT:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Iterator = Iterator + 1;
             end
             if( not( Iterator > 0 ) ) then
-                if( Addon:IsClassic() ) then
+                if( Addon:IsClassic() or not Addon:IsWrath() ) then
                     for i,Row in pairs( ConsoleGetAllCommands() ) do
                         local CurrentValue,DefaultValue,AccountWide,PerCharacter,_,Secure,ReadOnly = C_CVar.GetCVarInfo( Row.command );
                         local Scope;
@@ -72,30 +72,6 @@ Addon.DICT:SetScript( 'OnEvent',function( self,Event,AddonName )
                     -- Aggrend feedback: https://youtu.be/H69PDuEaxDc?t=654
                     if( tonumber( self.Dictionary[ string.lower( 'nameplateMaxDistance' ) ].CurrentValue ) >= 20 ) then
                         self.Dictionary[ string.lower( 'nameplateMaxDistance' ) ].CurrentValue = 20;
-                    end
-                else
-                    for i,Row in pairs( ConsoleGetAllCommands() ) do
-                        local CurrentValue,DefaultValue,AccountWide,PerCharacter,_,Secure,ReadOnly = C_CVar.GetCVarInfo( Row.command );
-                        local Scope;
-                        if( PerCharacter ) then
-                            Scope = 'Character';
-                        elseif( AccountWide ) then
-                            Scope = 'Account';
-                        elseif( ReadOnly ) then
-                            Scope = 'Locked';
-                        else
-                            Scope = 'Unknown';
-                        end
-                        local Key = string.lower( Row.command );
-                        self.Dictionary[ Key ] = {
-                            DefaultValue    = DefaultValue,
-                            DisplayText     = Row.command,
-                            Secure          = Secure,
-                            Key             = Key,
-                            Scope           = Scope,
-                            Description     = Row.help,
-                            CurrentValue    = CurrentValue,
-                        };
                     end
                 end
             end

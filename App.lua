@@ -319,6 +319,8 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 end
             end
 
+            local Settings = GetRaidProfileFlattenedOptions( CompactUnitFrameProfiles.selectedProfile );
+            Addon:Dump( Settings );
             CompactUnitFrameProfiles_ApplyCurrentSettings();
             
             if( Manual ) then
@@ -424,16 +426,16 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         DisplayText = Dict.DisplayText,
                         Description = Dict.Description,
                         DefaultValue = Dict.DefaultValue,
-                        Type = VarData.Type,
-                        Flagged = Flagged,
-                        Cascade = VarData.Cascade,
+                        Type = VarData.Type,                -- Toggle, Range, Select, etc
+                        Flagged = Flagged,                  -- Not appearing in list of client commands
+                        Cascade = VarData.Cascade,          -- Dependencies that need to fire when value changes
                         Name = Key,
                         Value = Value,
-                        Scope = Dict.Scope,
-                        Step = VarData.Step,
+                        Scope = Dict.Scope,                 -- Character, Account, Locked, Unknown
+                        Step = VarData.Step,                -- How much to dec/increment
                         KeyPairs = VarData.KeyPairs,
                         Category = VarData.Category,
-                        Dict = Dict,
+                        Dict = Dict,                        -- Dictionary entry
                     };
                 end
                 --[[
@@ -668,6 +670,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ReloadGX:HookScript( 'OnClick',function( self )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
             end );
+
+            -- 1. Pick HELLOWORLD as the unique identifier.
+            -- 2. Pick /hiw and /hellow as slash commands (/hi and /hello are actual emotes)
+            -- https://wowpedia.fandom.com/wiki/Creating_a_slash_command
+            SLASH_JVARS1, SLASH_JVARS2 = '/vars', '/jvars'; -- 3.
+            SlashCmdList['JVARS'] = function( Msg,EditBox ) -- 4.
+                Settings.OpenToCategory( self.Name );
+            end
         end
 
         self:Init();
