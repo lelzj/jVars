@@ -698,6 +698,32 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                 },
+                raidOptionShowBorders = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
+                },
+                raidOptionSortMode = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 'role',
+                            Description = 'Role',
+                        },
+                        {
+                            Value = 'group',
+                            Description = 'Group',
+                        },
+                    },
+                    Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
+                },
                 raidFramesDisplayClassColor = {
                     Type = 'Toggle',
                     Category = 'Hud',
@@ -758,32 +784,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 raidOptionKeepGroupsTogether = {
                     Type = 'Toggle',
-                    Category = 'Hud',
-                    Protected = {
-                        RefreshCompactPartyFrame = {
-                        },
-                    },
-                },
-                raidOptionShowBorders = {
-                    Type = 'Toggle',
-                    Category = 'Hud',
-                    Protected = {
-                        RefreshCompactPartyFrame = {
-                        },
-                    },
-                },
-                raidOptionSortMode = {
-                    Type = 'Select',
-                    KeyPairs = {
-                        {
-                            Value = 'role',
-                            Description = 'Role',
-                        },
-                        {
-                            Value = 'group',
-                            Description = 'Group',
-                        },
-                    },
                     Category = 'Hud',
                     Protected = {
                         RefreshCompactPartyFrame = {

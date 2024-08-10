@@ -83,13 +83,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
             -- Party frame
             if( Addon:Minify( VarName ):find( Addon:Minify( 'useCompactPartyFrames' ) ) ) then
-                SetCVar( Addon:Minify( VarName ),self:GetVarValue( VarName ) );
                 local function CVarChangedCB()
                     local compactFrames = C_CVar.GetCVarBool( 'useCompactPartyFrames' );
                     RaidOptionsFrame_UpdatePartyFrames()
                     CompactRaidFrameManager_UpdateShown( CompactRaidFrameManager );
                     InterfaceOverrides.RefreshRaidOptions();
                 end
+
+                CVarChangedCB();
                 Settings.SetupCVarCheckBox( category,'useCompactPartyFrames',USE_RAID_STYLE_PARTY_FRAMES,OPTION_TOOLTIP_USE_RAID_STYLE_PARTY_FRAMES);
                 CVarCallbackRegistry:RegisterCVarChangedCallback( CVarChangedCB,nil );
             end
@@ -105,8 +106,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     local function SetValue(value)
                         InterfaceOverrides.SetRaidProfileOption("useClassColors", value);
                     end
-                    
-                    SetValue( self:GetVarValue( VarName ) );
+
                     local setting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_CLASS_COLORS", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_USECLASSCOLORS, defaultValue, GetValue, SetValue);
                     Settings.CreateCheckBox(category, setting, OPTION_TOOLTIP_COMPACT_UNIT_FRAME_PROFILE_USECLASSCOLORS);
@@ -134,7 +134,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         return container:GetData();
                     end
 
-                    --SetValue( self:GetVarValue( VarName ) );
                     local healthTextSetting = Settings.RegisterProxySetting(category, "PROXY_RAID_HEALTH_TEXT", Settings.DefaultVarLocation,
                         Settings.VarType.String, COMPACT_UNIT_FRAME_PROFILE_HEALTHTEXT, defaultValue, GetValue, SetValue);
                     Settings.CreateDropDown(category, healthTextSetting, GetOptions, OPTION_TOOLTIP_COMPACT_UNIT_FRAME_PROFILE_HEALTHTEXT);
@@ -155,8 +154,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     local function SetValue(value)
                         InterfaceOverrides.SetRaidProfileOption("displayNonBossDebuffs", value);
                     end
-                    
-                    --SetValue( self:GetVarValue( VarName ) );
+
                     debuffsSetting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_SHOW_DEBUFFS", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_DISPLAYNONBOSSDEBUFFS, defaultValue, GetValue, SetValue);
                     debuffsInitializer = Settings.CreateCheckBox(category, debuffsSetting, OPTION_TOOLTIP_COMPACT_UNIT_FRAME_PROFILE_DISPLAYNONBOSSDEBUFFS);
@@ -175,7 +173,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         InterfaceOverrides.SetRaidProfileOption("displayPowerBar", value);
                     end
 
-                    --SetValue( self:GetVarValue( VarName ) );
                     local setting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_POWER_BAR", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_DISPLAYPOWERBAR, defaultValue, GetValue, SetValue);
                     Settings.CreateCheckBox(category, setting, OPTION_TOOLTIP_COMPACT_UNIT_FRAME_PROFILE_DISPLAYPOWERBAR);
@@ -193,8 +190,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     local function SetValue(value)
                         InterfaceOverrides.SetRaidProfileOption("displayPets", value);
                     end
-                    
-                    --SetValue( self:GetVarValue( VarName ) );
+
                     local setting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_PETS", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_DISPLAYPETS, defaultValue, GetValue, SetValue);
                     Settings.CreateCheckBox(category, setting, OPTION_TOOLTIP_COMPACT_UNIT_FRAME_PROFILE_DISPLAYPETS);
@@ -216,8 +212,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         local test = InterfaceOverrides.GetRaidProfileOption("keepGroupsTogether", defaultValue);
                         InterfaceOverrides.SetRaidProfileOption("keepGroupsTogether", value);
                     end
-                    
-                    --SetValue( self:GetVarValue( VarName ) );
+
+                    SetValue( self:GetVarValue( VarName ) );
+
                     keepGroupsTogetherSetting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_KEEP_GROUPS_TOGETHER", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_KEEPGROUPSTOGETHER, defaultValue, GetValue, SetValue);
                     keepGroupsInitializer = Settings.CreateCheckBox(category, keepGroupsTogetherSetting, OPTION_TOOLTIP_KEEP_GROUPS_TOGETHER);
@@ -235,8 +232,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     local function SetValue(value)
                         InterfaceOverrides.SetRaidProfileOption("displayBorder", value);
                     end
-                    
-                    --SetValue( self:GetVarValue( VarName ) );
+
                     local setting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_BORDER", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_DISPLAYBORDER, defaultValue, GetValue, SetValue);
                     Settings.CreateCheckBox(category, setting, nil);
@@ -257,6 +253,8 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         local test = InterfaceOverrides.GetRaidProfileOption("keepGroupsTogether", defaultValue);
                         InterfaceOverrides.SetRaidProfileOption("keepGroupsTogether", value);
                     end
+
+                    SetValue( self:GetVarValue( VarName ) );
                     
                     keepGroupsTogetherSetting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_KEEP_GROUPS_TOGETHER", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_KEEPGROUPSTOGETHER, defaultValue, GetValue, SetValue);
@@ -285,10 +283,10 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     SetCVar( VarName,defaultValue );
                 end
 
-                --SetValue( self:GetVarValue( VarName ) );
+                SetValue( self:GetVarValue( VarName ) );
+
                 local sortBySetting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_SORT_BY", Settings.DefaultVarLocation,
                     Settings.VarType.String, COMPACT_UNIT_FRAME_PROFILE_SORTBY, defaultValue, GetValue, SetValue);
-
 
                 local sortByInitializer = Settings.CreateDropDown(category, sortBySetting, GetOptions, TOOLTIP_TEXT);
 
@@ -311,8 +309,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     local function SetValue(value)
                         InterfaceOverrides.SetRaidProfileOption("displayMainTankAndAssist", value);
                     end
-                    
-                    --SetValue( self:GetVarValue( VarName ) );
+
                     local setting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_TANK_ASSIST", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_DISPLAYMAINTANKANDASSIST, defaultValue, GetValue, SetValue);
                     Settings.CreateCheckBox(category, setting, OPTION_TOOLTIP_COMPACT_UNIT_FRAME_PROFILE_DISPLAYMAINTANKANDASSIST);
@@ -320,7 +317,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
 
             local Settings = GetRaidProfileFlattenedOptions( CompactUnitFrameProfiles.selectedProfile );
-            Addon:Dump( Settings );
+            --Addon:Dump( Settings );
             CompactUnitFrameProfiles_ApplyCurrentSettings();
             
             if( Manual ) then
@@ -343,14 +340,15 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             C_Timer.After( 5,function()
                 Addon.FRAMES:Notify( 'Refreshing all settings...' );
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
-                    if( not VarData.Flagged ) then
-                        local Updated = SetCVar( string.lower( VarName ),VarData.Value );
+
+                    if( not VarData.Flagged and not VarData.Protected ) then
+                        local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
                         if( Updated and VarData.Cascade ) then
                             for Name,Data in pairs( VarData.Cascade ) do
                                 SetCVar( Addon:Minify( Name ),VarData.Value );
                             end
                         end
-                    elseif( VarData.Protected ) then
+                    elseif( not VarData.Flagged and VarData.Protected ) then
                         for Handling,_ in pairs( VarData.Protected ) do
                             if( Addon.APP[Handling] ) then
                                 Addon.APP[Handling]( VarName,VarData );
