@@ -672,7 +672,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             -- 1. Pick HELLOWORLD as the unique identifier.
             -- 2. Pick /hiw and /hellow as slash commands (/hi and /hello are actual emotes)
             -- https://wowpedia.fandom.com/wiki/Creating_a_slash_command
-            SLASH_JVARS1, SLASH_JVARS2 = '/vars', '/jvars'; -- 3.
+            SLASH_JVARS1,SLASH_JVARS2,SLASH_JVARS3 = '/jv','/vars','/jvars'; -- 3.
             SlashCmdList['JVARS'] = function( Msg,EditBox ) -- 4.
                 Settings.OpenToCategory( self.Name );
             end
