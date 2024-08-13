@@ -316,7 +316,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 end
             end
 
-            local Settings = GetRaidProfileFlattenedOptions( CompactUnitFrameProfiles.selectedProfile );
+            --local Settings = GetRaidProfileFlattenedOptions( CompactUnitFrameProfiles.selectedProfile );
             --Addon:Dump( Settings );
             CompactUnitFrameProfiles_ApplyCurrentSettings();
             

@@ -698,6 +698,32 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                 },
+                raidFramesHealthText = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 'none',
+                            Description = 'None',
+                        },
+                        {
+                            Value = 'health',
+                            Description = 'Health Remaining',
+                        },
+                        {
+                            Value = 'losthealth',
+                            Description = 'Health Lost (ie Deficit)',
+                        },
+                        {
+                            Value = 'perc',
+                            Description = 'Health Percentage',
+                        },
+                    },
+                    Category = 'Hud',
+                    Protected = {
+                        RefreshCompactPartyFrame = {
+                        },
+                    },
+                },
                 raidOptionShowBorders = {
                     Type = 'Toggle',
                     Category = 'Hud',
@@ -726,32 +752,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 raidFramesDisplayClassColor = {
                     Type = 'Toggle',
-                    Category = 'Hud',
-                    Protected = {
-                        RefreshCompactPartyFrame = {
-                        },
-                    },
-                },
-                raidFramesHealthText = {
-                    Type = 'Select',
-                    KeyPairs = {
-                        {
-                            Value = 'none',
-                            Description = 'None',
-                        },
-                        {
-                            Value = 'health',
-                            Description = 'Health Remaining',
-                        },
-                        {
-                            Value = 'losthealth',
-                            Description = 'Health Lost (ie Deficit)',
-                        },
-                        {
-                            Value = 'perc',
-                            Description = 'Health Percentage',
-                        },
-                    },
                     Category = 'Hud',
                     Protected = {
                         RefreshCompactPartyFrame = {
