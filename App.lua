@@ -419,7 +419,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 local Flagged = Addon.DB:GetFlagged( Key );
                 local Dict = Addon.DICT:GetDictionary()[ Key ];
 
-                if( Value and not Flagged ) then
+                if( not Flagged ) then
                     AllData[ Key ] = {
                         DisplayText = Dict.DisplayText,
                         Description = Dict.Description,

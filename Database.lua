@@ -32,6 +32,11 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Cascade = VarData.Cascade or {},
                     Value = Dict.CurrentValue,
                 };
+
+                -- Unflag special
+                if( self:SpecialFlags()[ VarName ] ) then
+                    Defaults.Vars[ string.lower( VarName ) ].Flagged = false;
+                end
             end
             return Defaults;
         end
@@ -56,6 +61,14 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         Addon.DB.GetModified = function( self,Index )
             if( self:GetPersistence().Vars[ string.lower( Index ) ] ) then
                 return self:GetPersistence().Vars[ string.lower( Index ) ].Modified;
+            end
+        end
+
+        Addon.DB.SpecialFlags = function( self,Index )
+            if( Addon:IsRetail() ) then
+                return {
+                     --multiBarRightVerticalLayout = true,
+                }
             end
         end
 
@@ -157,6 +170,12 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( not self.persistence ) then
                 return;
             end
+            --[[for Key,_ in pairs( self:SpecialFlags() ) do
+                Addon:Dump( {
+                    Key = Key,
+                    Defaults = self.persistence.Vars[ string.lower( Key ) ],
+                } );
+            end]]
             --self:Reset();
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
                 if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ) then
