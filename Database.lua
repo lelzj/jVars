@@ -69,6 +69,10 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                 return {
                      --multiBarRightVerticalLayout = true,
                 }
+            else
+                return {
+                     --multiBarRightVerticalLayout = true,
+                }
             end
         end
 
