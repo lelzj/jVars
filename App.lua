@@ -499,12 +499,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Config = CreateFrame( 'Frame',self.Name);
             self.Config.name = self.Name;
 
-            if( InterfaceOptions_AddCategory ) then
-                InterfaceOptions_AddCategory( self.Config,self.Name );
-            elseif( Settings and Settings.RegisterCanvasLayoutCategory ) then
-                Settings.RegisterCanvasLayoutCategory( self.Config,self.Name );
-            end
-
             self.RowHeight = 30;
 
             self.Heading = CreateFrame( 'Frame',self.Name..'Heading',self.Config );
@@ -669,12 +663,22 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
             end );
 
-            -- 1. Pick HELLOWORLD as the unique identifier.
-            -- 2. Pick /hiw and /hellow as slash commands (/hi and /hello are actual emotes)
-            -- https://wowpedia.fandom.com/wiki/Creating_a_slash_command
-            SLASH_JVARS1,SLASH_JVARS2,SLASH_JVARS3 = '/jv','/vars','/jvars'; -- 3.
-            SlashCmdList['JVARS'] = function( Msg,EditBox ) -- 4.
-                Settings.OpenToCategory( self.Name );
+            local Category,Layout;
+            if( InterfaceOptions_AddCategory ) then
+                InterfaceOptions_AddCategory( self.Config,self.Name );
+            elseif( Settings and Settings.RegisterCanvasLayoutCategory ) then
+                Category,Layout = Settings.RegisterCanvasLayoutCategory( self.Config,self.Name );
+                Settings.RegisterAddOnCategory( Category );
+            end
+
+            SLASH_JVARS1,SLASH_JVARS2,SLASH_JVARS3 = '/jv','/vars','/jvars';
+            SlashCmdList['JVARS'] = function( Msg,EditBox )
+                if( InterfaceOptionsFrame_OpenToCategory ) then
+                    InterfaceOptionsFrame_OpenToCategory( self.Name );
+                    InterfaceOptionsFrame_OpenToCategory( self.Name );
+                else
+                    Settings.OpenToCategory( Category.ID );
+                end
             end
         end
 
