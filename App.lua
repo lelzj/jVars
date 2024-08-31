@@ -682,10 +682,15 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        self:Init();
-        if( self:GetValue( 'Refresh' ) ) then
-            self:Refresh();
-        end
+        local EventFrame = CreateFrame( 'Frame' );
+        EventFrame:RegisterEvent( 'COMPACT_UNIT_FRAME_PROFILES_LOADED' );
+        EventFrame:SetScript( 'OnEvent',function( self,Event)
+            Addon.APP:Init();
+            if( Addon.APP:GetValue( 'Refresh' ) ) then
+                Addon.APP:Refresh();
+            end
+            EventFrame:UnregisterEvent( 'COMPACT_UNIT_FRAME_PROFILES_LOADED' );
+        end );
         self:UnregisterEvent( 'ADDON_LOADED' );
     end
 end );
