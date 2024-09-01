@@ -34,7 +34,17 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                 };
 
                 -- Unflag special
-                if( self:SpecialFlags()[ VarName ] ) then
+                local UnDocumented = {};
+                for Var,Ok in pairs( self:SpecialFlags() ) do
+                    UnDocumented[ string.lower( Var ) ] = Ok;
+                end
+                if( UnDocumented[ VarName ] ) then
+                    Addon.DICT.Dictionary[ string.lower( VarName ) ] = {
+                        DisplayText = VarName,
+                        Key = string.lower( VarName ),
+                        CurrentValue = GetCVar( VarName ) or 0,
+                        DefaultValue = GetCVar( VarName ) or 0,
+                    };
                     Defaults.Vars[ string.lower( VarName ) ].Flagged = false;
                 end
             end
@@ -72,6 +82,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             else
                 return {
                      --multiBarRightVerticalLayout = true,
+                     previewTalents = true,
                 }
             end
         end
@@ -174,6 +185,8 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( not self.persistence ) then
                 return;
             end
+            --self:GetPersistence().Vars = self:GetDefaults().Vars;
+
             --[[for Key,_ in pairs( self:SpecialFlags() ) do
                 Addon:Dump( {
                     Key = Key,

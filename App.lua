@@ -36,7 +36,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         end
                     end
                 end
-                Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ Addon:Minify( Index ) ].DisplayText,'to',Addon.APP:GetVarValue( Index ) );
+                Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',Addon.APP:GetVarValue( Index ) );
                 return true;
             end
             return false;
@@ -107,6 +107,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         InterfaceOverrides.SetRaidProfileOption("useClassColors", value);
                     end
 
+                    if( tonumber( self:GetVarValue( VarName ) ) == 0 or self:GetVarValue( VarName ) == 1 ) then
+                        SetValue( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
+                    else
+                        SetValue( self:GetVarValue( VarName ) );
+                    end
+
                     local setting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_CLASS_COLORS", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_USECLASSCOLORS, defaultValue, GetValue, SetValue);
                     Settings.CreateCheckBox(category, setting, OPTION_TOOLTIP_COMPACT_UNIT_FRAME_PROFILE_USECLASSCOLORS);
@@ -123,6 +129,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     
                     local function SetValue(value)
                         InterfaceOverrides.SetRaidProfileOption("healthText", value);
+                    end
+
+                    if( tonumber( self:GetVarValue( VarName ) ) == 0 or self:GetVarValue( VarName ) == 1 ) then
+                        SetValue( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
+                    else
+                        SetValue( self:GetVarValue( VarName ) );
                     end
 
                     local function GetOptions()
@@ -155,6 +167,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         InterfaceOverrides.SetRaidProfileOption("displayNonBossDebuffs", value);
                     end
 
+                    if( tonumber( self:GetVarValue( VarName ) ) == 0 or self:GetVarValue( VarName ) == 1 ) then
+                        SetValue( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
+                    else
+                        SetValue( self:GetVarValue( VarName ) );
+                    end
+
                     debuffsSetting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_SHOW_DEBUFFS", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_DISPLAYNONBOSSDEBUFFS, defaultValue, GetValue, SetValue);
                     debuffsInitializer = Settings.CreateCheckBox(category, debuffsSetting, OPTION_TOOLTIP_COMPACT_UNIT_FRAME_PROFILE_DISPLAYNONBOSSDEBUFFS);
@@ -173,6 +191,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         InterfaceOverrides.SetRaidProfileOption("displayPowerBar", value);
                     end
 
+                    if( tonumber( self:GetVarValue( VarName ) ) == 0 or self:GetVarValue( VarName ) == 1 ) then
+                        SetValue( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
+                    else
+                        SetValue( self:GetVarValue( VarName ) );
+                    end
+
                     local setting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_POWER_BAR", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_DISPLAYPOWERBAR, defaultValue, GetValue, SetValue);
                     Settings.CreateCheckBox(category, setting, OPTION_TOOLTIP_COMPACT_UNIT_FRAME_PROFILE_DISPLAYPOWERBAR);
@@ -189,6 +213,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     
                     local function SetValue(value)
                         InterfaceOverrides.SetRaidProfileOption("displayPets", value);
+                    end
+
+                    if( tonumber( self:GetVarValue( VarName ) ) == 0 or self:GetVarValue( VarName ) == 1 ) then
+                        SetValue( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
+                    else
+                        SetValue( self:GetVarValue( VarName ) );
                     end
 
                     local setting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_PETS", Settings.DefaultVarLocation, 
@@ -213,7 +243,11 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         InterfaceOverrides.SetRaidProfileOption("keepGroupsTogether", value);
                     end
 
-                    SetValue( self:GetVarValue( VarName ) );
+                    if( tonumber( self:GetVarValue( VarName ) ) == 0 or self:GetVarValue( VarName ) == 1 ) then
+                        SetValue( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
+                    else
+                        SetValue( self:GetVarValue( VarName ) );
+                    end
 
                     keepGroupsTogetherSetting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_KEEP_GROUPS_TOGETHER", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_KEEPGROUPSTOGETHER, defaultValue, GetValue, SetValue);
@@ -231,6 +265,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     
                     local function SetValue(value)
                         InterfaceOverrides.SetRaidProfileOption("displayBorder", value);
+                    end
+
+                    if( tonumber( self:GetVarValue( VarName ) ) == 0 or self:GetVarValue( VarName ) == 1 ) then
+                        SetValue( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
+                    else
+                        SetValue( self:GetVarValue( VarName ) );
                     end
 
                     local setting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_BORDER", Settings.DefaultVarLocation, 
@@ -254,7 +294,11 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         InterfaceOverrides.SetRaidProfileOption("keepGroupsTogether", value);
                     end
 
-                    SetValue( self:GetVarValue( VarName ) );
+                    if( tonumber( self:GetVarValue( VarName ) ) == 0 or self:GetVarValue( VarName ) == 1 ) then
+                        SetValue( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
+                    else
+                        SetValue( self:GetVarValue( VarName ) );
+                    end
                     
                     keepGroupsTogetherSetting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_KEEP_GROUPS_TOGETHER", Settings.DefaultVarLocation, 
                         Settings.VarType.Boolean, COMPACT_UNIT_FRAME_PROFILE_KEEPGROUPSTOGETHER, defaultValue, GetValue, SetValue);
@@ -279,11 +323,11 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     return container:GetData();
                 end
 
-                if( tonumber( self:GetVarValue( VarName ) ) == 0 ) then
-                    SetCVar( VarName,defaultValue );
+                if( tonumber( self:GetVarValue( VarName ) ) == 0 or self:GetVarValue( VarName ) == 1 ) then
+                    SetValue( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
+                else
+                    SetValue( self:GetVarValue( VarName ) );
                 end
-
-                SetValue( self:GetVarValue( VarName ) );
 
                 local sortBySetting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_SORT_BY", Settings.DefaultVarLocation,
                     Settings.VarType.String, COMPACT_UNIT_FRAME_PROFILE_SORTBY, defaultValue, GetValue, SetValue);
@@ -308,6 +352,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     
                     local function SetValue(value)
                         InterfaceOverrides.SetRaidProfileOption("displayMainTankAndAssist", value);
+                    end
+
+                    if( tonumber( self:GetVarValue( VarName ) ) == 0 or self:GetVarValue( VarName ) == 1 ) then
+                        SetValue( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
+                    else
+                        SetValue( self:GetVarValue( VarName ) );
                     end
 
                     local setting = Settings.RegisterProxySetting(category, "PROXY_RAID_FRAME_TANK_ASSIST", Settings.DefaultVarLocation, 
