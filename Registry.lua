@@ -606,6 +606,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 multiBarRightVerticalLayout = {
                     Type = 'Toggle',
                     Category = 'Hud',
+                    Protected = {
+                        RefreshActionBars = {
+                        },
+                    },
                 },
                 ConsoleKey = {
                     Type = 'Edit',
