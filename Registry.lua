@@ -305,6 +305,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateShowAll = {
                     Type = 'Toggle',
                     Category = 'Hud',
+                    Cascade = {
+                        UnitNameFriendlyPlayerName = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 nameplateShowEnemies = {
                     Type = 'Toggle',

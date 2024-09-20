@@ -36,6 +36,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         end
                     end
                 end
+
+                if( VarData.Cascade ) then
+                    for Name,Data in pairs( VarData.Cascade ) do
+                        SetCVar( Addon:Minify( Name ),Value );
+                        --print( 'Cascade',Addon:Minify( Name ),Value )
+                    end
+                end
+
                 Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',Addon.APP:GetVarValue( Index ) );
                 return true;
             end
