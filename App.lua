@@ -37,7 +37,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     end
                 end
 
-                if( VarData.Cascade ) then
+                if( VarData and VarData.Cascade ) then
                     for Name,Data in pairs( VarData.Cascade ) do
                         SetCVar( Addon:Minify( Name ),Value );
                         --print( 'Cascade',Addon:Minify( Name ),Value )
