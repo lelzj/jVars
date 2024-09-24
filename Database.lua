@@ -11,6 +11,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return table
         Addon.DB.GetDefaults = function( self )
             local Defaults = {
+                Debug = true,
                 Modified = {
                     Total = 0,
                 },
@@ -126,6 +127,9 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                         self:GetPersistence().Modified.Total = self:GetPersistence().Modified.Total - 1;
                     end
                 end
+            end
+            if( Addon.DB:GetValue( 'Debug' ) ) then
+                Addon:Dump( self:GetPersistence().Vars[ string.lower( Index ) ] );
             end
             return true;
         end
