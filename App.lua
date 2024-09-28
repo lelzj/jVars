@@ -483,10 +483,10 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
             self.ScrollChild = CreateFrame( 'Frame',self.Name..'ScrollChild' );
             self.ScrollFrame:SetScrollChild( self.ScrollChild );
-            if( Addon:IsClassic() ) then
-                self.ScrollChild:SetWidth( InterfaceOptionsFramePanelContainer:GetWidth() );
-            else
+            if( SettingsPanel ) then
                 self.ScrollChild:SetWidth( SettingsPanel:GetWidth() );
+            elseif( InterfaceOptionsFramePanelContainer ) then
+                self.ScrollChild:SetWidth( InterfaceOptionsFramePanelContainer:GetWidth() );
             end
             self.ScrollChild:SetHeight( 20 );
 
