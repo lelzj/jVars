@@ -2,8 +2,7 @@
 ..\FrameXML\UI.xsd">
 	<Script file="Registry.lua"/>
 	<Script file="Dictionary.lua"/>
-	<!--<Script file="View.lua"/>-->
-	<Script file="Config.lua"/>
+	<Script file="View.lua"/>
 	<Script file="Database.lua"/>
 	<Script file="App.lua"/>
 </Ui>

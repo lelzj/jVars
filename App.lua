@@ -20,6 +20,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
             local Result = Addon.DB:SetVarValue( Index,Value );
             if( Result ) then
+                self:Query();
                 SetCVar( Index,Value );
                 local VarData = Addon.REG:GetRegistry()[ Addon:Minify( Index ) ];
                 if( VarData and VarData.Protected ) then
@@ -573,15 +574,10 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        SLASH_JVARS1,SLASH_JVARS2,SLASH_JVARS3 = '/jv','/vars','/jvars';
-        SlashCmdList['JVARS'] = function( Msg,EditBox )
-            Settings.OpenToCategory( AddonName );
-        end
-
         local EventFrame = CreateFrame( 'Frame' );
         EventFrame:RegisterEvent( 'COMPACT_UNIT_FRAME_PROFILES_LOADED' );
         EventFrame:SetScript( 'OnEvent',function( self,Event)
-            Addon.CONFIG:CreateFrames();
+            Addon.APP:Init();
             if( Addon.APP:GetValue( 'Refresh' ) ) then
                 Addon.APP:Refresh();
             end
