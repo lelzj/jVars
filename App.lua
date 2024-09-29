@@ -255,6 +255,324 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end );
         end
 
+        Addon.APP.FrameRegister = function( self,FrameData )
+            local Found = false;
+            for i,MetaData in pairs( self.GetRegisteredFrames() ) do
+                if( MetaData.Name == FrameData.Name ) then
+                    Found = true;
+                end
+            end
+            if( not Found ) then
+                table.insert( self.GetRegisteredFrames(),{
+                    Name        = FrameData.Name,
+                    Frame       = FrameData.Frame,
+                    Description = FrameData.Description,
+                } );
+            end
+        end
+
+        Addon.APP.ShowAll = function( self )
+            for i,FrameData in pairs( self.GetRegisteredFrames() ) do
+                FrameData.Frame:Show();
+            end
+        end
+
+        Addon.APP.HideAll = function( self )
+            for i,FrameData in pairs( self.GetRegisteredFrames() ) do
+                FrameData.Frame:Hide();
+            end
+        end
+
+        Addon.APP.GetRegisteredFrame = function( self,Name )
+            if( not self:GetRegisteredFrames() ) then
+                return;
+            end
+            for i,FrameData in pairs( self:GetRegisteredFrames() ) do
+                if( FrameData.Name == Name ) then
+                    return FrameData.Frame;
+                end
+            end
+        end
+
+        Addon.APP.GetRegisteredFrames = function()
+            return self.RegisteredFrames or {};
+        end
+
+        Addon.APP.Filter = function( self,SearchQuery )
+            if( InCombatLockdown() ) then
+                return;
+            end
+            local AllData = {};
+            for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
+
+                local Key = string.lower( VarName );
+                local Value = self:GetVarValue( Key );
+                local Flagged = Addon.DB:GetFlagged( Key );
+                local Dict = Addon.DICT:GetDictionary()[ Key ];
+
+                if( not Flagged ) then
+                    AllData[ Key ] = {
+                        DisplayText = Dict.DisplayText,
+                        Description = Dict.Description,
+                        DefaultValue = Dict.DefaultValue,
+                        Type = VarData.Type,                -- Toggle, Range, Select, etc
+                        Flagged = Flagged,                  -- Not appearing in list of client commands
+                        Cascade = VarData.Cascade,          -- Dependencies that need to fire when value changes
+                        Name = Key,
+                        Value = Value,
+                        Scope = Dict.Scope,                 -- Character, Account, Locked, Unknown
+                        Step = VarData.Step,                -- How much to dec/increment
+                        KeyPairs = VarData.KeyPairs,
+                        Category = VarData.Category,
+                        Dict = Dict,                        -- Dictionary entry
+                    };
+                end
+                --[[
+                if( AllData[ Key ].Dict.Secure ) then
+                    Addon:Dump( AllData[ Key ] );
+                end
+                ]]
+            end
+
+            if( not SearchQuery or not ( string.len( SearchQuery ) >= 3 ) ) then
+                return AllData;
+            end
+
+            local FilteredData = {};
+            for VarName,VarData in pairs( AllData ) do
+                if( Addon:Minify( VarName ):find( Addon:Minify( SearchQuery ) ) ) then
+                    FilteredData[ string.lower( VarName ) ] = VarData;
+                end
+                if( VarData.Category ) then
+                    if( Addon:Minify( VarData.Category ):find( Addon:Minify( SearchQuery ) ) ) then
+                        FilteredData[ string.lower( VarName ) ] = VarData;
+                    end
+                end
+                if( VarData.Scope ) then
+                    if( Addon:Minify( VarData.Scope ):find( Addon:Minify( SearchQuery ) ) ) then
+                        FilteredData[ string.lower( VarName ) ] = VarData;
+                    end
+                end
+                if( VarData.Description ) then
+                    if( Addon:Minify( VarData.Description ):find( Addon:Minify( SearchQuery ) ) ) then
+                        FilteredData[ string.lower( VarName ) ] = VarData;
+                    end
+                end
+            end
+            return FilteredData;
+        end
+
+        Addon.APP.GetModified = function( self,Data,Handler )
+            return Addon.DB:GetModified( Data.Name );
+        end
+
+        Addon.APP.Query = function( self )
+            if( InCombatLockdown() ) then
+                return;
+            end
+            local SearchQuery = self.FilterBox:GetText();
+            local FilteredList = Addon.APP:Filter( SearchQuery );
+            Addon.VIEW:RegisterList( FilteredList,Addon.APP );
+            Addon.VIEW:GetStats( FilteredList,Addon.APP );
+        end
+
+        --
+        --  Module init
+        --
+        --  @return void
+        Addon.APP.Init = function( self )
+            if( InCombatLockdown() ) then
+                return;
+            end
+
+            self.Name = AddonName;
+
+            self.Config = CreateFrame( 'Frame',self.Name);
+            self.Config.name = self.Name;
+
+            self.RowHeight = 30;
+
+            self.Heading = CreateFrame( 'Frame',self.Name..'Heading',self.Config );
+            self.Heading:SetPoint( 'topleft',self.Config,'topleft',10,-10 );
+            self.Heading:SetSize( 610,100 );
+            self.Heading.FieldHeight = 10;
+            self.Heading.ColInset = 15;
+
+            self.Heading.BookEnd = self.Heading:CreateTexture( nil,'ARTWORK',nil,3 );
+            self.Heading.BookEnd:SetTexture( 'Interface\\azerite\\azeritecenterbggold' );
+            self.Heading.BookEnd:SetSize( 65,self.Heading:GetHeight() );
+            self.Heading.BookEnd:SetVertTile( true );
+            self.Heading.BookEnd:SetPoint( 'topright',self.Heading,'topright',0,5 );
+
+            self.FilterBox = CreateFrame( 'EditBox',self.Name..'Filter',self.Config,'SearchBoxTemplate' );
+            self.FilterBox:SetPoint( 'topleft',self.Heading,'topleft',15,( ( self.Heading:GetHeight() )*-1 )+25 );
+            self.FilterBox:SetSize( 145,20 );
+            self.FilterBox.clearButton:Hide();
+            self.FilterBox:ClearFocus();
+            self.FilterBox:SetAutoFocus( false );
+            self.FilterBox:SetScript( 'OnEscapePressed',function( self )
+                if( InCombatLockdown() ) then
+                    return;
+                end
+                self:SetAutoFocus( false );
+                if( self.Instructions ) then
+                    self.Instructions:Show();
+                end
+                self:ClearFocus();
+                self:SetText( '' );
+                Addon.APP:ShowAll();
+            end );
+            self.FilterBox:SetScript( 'OnEditFocusGained',function( self ) 
+                if( InCombatLockdown() ) then
+                    return;
+                end
+                self:SetAutoFocus( true );
+                if( self.Instructions ) then
+                    self.Instructions:Hide();
+                end
+                self:HighlightText();
+            end );
+            self.FilterBox:SetScript( 'OnTextChanged',function( self )
+                if( InCombatLockdown() ) then
+                    return;
+                end
+                Addon.APP:Query();
+            end );
+    
+            self.Heading.Name = Addon.FRAMES:AddLabel( { DisplayText = 'Name' },self.Heading );
+            self.Heading.Name:SetPoint( 'topleft',self.Heading,'topleft',self.Heading.ColInset+3,( ( self.Heading:GetHeight() )*-1 )+20 );
+            self.Heading.Name:SetSize( 180,self.Heading.FieldHeight );
+            self.Heading.Name:SetJustifyH( 'right' );
+
+            self.Heading.Scope = Addon.FRAMES:AddLabel( { DisplayText = 'Scope' },self.Heading );
+            self.Heading.Scope:SetPoint( 'topleft',self.Heading.Name,'topright',self.Heading.ColInset,0 );
+            self.Heading.Scope:SetSize( 50,self.Heading.FieldHeight );
+            self.Heading.Scope:SetJustifyH( 'left' );
+
+            self.Heading.Category = Addon.FRAMES:AddLabel( { DisplayText = 'Category' },self.Heading );
+            self.Heading.Category:SetPoint( 'topleft',self.Heading.Scope,'topright',self.Heading.ColInset,0 );
+            self.Heading.Category:SetSize( 50,self.Heading.FieldHeight );
+            self.Heading.Category:SetJustifyH( 'left' );
+
+            self.Heading.Default = Addon.FRAMES:AddLabel( { DisplayText = 'Default' },self.Heading );
+            self.Heading.Default:SetPoint( 'topleft',self.Heading.Category,'topright',self.Heading.ColInset,0 );
+            self.Heading.Default:SetSize( 50,self.Heading.FieldHeight );
+            self.Heading.Default:SetJustifyH( 'left' );
+
+            self.Heading.Adjustment = Addon.FRAMES:AddLabel( { DisplayText = 'Adjustment' },self.Heading );
+            self.Heading.Adjustment:SetPoint( 'topleft',self.Heading.Default,'topright',0,0 );
+            self.Heading.Adjustment:SetSize( 150,self.Heading.FieldHeight );
+            self.Heading.Adjustment:SetJustifyH( 'left' );
+
+            self.Heading.Art = Addon.FRAMES:AddBackGround( self.Heading );
+            self.Heading.Art:SetAllPoints( self.Heading );
+
+            self.Browser = CreateFrame( 'Frame',self.Name..'Browser',self.Config );
+            self.Browser:SetSize( self.Heading:GetWidth(),400 );
+            self.Browser:SetPoint( 'topleft',self.Heading,'bottomleft',0,-10 );
+
+            self.Browser.Art = Addon.FRAMES:AddBackGround( self.Browser );
+            self.Browser.Art:SetAllPoints( self.Browser );
+  
+            self.Browser.BookEnd = self.Browser:CreateTexture( nil,'ARTWORK',nil,3 );
+            self.Browser.BookEnd:SetTexture( 'Interface\\azerite\\azeritecenterbggold' );
+            self.Browser.BookEnd:SetSize( 65,self.Browser:GetHeight() );
+            self.Browser.BookEnd:SetPoint( 'topright',self.Browser,'topright',0,0 );
+
+            self.ScrollFrame = CreateFrame( 'ScrollFrame',self.Name..'ScrollFrame',self.Browser,'UIPanelScrollFrameTemplate' );
+            self.ScrollFrame:SetAllPoints( self.Browser );
+
+            self.ScrollChild = CreateFrame( 'Frame',self.Name..'ScrollChild' );
+            self.ScrollFrame:SetScrollChild( self.ScrollChild );
+            if( SettingsPanel ) then
+                self.ScrollChild:SetWidth( SettingsPanel:GetWidth() );
+            elseif( InterfaceOptionsFramePanelContainer ) then
+                self.ScrollChild:SetWidth( InterfaceOptionsFramePanelContainer:GetWidth() );
+            end
+            self.ScrollChild:SetHeight( 20 );
+
+            self.Footer = CreateFrame( 'Frame',self.Name..'Footer',self.Config );
+            self.Footer:SetSize( self.Browser:GetWidth(),25 );
+            self.Footer:SetPoint( 'topleft',self.Browser,'bottomleft',0,-10 );
+
+            self.Footer.Art = Addon.FRAMES:AddBackGround( self.Footer );
+            self.Footer.Art:SetAllPoints( self.Footer );
+
+            self.Stats = CreateFrame( 'Frame',self.Name..'FooterStats',self.Footer );
+            self.Stats:SetSize( self.Footer:GetWidth()/2,self.Footer:GetHeight() );
+            self.Stats:SetPoint( 'topright',self.Footer,'topright',0,0 );
+
+            self.Controls = CreateFrame( 'Frame',self.Name..'FooterConfig',self.Footer );
+            self.Controls:SetSize( self.Footer:GetWidth()/2,self.Footer:GetHeight() );
+            self.Controls:SetPoint( 'topright',self.Stats,'topleft',0,0 );
+
+            local RefreshData = {
+                Name = 'Refresh',
+                DisplayText = 'Apply settings on each reload',
+            };
+            self.Apply = Addon.FRAMES:AddToggle( RefreshData,self.Controls );
+            self.Apply.keyValue = RefreshData.Name;
+            self.Apply:SetChecked( self:GetValue( self.Apply.keyValue ) );
+            self.Apply:SetPoint( 'topleft',self.Controls,'topleft',0,0 );
+            self.Apply.Label = Addon.FRAMES:AddLabel( RefreshData,self.Apply );
+            self.Apply.Label:SetPoint( 'topleft',self.Apply,'topright',0,-3 );
+            self.Apply.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.Apply.Label:SetJustifyH( 'left' );
+            self.Apply:HookScript( 'OnClick',function( self )
+                Addon.APP:SetValue( self.keyValue,self:GetChecked() );
+            end );
+
+            local ReloadUIData = {
+                Name = 'ReloadUI',
+                DisplayText = 'Reload UI for each update',
+            };
+            self.ReloadUI = Addon.FRAMES:AddToggle( ReloadUIData,self.Controls );
+            self.ReloadUI.keyValue = ReloadUIData.Name;
+            self.ReloadUI:SetChecked( self:GetValue( self.ReloadUI.keyValue ) );
+            self.ReloadUI:SetPoint( 'topleft',self.Apply.Label,'topright',0,3 );
+            self.ReloadUI.Label = Addon.FRAMES:AddLabel( ReloadUIData,self.ReloadUI );
+            self.ReloadUI.Label:SetPoint( 'topleft',self.ReloadUI,'topright',0,-3 );
+            self.ReloadUI.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.ReloadUI.Label:SetJustifyH( 'left' );
+            self.ReloadUI:HookScript( 'OnClick',function( self )
+                Addon.APP:SetValue( self.keyValue,self:GetChecked() );
+            end );
+
+            local ReloadGXData = {
+                Name = 'ReloadGX',
+                DisplayText = 'Reload GX for each update',
+            };
+            self.ReloadGX = Addon.FRAMES:AddToggle( ReloadGXData,self.Controls );
+            self.ReloadGX.keyValue = ReloadGXData.Name;
+            self.ReloadGX:SetChecked( self:GetValue( self.ReloadGX.keyValue ) );
+            self.ReloadGX:SetPoint( 'topleft',self.ReloadUI.Label,'topright',0,3 );
+            self.ReloadGX.Label = Addon.FRAMES:AddLabel( ReloadGXData,self.ReloadGX );
+            self.ReloadGX.Label:SetPoint( 'topleft',self.ReloadGX,'topright',0,-3 );
+            self.ReloadGX.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.ReloadGX.Label:SetJustifyH( 'left' );
+            self.ReloadGX:HookScript( 'OnClick',function( self )
+                Addon.APP:SetValue( self.keyValue,self:GetChecked() );
+            end );
+
+            local Category,Layout;
+            if( InterfaceOptions_AddCategory ) then
+                InterfaceOptions_AddCategory( self.Config,self.Name );
+            elseif( Settings and Settings.RegisterCanvasLayoutCategory ) then
+                Category,Layout = Settings.RegisterCanvasLayoutCategory( self.Config,self.Name );
+                Settings.RegisterAddOnCategory( Category );
+            end
+
+            SLASH_JVARS1,SLASH_JVARS2,SLASH_JVARS3 = '/jv','/vars','/jvars';
+            SlashCmdList['JVARS'] = function( Msg,EditBox )
+                if( InterfaceOptionsFrame_OpenToCategory ) then
+                    InterfaceOptionsFrame_OpenToCategory( self.Name );
+                    InterfaceOptionsFrame_OpenToCategory( self.Name );
+                else
+                    Settings.OpenToCategory( Category.ID );
+                end
+            end
+        end
+
         SLASH_JVARS1,SLASH_JVARS2,SLASH_JVARS3 = '/jv','/vars','/jvars';
         SlashCmdList['JVARS'] = function( Msg,EditBox )
             Settings.OpenToCategory( AddonName );
