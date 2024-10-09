@@ -8,6 +8,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             return;
         end
 
+        local _SetCVar = SetCVar;
+        local SetCVar = function( ... )
+            local Status,Error = pcall( function( ... )
+                return _SetCVar( ... );
+            end,... );
+            return Status;
+        end
+
         --
         --  Set cvar setting
         --
@@ -21,26 +29,26 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             local Result = Addon.DB:SetVarValue( Index,Value );
             if( Result ) then
                 self:Query();
-                SetCVar( Index,Value );
-                local VarData = Addon.REG:GetRegistry()[ Addon:Minify( Index ) ];
-                if( VarData and VarData.Protected ) then
-                    for Handling,_ in pairs( VarData.Protected ) do
-                        if( Addon.APP[Handling] ) then
-                            Addon.APP[Handling]( Index,VarData,true );
+                local Updated = SetCVar( Index,Value );
+                if( Updated ) then
+                    local VarData = Addon.REG:GetRegistry()[ Addon:Minify( Index ) ];
+                    if( VarData and VarData.Cascade ) then
+                        for Handling,_ in pairs( VarData.Cascade ) do
+                            if( Addon.APP[Handling] ) then
+                                Addon.APP[Handling]( Index,VarData,true );
+                            end
+                        end
+                    end
+
+                    if( VarData and VarData.Cascade ) then
+                        for Name,Data in pairs( VarData.Cascade ) do
+                            SetCVar( Addon:Minify( Name ),Value );
+                            --print( 'Cascade',Addon:Minify( Name ),Value )
                         end
                     end
                 end
 
-                if( VarData and VarData.Cascade ) then
-                    for Name,Data in pairs( VarData.Cascade ) do
-                        SetCVar( Addon:Minify( Name ),Value );
-                        --print( 'Cascade',Addon:Minify( Name ),Value )
-                    end
-                end
-
-                if( Addon.DB:GetValue( 'Debug' ) ) then
-                    Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',Addon.APP:GetVarValue( Index ) );
-                end
+                Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',Addon.APP:GetVarValue( Index ) );
                 if( Addon.DB:GetValue( 'ReloadGX' ) ) then
                     RestartGx();
                 end
@@ -80,6 +88,26 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             return Addon.DB:GetValue( Index );
         end
 
+        Addon.APP.SetConsole = function( self )
+            local Value = Addon.APP:GetVarValue( 'ConsoleKey' );
+            if( Value ) then
+                if( Addon.DB:GetValue( 'Debug' ) ) then
+                    local Index = 'ConsoleKey';
+                    Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',Value );
+                    Addon.FRAMES:Warn( 'The console is only accessible when WoW is started with the "-console" parameter. This function does nothing if the parameter wasn\'t used.' );
+                end
+                SetConsoleKey( Value );
+            end
+        end
+
+        Addon.APP.RefreshFindYourself = function( self )
+            local Value = Addon.APP:GetVarValue( 'findYourselfMode' );
+
+            if( Value ) then
+                SetCVar( 'findYourselfModeOutline',Value );
+            end
+        end
+
         Addon.APP.RefreshActionBars = function( self )
             local Value = Addon.APP:GetVarValue( 'multiBarRightVerticalLayout' );
             if( Value and tonumber( Value ) > 0 ) then
@@ -108,6 +136,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return void
         Addon.APP.RefreshCompactPartyFrame = function( VarName,VarData,Manual )
 
+            -- /Blizzard_UnitFrame/Mainline/CompactUnitFrame.lua
+            -- 
+            -- Blizzard_CUFProfiles/Blizzard_CompactUnitFrameProfiles.lua
             -- /Blizzard_CUFProfiles/Blizzard_CompactUnitFrameProfiles.xml
             -- $parentKey:
             -- 
@@ -117,7 +148,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             -- More keys:
             --             $parentHeightSlider
             --             $parentWidthSlider
-
             if( Addon:Minify( VarName ):find( Addon:Minify( 'useCompactPartyFrames' ) ) ) then
                 if( CompactUnitFrameProfilesRaidStylePartyFrames ) then
                     local CurrentValue = CompactUnitFrameProfilesRaidStylePartyFrames:GetChecked();
@@ -214,12 +244,77 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 end
             end
 
-            CompactUnitFrameProfiles_UpdateCurrentPanel();
-            CompactUnitFrameProfiles_ApplyCurrentSettings();
+            --CompactUnitFrameProfiles_UpdateCurrentPanel();
+            --CompactUnitFrameProfiles_ApplyCurrentSettings();
             
             if( Manual ) then
                 Addon.FRAMES:Warn( 'Changing this setting may require a reload' );
             end
+        end
+
+        Addon.APP.AddPort = function( self,Parent )
+
+            local VarData = {
+                Name = 'ExportWindow',
+                Value = '',
+                Flagged = false,
+            };
+
+            local Frame = CreateFrame( 'Frame',AddonName..VarData.Name,Parent );
+
+            Frame.Edit = Addon.FRAMES:AddMultiEdit( VarData,Frame );
+
+            local ImportData = {
+                Name = 'Import',
+                DisplayText = 'Import',
+            };
+            Frame.Import = Addon.FRAMES:AddButton( ImportData,Frame )
+            Frame.Import:SetPoint( 'bottomleft' );
+            Frame.Import:SetWidth( 50 );
+            Frame.Import:SetScript( 'OnClick',function( self )
+                local Value = self:GetParent().Edit.Input:GetText();
+                if( Value ) then
+                    local Data = {};
+                    local Tmp = Addon:Explode( Value,',' )
+                    for _,SetString in pairs( Tmp ) do
+                        local Pieces = Addon:Explode( SetString,':::' );
+                        if( Pieces[1] and Pieces[1] ~= '' ) then
+                            Data[ Pieces[1] ] = {
+                                VarName = Pieces[1],
+                                Value = Pieces[2],
+                            };
+                        end
+                    end
+                    for VarName,VarData in pairs( Data ) do
+                        Addon.APP:SetVarValue( VarName,VarData.Value );
+                    end
+                end
+            end );
+
+            local ExportData = {
+                Name = 'Export',
+                DisplayText = 'Export',
+            };
+            Frame.Export = Addon.FRAMES:AddButton( ExportData,Frame )
+            Frame.Export:SetPoint( 'topleft',Frame.Import,'topright' );
+            Frame.Export:SetWidth( 50 );
+            Frame.Export:SetScript( 'OnClick',function( self )
+                local Export = '';
+                for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
+                    local Key = string.lower( VarName );
+                    local Value = Addon.APP:GetVarValue( Key );
+                    local Dict = Addon.DICT:GetDictionary()[ Key ];
+
+                    if( Value ~= nil ) then
+                        if( Dict and Dict.DefaultValue ~= Value ) then
+                            Export = Export..Dict.Key..':::'..Value..',';
+                        end
+                    end
+                end
+                self:GetParent().Edit.Input:SetText( Export );
+            end );
+            
+            return Frame;
         end
 
         --
@@ -233,25 +328,30 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( InCombatLockdown() ) then
                 return;
             end
+
             C_Timer.After( 5,function()
                 Addon.FRAMES:Notify( 'Refreshing all settings...' );
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
 
-                    if( not VarData.Flagged and not VarData.Protected ) then
+                    if( not VarData.Flagged ) then
                         local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
+
                         if( Updated and VarData.Cascade ) then
                             for Name,Data in pairs( VarData.Cascade ) do
                                 SetCVar( Addon:Minify( Name ),VarData.Value );
                             end
                         end
-                    elseif( not VarData.Flagged and VarData.Protected ) then
-                        for Handling,_ in pairs( VarData.Protected ) do
+                    end
+
+                    if( VarData.Cascade ) then
+                        for Handling,_ in pairs( VarData.Cascade ) do
                             if( Addon.APP[Handling] ) then
                                 Addon.APP[Handling]( VarName,VarData );
                             end
                         end
                     end
                 end;
+
                 Addon.FRAMES:Notify( 'Done' );
             end );
         end
@@ -303,6 +403,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( InCombatLockdown() ) then
                 return;
             end
+
             local AllData = {};
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
 
@@ -328,11 +429,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         Dict = Dict,                        -- Dictionary entry
                     };
                 end
-                --[[
-                if( AllData[ Key ].Dict.Secure ) then
-                    Addon:Dump( AllData[ Key ] );
-                end
-                ]]
             end
 
             if( not SearchQuery or not ( string.len( SearchQuery ) >= 3 ) ) then
@@ -375,6 +471,17 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             local FilteredList = Addon.APP:Filter( SearchQuery );
             Addon.VIEW:RegisterList( FilteredList,Addon.APP );
             Addon.VIEW:GetStats( FilteredList,Addon.APP );
+        end
+
+        Addon.APP.BackTrace = function( Index,Value,... )
+            local InfoDump = {
+                Index = Index,
+                Value = Value,
+            };
+            InfoDump.Trace = debugstack( 2 );
+            if( Addon.APP:GetValue( 'Debug' ) ) then
+                Addon:Dump( InfoDump );
+            end
         end
 
         --
@@ -493,7 +600,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ScrollChild:SetHeight( 20 );
 
             self.Footer = CreateFrame( 'Frame',self.Name..'Footer',self.Config );
-            self.Footer:SetSize( self.Browser:GetWidth(),25 );
+            self.Footer:SetSize( self.Browser:GetWidth(),50 );
             self.Footer:SetPoint( 'topleft',self.Browser,'bottomleft',0,-10 );
 
             self.Footer.Art = Addon.FRAMES:AddBackGround( self.Footer );
@@ -506,6 +613,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Controls = CreateFrame( 'Frame',self.Name..'FooterConfig',self.Footer );
             self.Controls:SetSize( self.Footer:GetWidth()/2,self.Footer:GetHeight() );
             self.Controls:SetPoint( 'topright',self.Stats,'topleft',0,0 );
+
+            local ImportExport = Addon.APP:AddPort( self.Heading );
+            ImportExport:ClearAllPoints();
+            ImportExport:SetSize( 300,( self.Heading:GetHeight()/3 )+25 );
+            ImportExport.Edit:SetSize( 300,self.Heading:GetHeight()/3 );
+            ImportExport.Edit.Input:SetSize( 300,self.Heading:GetHeight()/3 );
+            ImportExport:SetPoint( 'topright',-10 );
+            ImportExport:Hide();
 
             local RefreshData = {
                 Name = 'Refresh',
@@ -555,6 +670,42 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
             end );
 
+            local ImportCVs = {
+                Name = 'ImportExportCVs',
+                DisplayText = 'Import/Export CVars',
+            };
+            self.ImportCVs = Addon.FRAMES:AddButton( ImportCVs,self.Controls );
+            self.ImportCVs:SetText( nil );
+            self.ImportCVs.keyValue = ImportCVs.Name;
+            self.ImportCVs:SetPoint( 'topleft',self.ReloadGX.Label,'topright',0,3 );
+
+            self.ImportCVs.Label = Addon.FRAMES:AddLabel( ImportCVs,self.ImportCVs );
+            self.ImportCVs.Label:SetPoint( 'topleft',self.ImportCVs,'topright',0,-3 );
+            self.ImportCVs.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.ImportCVs.Label:SetJustifyH( 'left' );
+            self.ImportCVs:HookScript( 'OnClick',function( self )
+                ImportExport:SetShown( not ImportExport:IsShown() );
+            end );
+
+            local DefaultUI = {
+                Name = 'DefaultUI',
+                DisplayText = 'Reset to Defaults',
+            };
+            self.DefaultUI = Addon.FRAMES:AddButton( DefaultUI,self.Controls );
+            self.DefaultUI:SetText( nil );
+            self.DefaultUI.keyValue = DefaultUI.Name;
+            self.DefaultUI:SetPoint( 'topleft',self.ImportCVs.Label,'topright',-20,3 );
+
+            self.DefaultUI.Label = Addon.FRAMES:AddLabel( DefaultUI,self.DefaultUI );
+            self.DefaultUI.Label:SetPoint( 'topleft',self.DefaultUI,'topright',0,-3 );
+            self.DefaultUI.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.DefaultUI.Label:SetJustifyH( 'left' );
+            self.DefaultUI:HookScript( 'OnClick',function( self )
+                DEFAULT_CHAT_FRAME.editBox:SetText( '/console cvar_default' );
+                ChatEdit_SendText( DEFAULT_CHAT_FRAME.editBox,0 );
+            end );
+
+
             local Category,Layout;
             if( InterfaceOptions_AddCategory ) then
                 InterfaceOptions_AddCategory( self.Config,self.Name );
@@ -576,13 +727,21 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
         local EventFrame = CreateFrame( 'Frame' );
         EventFrame:RegisterEvent( 'COMPACT_UNIT_FRAME_PROFILES_LOADED' );
-        EventFrame:SetScript( 'OnEvent',function( self,Event)
-            Addon.APP:Init();
-            if( Addon.APP:GetValue( 'Refresh' ) ) then
-                Addon.APP:Refresh();
+        EventFrame:SetScript( 'OnEvent',function( self,Event,... )
+            if( Event == 'COMPACT_UNIT_FRAME_PROFILES_LOADED' ) then
+                Addon.APP:Init();
+                if( Addon.APP:GetValue( 'Refresh' ) ) then
+                    Addon.APP:Refresh();
+                end
+                EventFrame:UnregisterEvent( 'COMPACT_UNIT_FRAME_PROFILES_LOADED' );
             end
-            EventFrame:UnregisterEvent( 'COMPACT_UNIT_FRAME_PROFILES_LOADED' );
         end );
+
+        hooksecurefunc( 'SetCVar',self.BackTrace );
+        if( C_CVar and C_CVar.SetCVar ) then
+            hooksecurefunc( C_CVar,'SetCVar',self.BackTrace );
+        end
+
         self:UnregisterEvent( 'ADDON_LOADED' );
     end
 end );

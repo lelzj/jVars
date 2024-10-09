@@ -89,6 +89,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 findYourselfMode = {
                     Type = 'Select',
+                    Cascade = {
+                        RefreshFindYourself = {
+                        },
+                    },
                     KeyPairs = {
                         {
                             Value = 0,
@@ -611,7 +615,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 multiBarRightVerticalLayout = {
                     Type = 'Toggle',
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshActionBars = {
                         },
                     },
@@ -619,6 +623,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 ConsoleKey = {
                     Type = 'Edit',
                     Category = 'System',
+                    Cascade = {
+                        SetConsole = {
+                        },
+                    }
                 },
                 checkAddonVersion = {
                     Type = 'Toggle',
@@ -698,11 +706,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
-                --[[
+
                 useCompactPartyFrames = {
                     Type = 'Toggle',
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshCompactPartyFrame = {
                         },
                     },
@@ -728,7 +736,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshCompactPartyFrame = {
                         },
                     },
@@ -736,7 +744,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidOptionShowBorders = {
                     Type = 'Toggle',
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshCompactPartyFrame = {
                         },
                     },
@@ -754,7 +762,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshCompactPartyFrame = {
                         },
                     },
@@ -762,7 +770,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidFramesDisplayClassColor = {
                     Type = 'Toggle',
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshCompactPartyFrame = {
                         },
                     },
@@ -770,7 +778,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidFramesDisplayOnlyDispellableDebuffs = {
                     Type = 'Toggle',
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshCompactPartyFrame = {
                         },
                     },
@@ -778,7 +786,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidFramesDisplayPowerBars = {
                     Type = 'Toggle',
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshCompactPartyFrame = {
                         },
                     },
@@ -786,7 +794,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidOptionDisplayPets = {
                     Type = 'Toggle',
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshCompactPartyFrame = {
                         },
                     },
@@ -794,7 +802,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidOptionKeepGroupsTogether = {
                     Type = 'Toggle',
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshCompactPartyFrame = {
                         },
                     },
@@ -802,7 +810,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 raidOptionDisplayMainTankAndAssist = {
                     Type = 'Toggle',
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshCompactPartyFrame = {
                         },
                     },
@@ -820,12 +828,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Hud',
-                    Protected = {
+                    Cascade = {
                         RefreshRaid = {
                         },
                     },
                 },
-                ]]
                 RAIDfarclip = {
                     Type = 'Range',
                     KeyPairs = {
@@ -853,7 +860,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Low',
                         },
                         High = {
-                            Value = 7,
+                            Value = 10,
                             Description = 'High',
                         },
                     },
@@ -868,7 +875,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Low',
                         },
                         High = {
-                            Value = 7,
+                            Value = 10,
                             Description = 'High',
                         },
                     },
@@ -876,48 +883,85 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Category = 'Graphics',
                 },
                 raidGraphicsLiquidDetail = {
-                    Type = 'Range',
+                    Type = 'Select',
                     KeyPairs = {
-                        Low = {
-                            Value = 1,
-                            Description = 'Low',
-                        },
-                        High = {
-                            Value = 7,
-                            Description = 'High',
-                        },
-                    },
-                    Step = 1,
-                    Category = 'Graphics',
-                },
-                raidGraphicsParticleDensity = {
-                    Type = 'Range',
-                    KeyPairs = {
-                        Low = {
-                            Value = 10,
-                            Description = 'Low',
-                        },
-                        High = {
-                            Value = 100,
-                            Description = 'High',
-                        },
-                    },
-                    Step = 10,
-                    Category = 'Graphics',
-                },
-                raidGraphicsShadowQuality = {
-                    Type = 'Range',
-                    KeyPairs = {
-                        Low = {
+                        {
                             Value = 0,
                             Description = 'Low',
                         },
-                        High = {
-                            Value = 5,
+                        {
+                            Value = 1,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 3,
                             Description = 'High',
                         },
                     },
-                    Step = 1,
+                    Category = 'Graphics',
+                },
+                raidGraphicsParticleDensity = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Disabled',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'Medium',
+                        },
+                        {
+                            Value = 4,
+                            Description = 'High',
+                        },
+                        {
+                            Value = 5,
+                            Description = 'Ultra',
+                        },
+                    },
+                    Category = 'Graphics',
+                },
+                raidGraphicsShadowQuality = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                        {
+                            Value = 4,
+                            Description = 'Ultra',
+                        },
+                        {
+                            Value = 5,
+                            Description = 'Ultra High',
+                        },
+                    },
                     Category = 'Graphics',
                 },
                 raidGraphicsSSAO = {
@@ -929,21 +973,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                         High = {
                             Value = 4,
-                            Description = 'High',
-                        },
-                    },
-                    Step = 1,
-                    Category = 'Graphics',
-                },
-                RAIDgraphicsQuality = {
-                    Type = 'Range',
-                    KeyPairs = {
-                        Low = {
-                            Value = 1,
-                            Description = 'Low',
-                        },
-                        High = {
-                            Value = 10,
                             Description = 'High',
                         },
                     },
@@ -1456,7 +1485,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Low',
                         },
                         High = {
-                            Value = 7,
+                            Value = 10,
                             Description = 'High',
                         },
                     },
@@ -1471,7 +1500,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Low',
                         },
                         High = {
-                            Value = 7,
+                            Value = 10,
                             Description = 'High',
                         },
                     },
@@ -1479,33 +1508,55 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Category = 'Graphics',
                 },
                 graphicsLiquidDetail = {
-                    Type = 'Range',
+                    Type = 'Select',
                     KeyPairs = {
-                        Low = {
-                            Value = 1,
-                            Description = 'Low',
-                        },
-                        High = {
-                            Value = 7,
-                            Description = 'High',
-                        },
-                    },
-                    Step = 1,
-                    Category = 'Graphics',
-                },
-                graphicsShadowQuality = {
-                    Type = 'Range',
-                    KeyPairs = {
-                        Low = {
+                        {
                             Value = 0,
                             Description = 'Low',
                         },
-                        High = {
-                            Value = 5,
+                        {
+                            Value = 1,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 3,
                             Description = 'High',
                         },
                     },
-                    Step = 1,
+                    Category = 'Graphics',
+                },
+                graphicsShadowQuality = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                        {
+                            Value = 4,
+                            Description = 'Ultra',
+                        },
+                        {
+                            Value = 5,
+                            Description = 'Ultra High',
+                        },
+                    },
                     Category = 'Graphics',
                 },
                 graphicsSSAO = {
@@ -1517,21 +1568,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                         High = {
                             Value = 4,
-                            Description = 'High',
-                        },
-                    },
-                    Step = 1,
-                    Category = 'Graphics',
-                },
-                graphicsQuality = {
-                    Type = 'Range',
-                    KeyPairs = {
-                        Low = {
-                            Value = 1,
-                            Description = 'Low',
-                        },
-                        High = {
-                            Value = 10,
                             Description = 'High',
                         },
                     },
@@ -1606,18 +1642,33 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Category = 'Hud',
                 },
                 particleDensity = {
-                    Type = 'Range',
+                    Type = 'Select',
                     KeyPairs = {
-                        Low = {
-                            Value = 10,
+                        {
+                            Value = 0,
+                            Description = 'Disabled',
+                        },
+                        {
+                            Value = 1,
                             Description = 'Low',
                         },
-                        High = {
-                            Value = 100,
+                        {
+                            Value = 2,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'Medium',
+                        },
+                        {
+                            Value = 4,
                             Description = 'High',
                         },
+                        {
+                            Value = 5,
+                            Description = 'Ultra',
+                        },
                     },
-                    Step = 10,
                     Category = 'Graphics',
                 },
                 projectedtextures = {
@@ -2603,6 +2654,176 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Social',
+                },
+                DisableAdvancedFlyingVelocityVFX = {
+                    Type = 'Toggle',
+                    Category = 'Graphics',
+                },
+                DisableAdvancedFlyingFullScreenEffects = {
+                    Type = 'Toggle',
+                    Category = 'Graphics',
+                },
+                horizonStart = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 800,
+                            Description = 'Default',
+                        },
+                        {
+                            Value = 400,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 1400,
+                            Description = 'High',
+                        },
+                    },
+                    Category = 'Graphics',
+                },
+                WorldTextScale = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 1.0,
+                            Description = 'Default',
+                        },
+                        {
+                            Value = 0.5,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 2.0,
+                            Description = 'High',
+                        },
+                    },
+                    Category = 'Graphics',
+                },
+                WorldTextMinSize = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 64,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                },
+                WorldTextMinAlpha = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                graphicsComputeEffects = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Disabled',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                        {
+                            Value = 4,
+                            Description = 'Ultra',
+                        },
+                    },
+                    Category = 'Graphics',
+                },
+                graphicsDepthEffects = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Disabled',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                    },
+                    Category = 'Graphics',
+                },
+                maxLightDist = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Off',
+                        },
+                        {
+                            Value = 35,
+                            Description = 'Close-Range',
+                        },
+                        {
+                            Value = 2048,
+                            Description = 'Default',
+                        },
+                    },
+                    Category = 'Graphics',
+                },
+                graphicsViewDistance = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 10,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                },
+                raidGraphicsViewDistance = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 10,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
                 },
             };
             for VarName,VarData in pairs( Registry ) do

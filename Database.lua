@@ -11,7 +11,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return table
         Addon.DB.GetDefaults = function( self )
             local Defaults = {
-                Debug = true,
+                Debug = false,
                 Modified = {
                     Total = 0,
                 },

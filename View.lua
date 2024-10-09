@@ -39,7 +39,7 @@ Addon.VIEW:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Row.TotalValue = Addon.FRAMES:AddLabel( { DisplayText = Data.Total },Row );
 
 
-                Row.LockedLabel:SetPoint( 'topright',Handler.Stats,'topright',-10,-7 );
+                Row.LockedLabel:SetPoint( 'topright',Handler.Stats,'bottomright',-10,15 );
                 Row.LockedValue:SetPoint( 'topright',Row.LockedLabel,'topleft',0,0 );
 
                 Row.ModifiedLabel:SetPoint( 'topright',Row.LockedValue,'topleft',0,0 );
