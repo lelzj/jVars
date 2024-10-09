@@ -88,7 +88,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             return Addon.DB:GetValue( Index );
         end
 
-        Addon.APP.SetConsole = function( self )
+        Addon.APP.RefreshConsole = function( self )
             local Value = Addon.APP:GetVarValue( 'ConsoleKey' );
             if( Value ) then
                 if( Addon.DB:GetValue( 'Debug' ) ) then
@@ -296,7 +296,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 DisplayText = 'Export',
             };
             Frame.Export = Addon.FRAMES:AddButton( ExportData,Frame )
-            Frame.Export:SetPoint( 'topleft',Frame.Import,'topright' );
+            Frame.Export:SetPoint( 'topleft',Frame.Import,'topright',15,0 );
             Frame.Export:SetWidth( 50 );
             Frame.Export:SetScript( 'OnClick',function( self )
                 local Export = '';
@@ -672,34 +672,24 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
             local ImportCVs = {
                 Name = 'ImportExportCVs',
-                DisplayText = 'Import/Export CVars',
+                DisplayText = 'Config',
             };
             self.ImportCVs = Addon.FRAMES:AddButton( ImportCVs,self.Controls );
-            self.ImportCVs:SetText( nil );
             self.ImportCVs.keyValue = ImportCVs.Name;
-            self.ImportCVs:SetPoint( 'topleft',self.ReloadGX.Label,'topright',0,3 );
-
-            self.ImportCVs.Label = Addon.FRAMES:AddLabel( ImportCVs,self.ImportCVs );
-            self.ImportCVs.Label:SetPoint( 'topleft',self.ImportCVs,'topright',0,-3 );
-            self.ImportCVs.Label:SetSize( self.Controls:GetWidth()/3,20 );
-            self.ImportCVs.Label:SetJustifyH( 'left' );
+            self.ImportCVs:SetPoint( 'topleft',self.ReloadGX.Label,'topright',10,3 );
+            self.ImportCVs:SetSize( 50,25 );
             self.ImportCVs:HookScript( 'OnClick',function( self )
                 ImportExport:SetShown( not ImportExport:IsShown() );
             end );
 
             local DefaultUI = {
                 Name = 'DefaultUI',
-                DisplayText = 'Reset to Defaults',
+                DisplayText = 'Defaults',
             };
             self.DefaultUI = Addon.FRAMES:AddButton( DefaultUI,self.Controls );
-            self.DefaultUI:SetText( nil );
             self.DefaultUI.keyValue = DefaultUI.Name;
-            self.DefaultUI:SetPoint( 'topleft',self.ImportCVs.Label,'topright',-20,3 );
-
-            self.DefaultUI.Label = Addon.FRAMES:AddLabel( DefaultUI,self.DefaultUI );
-            self.DefaultUI.Label:SetPoint( 'topleft',self.DefaultUI,'topright',0,-3 );
-            self.DefaultUI.Label:SetSize( self.Controls:GetWidth()/3,20 );
-            self.DefaultUI.Label:SetJustifyH( 'left' );
+            self.DefaultUI:SetPoint( 'topleft',self.ImportCVs,'topright',15,0 );
+            self.DefaultUI:SetSize( 50,25 );
             self.DefaultUI:HookScript( 'OnClick',function( self )
                 DEFAULT_CHAT_FRAME.editBox:SetText( '/console cvar_default' );
                 ChatEdit_SendText( DEFAULT_CHAT_FRAME.editBox,0 );

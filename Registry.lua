@@ -624,9 +624,9 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Edit',
                     Category = 'System',
                     Cascade = {
-                        SetConsole = {
+                        RefreshConsole = {
                         },
-                    }
+                    },
                 },
                 checkAddonVersion = {
                     Type = 'Toggle',
