@@ -1814,6 +1814,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
+                useMaxFPS = {
+                    Type = 'Toggle',
+                    Category = 'Graphics',
+                },
                 maxFPSLoading = {
                     Type = 'Range',
                     KeyPairs = {
