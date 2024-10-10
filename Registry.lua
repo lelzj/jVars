@@ -706,7 +706,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
-
+                --[[
                 useCompactPartyFrames = {
                     Type = 'Toggle',
                     Category = 'Hud',
@@ -714,6 +714,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         RefreshCompactPartyFrame = {
                         },
                     },
+                },
+                raidFramesDisplayIncomingHeals = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
                 },
                 raidFramesHealthText = {
                     Type = 'Select',
@@ -833,6 +837,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                 },
+                ]]
                 RAIDfarclip = {
                     Type = 'Range',
                     KeyPairs = {

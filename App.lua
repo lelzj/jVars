@@ -172,6 +172,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( Addon:Minify( VarName ):find( Addon:Minify( 'raidOptionSortMode' ) ) ) then
                 if( CompactRaidFrameManager_SetSortMode ) then
                     CompactRaidFrameManager_SetSortMode( self:GetVarValue( VarName ) );
+                    CompactUnitFrameProfilesGeneralOptionsFrameSortByDropdown.selectedValue = self:GetVarValue( VarName );
                 end
             end
 
