@@ -264,6 +264,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             },Parent );
             Frame:SetSize( SettingsPanel:GetWidth()-100,350 );
             Frame:SetPoint( 'center',SettingsPanel,'center' );
+            SettingsPanel:HookScript( 'OnHide',function()
+                Frame:Hide();
+            end );
 
             Frame.Edit = Addon.FRAMES:AddMultiEdit( {
                 Name = 'ExportImportEdit',
@@ -285,7 +288,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Name = 'Clear',
                 DisplayText = 'Clear',
             },Frame )
-            Frame.Clear:SetPoint( 'bottomleft',15,0 );
+            Frame.Clear:SetPoint( 'bottomleft',10,5 );
             Frame.Clear:SetWidth( 50 );
             Frame.Clear:SetScript( 'OnClick',function( self )
                 local Input = self:GetParent().Edit.Input;
@@ -299,7 +302,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Name = 'Ok',
                 DisplayText = 'Ok',
             },Frame )
-            Frame.Ok:SetPoint( 'topleft',Frame.Clear,'topright',15,0 );
+            Frame.Ok:SetPoint( 'topleft',Frame.Clear,'topright',10,0 );
             Frame.Ok:SetWidth( 50 );
             Frame.Ok:SetScript( 'OnClick',function( self )
                 local Value = self:GetParent().Edit.Input:GetText();
@@ -331,7 +334,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Name = 'Close',
                 DisplayText = 'Close',
             },Frame )
-            Frame.Close:SetPoint( 'topleft',Frame.Ok,'topright',15,0 );
+            Frame.Close:SetPoint( 'topleft',Frame.Ok,'topright',10,0 );
             Frame.Close:SetWidth( 50 );
             Frame.Close:SetScript( 'OnClick',function( self )
                 self:GetParent():Hide();
