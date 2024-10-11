@@ -275,6 +275,11 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             Frame.Edit.Input:SetSize( Frame:GetWidth()-25,Frame:GetHeight()-25 );
             --Frame.Edit.Input:SetFocus();
             --Frame.Edit.Input:Click();
+            Frame.Edit.Input:SetScript( 'OnKeyDown',function( self,Key )
+                if( Addon:Minify( Key ):find( 'escape' ) ) then
+                    Frame:Hide();
+                end
+            end );
 
             Frame.Clear = Addon.FRAMES:AddButton( {
                 Name = 'Clear',
