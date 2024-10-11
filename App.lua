@@ -22,7 +22,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  string  Index
         --  @param  string  Value
         --  @return bool
-        Addon.APP.SetVarValue = function( self,Index,Value )
+        Addon.APP.SetVarValue = function( self,Index,Value,Importing )
             if( InCombatLockdown() ) then
                 return;
             end
@@ -48,13 +48,15 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     end
                 end
 
+                if( not Importing ) then
+                    if( Addon.DB:GetValue( 'ReloadGX' ) ) then
+                        RestartGx();
+                    end
+                    if( Addon.DB:GetValue( 'ReloadUI' ) ) then
+                        ReloadUI();
+                    end
+                end
                 Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',Addon.APP:GetVarValue( Index ) );
-                if( Addon.DB:GetValue( 'ReloadGX' ) ) then
-                    RestartGx();
-                end
-                if( Addon.DB:GetValue( 'ReloadUI' ) ) then
-                    ReloadUI();
-                end
                 return true;
             end
             return false;
@@ -286,8 +288,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                             };
                         end
                     end
+
+                    local IsValid = function( VarName )
+                        return Addon.DB:GetPersistence().Vars[ string.lower( VarName ) ] ~= nil and Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ~= nil;
+                    end
                     for VarName,VarData in pairs( Data ) do
-                        Addon.APP:SetVarValue( VarName,VarData.Value );
+                        if( IsValid( VarName ) ) then
+                            Addon.APP:SetVarValue( VarName,VarData.Value,true );
+                        end
                     end
                 end
             end );
