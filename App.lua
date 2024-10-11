@@ -255,26 +255,48 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        Addon.APP.AddPort = function( self,Parent )
+        Addon.APP.AddMovablePort = function( self,Parent )
 
-            local VarData = {
+            local Frame = Addon.FRAMES:AddMovable( {
                 Name = 'ExportWindow',
                 Value = '',
                 Flagged = false,
-            };
+            },Parent );
+            Frame:SetSize( SettingsPanel:GetWidth()-100,350 );
+            Frame:SetPoint( 'center',SettingsPanel,'center' );
 
-            local Frame = CreateFrame( 'Frame',AddonName..VarData.Name,Parent );
+            Frame.Edit = Addon.FRAMES:AddMultiEdit( {
+                Name = 'ExportImportEdit',
+                Value = '',
+            },Frame );
+            Frame.Edit.Input:SetCursorPosition( 0 );
+            Frame.Edit:SetPoint( 'center',Frame,'center' );
+            Frame.Edit:SetSize( Frame:GetWidth()-25,Frame:GetHeight()-25 );
+            Frame.Edit.Input:SetSize( Frame:GetWidth()-25,Frame:GetHeight()-25 );
+            --Frame.Edit.Input:SetFocus();
+            --Frame.Edit.Input:Click();
 
-            Frame.Edit = Addon.FRAMES:AddMultiEdit( VarData,Frame );
+            Frame.Clear = Addon.FRAMES:AddButton( {
+                Name = 'Clear',
+                DisplayText = 'Clear',
+            },Frame )
+            Frame.Clear:SetPoint( 'bottomleft',15,0 );
+            Frame.Clear:SetWidth( 50 );
+            Frame.Clear:SetScript( 'OnClick',function( self )
+                local Input = self:GetParent().Edit.Input;
+                local Value = Input:GetText();
+                if( Value ) then
+                    Input:SetText( '' );
+                end
+            end );
 
-            local ImportData = {
-                Name = 'Import',
-                DisplayText = 'Import',
-            };
-            Frame.Import = Addon.FRAMES:AddButton( ImportData,Frame )
-            Frame.Import:SetPoint( 'bottomleft' );
-            Frame.Import:SetWidth( 50 );
-            Frame.Import:SetScript( 'OnClick',function( self )
+            Frame.Ok = Addon.FRAMES:AddButton( {
+                Name = 'Ok',
+                DisplayText = 'Ok',
+            },Frame )
+            Frame.Ok:SetPoint( 'topleft',Frame.Clear,'topright',15,0 );
+            Frame.Ok:SetWidth( 50 );
+            Frame.Ok:SetScript( 'OnClick',function( self )
                 local Value = self:GetParent().Edit.Input:GetText();
                 if( Value ) then
                     local Data = {};
@@ -300,28 +322,16 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 end
             end );
 
-            local ExportData = {
-                Name = 'Export',
-                DisplayText = 'Export',
-            };
-            Frame.Export = Addon.FRAMES:AddButton( ExportData,Frame )
-            Frame.Export:SetPoint( 'topleft',Frame.Import,'topright',15,0 );
-            Frame.Export:SetWidth( 50 );
-            Frame.Export:SetScript( 'OnClick',function( self )
-                local Export = '';
-                for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
-                    local Key = string.lower( VarName );
-                    local Value = Addon.APP:GetVarValue( Key );
-                    local Dict = Addon.DICT:GetDictionary()[ Key ];
-
-                    if( Value ~= nil ) then
-                        if( Dict and Dict.DefaultValue ~= Value ) then
-                            Export = Export..Dict.Key..':::'..Value..',';
-                        end
-                    end
-                end
-                self:GetParent().Edit.Input:SetText( Export );
+            Frame.Close = Addon.FRAMES:AddButton( {
+                Name = 'Close',
+                DisplayText = 'Close',
+            },Frame )
+            Frame.Close:SetPoint( 'topleft',Frame.Ok,'topright',15,0 );
+            Frame.Close:SetWidth( 50 );
+            Frame.Close:SetScript( 'OnClick',function( self )
+                self:GetParent():Hide();
             end );
+            Frame:Hide();
             
             return Frame;
         end
@@ -623,13 +633,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Controls:SetSize( self.Footer:GetWidth()/2,self.Footer:GetHeight() );
             self.Controls:SetPoint( 'topright',self.Stats,'topleft',0,0 );
 
-            local ImportExport = Addon.APP:AddPort( self.Heading );
-            ImportExport:ClearAllPoints();
-            ImportExport:SetSize( 300,( self.Heading:GetHeight()/3 )+25 );
-            ImportExport.Edit:SetSize( 300,self.Heading:GetHeight()/3 );
-            ImportExport.Edit.Input:SetSize( 300,self.Heading:GetHeight()/3 );
-            ImportExport:SetPoint( 'topright',-10 );
-            ImportExport:Hide();
+            local MovingPort = Addon.APP:AddMovablePort( self.Browser );
 
             local RefreshData = {
                 Name = 'Refresh',
@@ -680,15 +684,60 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end );
 
             local ImportCVs = {
-                Name = 'ImportExportCVs',
-                DisplayText = 'Config',
+                Name = 'Import',
+                DisplayText = 'Import',
             };
             self.ImportCVs = Addon.FRAMES:AddButton( ImportCVs,self.Controls );
             self.ImportCVs.keyValue = ImportCVs.Name;
             self.ImportCVs:SetPoint( 'topleft',self.ReloadGX.Label,'topright',10,3 );
             self.ImportCVs:SetSize( 50,25 );
             self.ImportCVs:HookScript( 'OnClick',function( self )
-                ImportExport:SetShown( not ImportExport:IsShown() );
+
+                local Input = MovingPort.Edit.Input;
+                local Value = Input:GetText();
+                if( Value ) then
+                    Input:SetText( 'Paste your import string' );
+                end
+
+                MovingPort:Show();
+
+                Input:HighlightText( 0 );
+                Input:SetFocus();
+            end );
+
+            local ExportCVs = {
+                Name = 'Export',
+                DisplayText = 'Export',
+            };
+            self.ExportCVs = Addon.FRAMES:AddButton( ExportCVs,self.Controls );
+            self.ExportCVs.keyValue = ExportCVs.Name;
+            self.ExportCVs:SetPoint( 'topleft',self.ImportCVs,'topright',10,0 );
+            self.ExportCVs:SetSize( 50,25 );
+            self.ExportCVs:HookScript( 'OnClick',function( self )
+
+                local Input = MovingPort.Edit.Input;
+                local Value = Input:GetText();
+                if( Value ) then
+                    Input:SetText( '' );
+                end
+
+                MovingPort:Show();
+
+                local Export = '';
+                for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
+                    local Key = string.lower( VarName );
+                    local Value = Addon.APP:GetVarValue( Key );
+                    local Dict = Addon.DICT:GetDictionary()[ Key ];
+
+                    if( Value ~= nil ) then
+                        if( Dict and Dict.DefaultValue ~= Value ) then
+                            Export = Export..Dict.Key..':::'..Value..',';
+                        end
+                    end
+                end
+                Input:SetText( Export );
+                Input:HighlightText( 0 );
+                Input:SetFocus();
             end );
 
             local DefaultUI = {
@@ -697,7 +746,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             };
             self.DefaultUI = Addon.FRAMES:AddButton( DefaultUI,self.Controls );
             self.DefaultUI.keyValue = DefaultUI.Name;
-            self.DefaultUI:SetPoint( 'topleft',self.ImportCVs,'topright',15,0 );
+            self.DefaultUI:SetPoint( 'topleft',self.ExportCVs,'topright',10,0 );
             self.DefaultUI:SetSize( 50,25 );
             self.DefaultUI:HookScript( 'OnClick',function( self )
                 DEFAULT_CHAT_FRAME.editBox:SetText( '/console cvar_default' );
