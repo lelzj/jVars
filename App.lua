@@ -106,7 +106,10 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             local Value = Addon.APP:GetVarValue( 'findYourselfMode' );
 
             if( Value ) then
+                SetCVar( 'findyourselfanywhere',1 );
                 SetCVar( 'findYourselfModeOutline',Value );
+            else
+                SetCVar( 'findyourselfanywhere',0 );
             end
         end
 
