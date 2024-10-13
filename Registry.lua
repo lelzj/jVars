@@ -25,6 +25,21 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return table
         Addon.REG.GetRegistry = function( self )
             local Registry = {
+                spellEffectLevel = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1000,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 100,
+                    Category = 'Hud',
+                },
                 nameplateShowOnlyNames = {
                     Type = 'Toggle',
                     Category = 'Hud',
@@ -2190,6 +2205,66 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 showUnactivatedCharacters = {
                     Type = 'Toggle',
                     Category = 'System',
+                },
+                RAIDspellClutter = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = -1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 100,
+                            Description = '100',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                },
+                graphicsSpellDensity = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Essential',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Some',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Half',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'Most',
+                        },
+                        {
+                            Value = 4,
+                            Description = 'Dynamic',
+                        },
+                        {
+                            Value = 5,
+                            Description = 'Everything',
+                        },
+                    },
+                    Category = 'Graphics',
+                },
+                spellClutter = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = -1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 100,
+                            Description = '100',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
                 },
                 spellClutterDefaultTargetScalar = {
                     Type = 'Range',

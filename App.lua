@@ -263,7 +263,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             local Frame = Addon.FRAMES:AddMovable( {
                 Name = 'ExportWindow',
                 Value = '',
-                Flagged = false,
             },Parent );
             Frame:SetSize( SettingsPanel:GetWidth()-100,350 );
             Frame:SetPoint( 'center',SettingsPanel,'center' );
@@ -363,7 +362,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Addon.FRAMES:Notify( 'Refreshing all settings...' );
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
 
-                    if( not VarData.Flagged ) then
+                    if( not VarData.Missing ) then
                         local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
 
                         if( Updated and VarData.Cascade ) then
@@ -439,16 +438,16 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
                 local Key = string.lower( VarName );
                 local Value = self:GetVarValue( Key );
-                local Flagged = Addon.DB:GetFlagged( Key );
+                local Missing = Addon.DB:GetMissing( Key );
                 local Dict = Addon.DICT:GetDictionary()[ Key ];
 
-                if( not Flagged ) then
+                if( not Missing ) then
                     AllData[ Key ] = {
                         DisplayText = Dict.DisplayText,
                         Description = Dict.Description,
                         DefaultValue = Dict.DefaultValue,
                         Type = VarData.Type,                -- Toggle, Range, Select, etc
-                        Flagged = Flagged,                  -- Not appearing in list of client commands
+                        Missing = Missing,                  -- Not appearing in list of client commands
                         Cascade = VarData.Cascade,          -- Dependencies that need to fire when value changes
                         Name = Key,
                         Value = Value,

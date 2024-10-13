@@ -24,30 +24,15 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
                 local Dict = Addon.DICT:GetDictionary()[ string.lower( VarName ) ] or {
                     CurrentValue = nil,
-                    Flagged = true,
+                    Missing = true,
                 };
 
                 Defaults.Vars[ string.lower( VarName ) ] = {
                     Protected = VarData.Protected or nil,
-                    Flagged = Dict.Flagged or false,
+                    Missing = Dict.Missing or false,
                     Cascade = VarData.Cascade or {},
                     Value = Dict.CurrentValue,
                 };
-
-                -- Unflag special
-                local UnDocumented = {};
-                for Var,Ok in pairs( self:SpecialFlags() ) do
-                    UnDocumented[ string.lower( Var ) ] = Ok;
-                end
-                if( UnDocumented[ VarName ] ) then
-                    Addon.DICT.Dictionary[ string.lower( VarName ) ] = {
-                        DisplayText = VarName,
-                        Key = string.lower( VarName ),
-                        CurrentValue = GetCVar( VarName ) or 0,
-                        DefaultValue = GetCVar( VarName ) or 0,
-                    };
-                    Defaults.Vars[ string.lower( VarName ) ].Flagged = false;
-                end
             end
             return Defaults;
         end
@@ -63,28 +48,15 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             return self.persistence;
         end
 
-        Addon.DB.GetFlagged = function( self,Index )
+        Addon.DB.GetMissing = function( self,Index )
             if( self:GetPersistence().Vars[ string.lower( Index ) ] ) then
-                return self:GetPersistence().Vars[ string.lower( Index ) ].Flagged;
+                return self:GetPersistence().Vars[ string.lower( Index ) ].Missing or false;
             end
         end
 
         Addon.DB.GetModified = function( self,Index )
             if( self:GetPersistence().Vars[ string.lower( Index ) ] ) then
                 return self:GetPersistence().Vars[ string.lower( Index ) ].Modified;
-            end
-        end
-
-        Addon.DB.SpecialFlags = function( self,Index )
-            if( Addon:IsRetail() ) then
-                return {
-                     --multiBarRightVerticalLayout = true,
-                }
-            else
-                return {
-                     --multiBarRightVerticalLayout = true,
-                     previewTalents = true,
-                }
             end
         end
 
@@ -190,13 +162,6 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                 return;
             end
             --self:GetPersistence().Vars = self:GetDefaults().Vars;
-
-            --[[for Key,_ in pairs( self:SpecialFlags() ) do
-                Addon:Dump( {
-                    Key = Key,
-                    Defaults = self.persistence.Vars[ string.lower( Key ) ],
-                } );
-            end]]
             --self:Reset();
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
                 if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ) then
