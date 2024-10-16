@@ -56,7 +56,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         ReloadUI();
                     end
                 end
-                Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',Addon.APP:GetVarValue( Index ) );
+                if( Addon.DB:GetValue( 'Debug' ) ) then
+                    Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',Addon.APP:GetVarValue( Index ) );
+                end
                 return true;
             end
             return false;
@@ -95,7 +97,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( Value ) then
                 if( Addon.DB:GetValue( 'Debug' ) ) then
                     local Index = 'ConsoleKey';
-                    Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',Value );
                     Addon.FRAMES:Warn( 'The console is only accessible when WoW is started with the "-console" parameter. This function does nothing if the parameter wasn\'t used.' );
                 end
                 SetConsoleKey( Value );
@@ -365,6 +366,10 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     if( not VarData.Missing ) then
                         local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
 
+                        if( Updated and Addon.DB:GetValue( 'Debug' ) ) then
+                            --Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DisplayText,'to',VarData.Value );
+                        end
+
                         if( Updated and VarData.Cascade ) then
                             for Name,Data in pairs( VarData.Cascade ) do
                                 SetCVar( Addon:Minify( Name ),VarData.Value );
@@ -509,7 +514,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             };
             InfoDump.Trace = debugstack( 2 );
             if( Addon.APP:GetValue( 'Debug' ) ) then
-                Addon:Dump( InfoDump );
+                --Addon:Dump( InfoDump );
             end
         end
 
@@ -763,6 +768,21 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 ChatEdit_SendText( DEFAULT_CHAT_FRAME.editBox,0 );
             end );
 
+            local DebugData = {
+                Name = 'Debug',
+                DisplayText = 'Debug',
+            };
+            self.Debug = Addon.FRAMES:AddToggle( DebugData,self.Controls );
+            self.Debug.keyValue = DebugData.Name;
+            self.Debug:SetChecked( self:GetValue( self.Debug.keyValue ) );
+            self.Debug:SetPoint( 'topleft',self.Apply,'bottomleft',0,0 );
+            self.Debug.Label = Addon.FRAMES:AddLabel( DebugData,self.Debug );
+            self.Debug.Label:SetPoint( 'topleft',self.Debug,'topright',0,-3 );
+            self.Debug.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.Debug.Label:SetJustifyH( 'left' );
+            self.Debug:HookScript( 'OnClick',function( self )
+                Addon.APP:SetValue( self.keyValue,self:GetChecked() );
+            end );
 
             local Category,Layout;
             if( InterfaceOptions_AddCategory ) then
@@ -784,14 +804,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         local EventFrame = CreateFrame( 'Frame' );
-        EventFrame:RegisterEvent( 'COMPACT_UNIT_FRAME_PROFILES_LOADED' );
+        EventFrame:RegisterEvent( 'CVAR_UPDATE' );
         EventFrame:SetScript( 'OnEvent',function( self,Event,... )
-            if( Event == 'COMPACT_UNIT_FRAME_PROFILES_LOADED' ) then
+            if( Event == 'CVAR_UPDATE' ) then
                 Addon.APP:Init();
                 if( Addon.APP:GetValue( 'Refresh' ) ) then
                     Addon.APP:Refresh();
                 end
-                EventFrame:UnregisterEvent( 'COMPACT_UNIT_FRAME_PROFILES_LOADED' );
+                EventFrame:UnregisterEvent( 'CVAR_UPDATE' );
             end
         end );
 

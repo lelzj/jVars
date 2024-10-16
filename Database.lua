@@ -11,14 +11,16 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return table
         Addon.DB.GetDefaults = function( self )
             local Defaults = {
-                Debug = false,
-                Modified = {
-                    Total = 0,
+                global = {
+                    Debug = false,
+                    Modified = {
+                        Total = 0,
+                    },
+                    ReloadUI = false,
+                    ReloadGX = false,
+                    Refresh = true,
+                    Vars = {},
                 },
-                ReloadUI = false,
-                ReloadGX = false,
-                Refresh = true,
-                Vars = {},
             };
             -- Flag missing C_Console.GetAllCommands vars
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
@@ -27,7 +29,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Missing = true,
                 };
 
-                Defaults.Vars[ string.lower( VarName ) ] = {
+                Defaults.global.Vars[ string.lower( VarName ) ] = {
                     Protected = VarData.Protected or nil,
                     Missing = Dict.Missing or false,
                     Cascade = VarData.Cascade or {},
@@ -42,6 +44,14 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return table
         Addon.DB.GetPersistence = function( self )
+            if( not self.db ) then
+                return;
+            end
+            local Player = UnitName( 'player' );
+            local Realm = GetRealmName();
+            local PlayerRealm = Player..'-'..Realm;
+
+            self.persistence = self.db.global;
             if( not self.persistence ) then
                 return;
             end
@@ -153,14 +163,24 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.DB.Init = function( self )
-            self.db = LibStub( 'AceDB-3.0' ):New( AddonName,{ profile = self:GetDefaults() },true );
+            self.db = LibStub( 'AceDB-3.0' ):New( AddonName,self:GetDefaults(),'global' );
             if( not self.db ) then
                 return;
             end
-            self.persistence = self.db.profile;
-            if( not self.persistence ) then
+
+            if( not self:GetPersistence() ) then
                 return;
             end
+
+            for i,v in pairs( self:GetPersistence().Vars ) do
+                if( i:find( 'cameradistancemaxzoomfactor' ) ) then
+                    Addon:Dump({
+                        i = i,
+                        v = v,
+                    })
+                end
+            end
+
             --self:GetPersistence().Vars = self:GetDefaults().Vars;
             --self:Reset();
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
