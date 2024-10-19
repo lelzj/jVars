@@ -11,16 +11,15 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return table
         Addon.DB.GetDefaults = function( self )
             local Defaults = {
-                global = {
-                    Debug = false,
-                    Modified = {
-                        Total = 0,
-                    },
-                    ReloadUI = false,
-                    ReloadGX = false,
-                    Refresh = true,
-                    Vars = {},
+                Debug = false,
+                Modified = {
+                    Total = 0,
                 },
+                ModifiedOnly = false,
+                ReloadUI = false,
+                ReloadGX = false,
+                Refresh = true,
+                Vars = {},
             };
             -- Flag missing C_Console.GetAllCommands vars
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
@@ -29,7 +28,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Missing = true,
                 };
 
-                Defaults.global.Vars[ string.lower( VarName ) ] = {
+                Defaults.Vars[ string.lower( VarName ) ] = {
                     Protected = VarData.Protected or nil,
                     Missing = Dict.Missing or false,
                     Cascade = VarData.Cascade or {},
@@ -163,7 +162,7 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
         --
         --  @return void
         Addon.DB.Init = function( self )
-            self.db = LibStub( 'AceDB-3.0' ):New( AddonName,self:GetDefaults(),'global' );
+            self.db = LibStub( 'AceDB-3.0' ):New( AddonName,{ global = self:GetDefaults() },true );
             if( not self.db ) then
                 return;
             end
@@ -171,20 +170,37 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( not self:GetPersistence() ) then
                 return;
             end
-
+            --[[
             for i,v in pairs( self:GetPersistence().Vars ) do
-                if( i:find( 'cameradistancemaxzoomfactor' ) ) then
+                if( i:find( 'nameplateotheratbase' ) ) then
+                    Addon:Dump({
+                        i = i,
+                        v = v,
+                    })
+                end
+                if( i:find( 'nameplatepersonalshowalways' ) ) then
                     Addon:Dump({
                         i = i,
                         v = v,
                     })
                 end
             end
-
+            ]]
             --self:GetPersistence().Vars = self:GetDefaults().Vars;
             --self:Reset();
+
+            local EventFrame = CreateFrame( 'Frame' );
+            EventFrame:RegisterEvent( 'PLAYER_LOGOUT' );
+            EventFrame:SetScript( 'OnEvent',function( self,Event,...)
+                for VarName,VarData in pairs( self:GetPersistence().Vars ) do
+                    self:GetPersistence().Vars[ string.lower( VarName ) ] = VarData;
+                end
+            end );
+
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
                 if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ) then
+                    self:GetPersistence().Vars[ string.lower( VarName ) ].Dictionary = Addon.DICT:GetDictionary()[ string.lower( VarName ) ];
+
                     if( tostring( self:GetPersistence().Vars[ string.lower( VarName ) ].Value ) == tostring( Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DefaultValue ) ) then
                          self:GetPersistence().Vars[ string.lower( VarName ) ].Modified = false;
                     else

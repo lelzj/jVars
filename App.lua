@@ -367,7 +367,18 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
 
                         if( Updated and Addon.DB:GetValue( 'Debug' ) ) then
-                            --Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DisplayText,'to',VarData.Value );
+                            if( Addon:Minify( VarName ):find( 'nameplatepersonalshowalways' ) or Addon:Minify( VarName ):find( 'otheratbase' ) ) then
+                                local DisplayText = VarName;
+                                if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ~= nil ) then
+                                    DisplayText = Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DisplayText;
+                                end
+                                if( not VarData.Value ) then
+                                    VarData.Value = '';
+                                end
+                                Addon.FRAMES:Debug( 'Updated',DisplayText,'to',VarData.Value );
+                                Addon.FRAMES:Debug( 'Dumping',VarName,'VarData' );
+                                Addon:Dump( VarData );
+                            end
                         end
 
                         if( Updated and VarData.Cascade ) then
@@ -380,6 +391,13 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     if( VarData.Cascade ) then
                         for Handling,_ in pairs( VarData.Cascade ) do
                             if( Addon.APP[Handling] ) then
+
+                                if( Addon.DB:GetValue( 'Debug' ) ) then
+                                    if( Addon:Minify( VarName ):find( 'nameplatepersonalshowalways' ) or Addon:Minify( VarName ):find( 'otheratbase' ) ) then
+                                        Addon.FRAMES:Debug( 'Calling',VarName,'cascade',Handling );
+                                    end
+                                end
+
                                 Addon.APP[Handling]( VarName,VarData );
                             end
                         end
@@ -764,6 +782,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.DefaultUI:SetPoint( 'topleft',self.ExportCVs,'topright',10,0 );
             self.DefaultUI:SetSize( 50,25 );
             self.DefaultUI:HookScript( 'OnClick',function( self )
+                Addon.DB:Reset();
                 DEFAULT_CHAT_FRAME.editBox:SetText( '/console cvar_default' );
                 ChatEdit_SendText( DEFAULT_CHAT_FRAME.editBox,0 );
             end );
@@ -804,14 +823,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         end
 
         local EventFrame = CreateFrame( 'Frame' );
-        EventFrame:RegisterEvent( 'CVAR_UPDATE' );
+        EventFrame:RegisterEvent( 'VARIABLES_LOADED' );
         EventFrame:SetScript( 'OnEvent',function( self,Event,... )
-            if( Event == 'CVAR_UPDATE' ) then
+            if( Event == 'VARIABLES_LOADED' ) then
                 Addon.APP:Init();
                 if( Addon.APP:GetValue( 'Refresh' ) ) then
                     Addon.APP:Refresh();
                 end
-                EventFrame:UnregisterEvent( 'CVAR_UPDATE' );
+                EventFrame:UnregisterEvent( 'VARIABLES_LOADED' );
             end
         end );
 
