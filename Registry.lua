@@ -932,23 +932,23 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Disabled',
                         },
                         {
-                            Value = 1,
+                            Value = 10,
                             Description = 'Low',
                         },
                         {
-                            Value = 2,
+                            Value = 25,
                             Description = 'Fair',
                         },
                         {
-                            Value = 3,
-                            Description = 'Medium',
+                            Value = 50,
+                            Description = 'Good',
                         },
                         {
-                            Value = 4,
+                            Value = 80,
                             Description = 'High',
                         },
                         {
-                            Value = 5,
+                            Value = 100,
                             Description = 'Ultra',
                         },
                     },
@@ -1669,23 +1669,23 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Disabled',
                         },
                         {
-                            Value = 1,
+                            Value = 10,
                             Description = 'Low',
                         },
                         {
-                            Value = 2,
+                            Value = 25,
                             Description = 'Fair',
                         },
                         {
-                            Value = 3,
-                            Description = 'Medium',
+                            Value = 50,
+                            Description = 'Good',
                         },
                         {
-                            Value = 4,
+                            Value = 80,
                             Description = 'High',
                         },
                         {
-                            Value = 5,
+                            Value = 100,
                             Description = 'Ultra',
                         },
                     },
