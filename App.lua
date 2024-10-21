@@ -388,7 +388,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         end
                     end
 
-                    if( VarData.Cascade ) then
+                    if( Updated and VarData.Cascade ) then
                         for Handling,_ in pairs( VarData.Cascade ) do
                             if( Addon.APP[Handling] ) then
 
@@ -523,17 +523,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             local FilteredList = Addon.APP:Filter( SearchQuery );
             Addon.VIEW:RegisterList( FilteredList,Addon.APP );
             Addon.VIEW:GetStats( FilteredList,Addon.APP );
-        end
-
-        Addon.APP.BackTrace = function( Index,Value,... )
-            local InfoDump = {
-                Index = Index,
-                Value = Value,
-            };
-            InfoDump.Trace = debugstack( 2 );
-            if( Addon.APP:GetValue( 'Debug' ) ) then
-                --Addon:Dump( InfoDump );
-            end
         end
 
         --
@@ -833,11 +822,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 EventFrame:UnregisterEvent( 'VARIABLES_LOADED' );
             end
         end );
-
-        hooksecurefunc( 'SetCVar',self.BackTrace );
-        if( C_CVar and C_CVar.SetCVar ) then
-            hooksecurefunc( C_CVar,'SetCVar',self.BackTrace );
-        end
 
         self:UnregisterEvent( 'ADDON_LOADED' );
     end
