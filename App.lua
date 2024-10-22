@@ -8,14 +8,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             return;
         end
 
-        local _SetCVar = SetCVar;
-        local SetCVar = function( ... )
-            local Status,Error = pcall( function( ... )
-                return _SetCVar( ... );
-            end,... );
-            return Status;
-        end
-
         --
         --  Set cvar setting
         --
@@ -361,9 +353,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
             C_Timer.After( 5,function()
                 Addon.FRAMES:Notify( 'Refreshing all settings...' );
+
+                --Addon:Dump( {name='nameplatepersonalshowalways',value=Addon.DB:GetPersistence().Vars['nameplatepersonalshowalways' ].Value } );
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
 
                     if( not VarData.Missing ) then
+
                         local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
 
                         if( Updated and Addon.DB:GetValue( 'Debug' ) ) then
@@ -376,8 +371,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                                     VarData.Value = '';
                                 end
                                 Addon.FRAMES:Debug( 'Updated',DisplayText,'to',VarData.Value );
-                                Addon.FRAMES:Debug( 'Dumping',VarName,'VarData' );
-                                Addon:Dump( VarData );
                             end
                         end
 
@@ -811,15 +804,10 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        local EventFrame = CreateFrame( 'Frame' );
-        EventFrame:RegisterEvent( 'VARIABLES_LOADED' );
-        EventFrame:SetScript( 'OnEvent',function( self,Event,... )
-            if( Event == 'VARIABLES_LOADED' ) then
-                Addon.APP:Init();
-                if( Addon.APP:GetValue( 'Refresh' ) ) then
-                    Addon.APP:Refresh();
-                end
-                EventFrame:UnregisterEvent( 'VARIABLES_LOADED' );
+        C_Timer.After( 2, function()
+            Addon.APP:Init();
+            if( Addon.APP:GetValue( 'Refresh' ) ) then
+                Addon.APP:Refresh();
             end
         end );
 
