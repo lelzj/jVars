@@ -323,6 +323,10 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         end
                     end
 
+                    if( Addon.APP:GetValue( 'ReloadOnImport' ) ) then
+                        ReloadUI();
+                        return;
+                    end
                     local Input = self:GetParent().Edit.Input
                     Input:HighlightText( 0 );
                     Input:SetFocus();
@@ -582,7 +586,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 if( InCombatLockdown() ) then
                     return;
                 end
-                Addon.APP:Query();
+                --if( string.len( self:GetText() ) > 3 ) then
+                    Addon.APP:Query();
+                --end
             end );
     
             self.Heading.Name = Addon.FRAMES:AddLabel( { DisplayText = 'Name' },self.Heading );
@@ -722,6 +728,8 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
                 Input:HighlightText( 0 );
                 Input:SetFocus();
+
+                Addon.FRAMES:Warn( 'This will cause your game to temporarily freeze' );
             end );
 
             local ExportCVs = {
@@ -786,6 +794,22 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Debug.Label:SetSize( self.Controls:GetWidth()/3,20 );
             self.Debug.Label:SetJustifyH( 'left' );
             self.Debug:HookScript( 'OnClick',function( self )
+                Addon.APP:SetValue( self.keyValue,self:GetChecked() );
+            end );
+
+            local ReloadImportData = {
+                Name = 'ReloadOnImport',
+                DisplayText = 'Reload UI for import',
+            };
+            self.ReloadOnImport = Addon.FRAMES:AddToggle( ReloadImportData,self.Controls );
+            self.ReloadOnImport.keyValue = ReloadImportData.Name;
+            self.ReloadOnImport:SetChecked( self:GetValue( self.ReloadOnImport.keyValue ) );
+            self.ReloadOnImport:SetPoint( 'topleft',self.ReloadUI,'bottomleft',0,0  );
+            self.ReloadOnImport.Label = Addon.FRAMES:AddLabel( ReloadImportData,self.ReloadOnImport );
+            self.ReloadOnImport.Label:SetPoint( 'topleft',self.ReloadOnImport,'topright',0,-3 );
+            self.ReloadOnImport.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.ReloadOnImport.Label:SetJustifyH( 'left' );
+            self.ReloadOnImport:HookScript( 'OnClick',function( self )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
             end );
 
