@@ -322,6 +322,10 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Addon.APP:SetVarValue( VarName,VarData.Value,true );
                         end
                     end
+
+                    local Input = self:GetParent().Edit.Input
+                    Input:HighlightText( 0 );
+                    Input:SetFocus();
                 end
             end );
 
