@@ -721,6 +721,21 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
+                mapAnimDuration = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1,
+                            Description = 'High',
+                        },
+                    },
+                    Step = .2,
+                    Category = 'Hud',
+                },
                 --[[
                 useCompactPartyFrames = {
                     Type = 'Toggle',
@@ -934,10 +949,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         {
                             Value = 10,
                             Description = 'Low',
-                        },
-                        {
-                            Value = 25,
-                            Description = 'Fair',
                         },
                         {
                             Value = 50,
@@ -1497,6 +1508,28 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
+                rippleDetail = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'No reflection',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Sky reflection',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'More reflection',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'High reflection',
+                        },
+                    },
+                    Category = 'Graphics',
+                },
                 graphicsEnvironmentDetail = {
                     Type = 'Range',
                     KeyPairs = {
@@ -1673,10 +1706,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Low',
                         },
                         {
-                            Value = 25,
-                            Description = 'Fair',
-                        },
-                        {
                             Value = 50,
                             Description = 'Good',
                         },
@@ -1693,6 +1722,28 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 projectedtextures = {
                     Type = 'Toggle',
+                    Category = 'Graphics',
+                },
+                reflectionMode = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Screen Space',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Sky',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Sky/Terrain',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'Sky/Terrain/Building',
+                        },
+                    },
                     Category = 'Graphics',
                 },
                 RenderScale = {
@@ -2908,6 +2959,22 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
+                },
+                synchronizeConfig = {
+                    Type = 'Toggle',
+                    Category = 'System',
+                },
+                synchronizeMacros = {
+                    Type = 'Toggle',
+                    Category = 'System',
+                },
+                synchronizeSettings = {
+                    Type = 'Toggle',
+                    Category = 'System',
+                },
+                synchronizeBindings = {
+                    Type = 'Toggle',
+                    Category = 'System',
                 },
             };
             for VarName,VarData in pairs( Registry ) do

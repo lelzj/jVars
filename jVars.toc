@@ -9,7 +9,7 @@
 ## X-WoWI-ID: 26744
 ## X-Wago-ID: XKq9QjKy
 
-## DefaultState: disabled
+## DefaultState: enabled
 ## SavedVariables: jVars
 
 ## Interface: 110005
