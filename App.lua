@@ -832,7 +832,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        C_Timer.After( 2, function()
+        -- solve absolute silliness on classic
+        local Time = 2;
+        if( Addon:IsClassic() ) then
+            Time = 15;
+        end
+        C_Timer.After( Time,function()
             Addon.APP:Init();
             if( Addon.APP:GetValue( 'Refresh' ) ) then
                 Addon.APP:Refresh();
