@@ -364,7 +364,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
                 --Addon:Dump( {name='nameplatepersonalshowalways',value=Addon.DB:GetPersistence().Vars['nameplatepersonalshowalways' ].Value } );
                 for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
-
                     if( not VarData.Missing ) then
 
                         local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
@@ -831,13 +830,8 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 end
             end
         end
-
-        -- solve absolute silliness on classic
-        local Time = 2;
-        if( Addon:IsClassic() ) then
-            Time = 15;
-        end
-        C_Timer.After( Time,function()
+        
+        C_Timer.After( 2,function()
             Addon.APP:Init();
             if( Addon.APP:GetValue( 'Refresh' ) ) then
                 Addon.APP:Refresh();

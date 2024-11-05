@@ -190,14 +190,6 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             --self:GetPersistence().Vars = self:GetDefaults().Vars;
             --self:Reset();
 
-            local EventFrame = CreateFrame( 'Frame' );
-            EventFrame:RegisterEvent( 'PLAYER_LOGOUT' );
-            EventFrame:SetScript( 'OnEvent',function( self,Event,...)
-                for VarName,VarData in pairs( self:GetPersistence().Vars ) do
-                    self:GetPersistence().Vars[ string.lower( VarName ) ] = VarData;
-                end
-            end );
-
             for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
                 if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ) then
                     self:GetPersistence().Vars[ string.lower( VarName ) ].Dictionary = Addon.DICT:GetDictionary()[ string.lower( VarName ) ];
