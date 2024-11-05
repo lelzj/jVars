@@ -467,7 +467,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 if( not Missing ) then
                     AllData[ Key ] = {
                         DisplayText = Dict.DisplayText,
-                        Description = Dict.Description,
+                        Description = Dict.Description or VarData.Description,
                         DefaultValue = Dict.DefaultValue,
                         Type = VarData.Type,                -- Toggle, Range, Select, etc
                         Missing = Missing,                  -- Not appearing in list of client commands
@@ -658,6 +658,12 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Controls:SetPoint( 'topright',self.Stats,'topleft',0,0 );
 
             local MovingPort = Addon.APP:AddMovablePort( self.Browser );
+            MovingPort.Edit.Input:SetScript( 'OnEditFocusLost',function( self )
+                if( Addon.DB:GetValue( 'Debug' ) ) then
+                    print( 'MovingPort.Edit.Input','OnEditFocusLost','setting focus....' )
+                end
+                self:SetFocus();
+            end );
 
             local RefreshData = {
                 Name = 'Refresh',

@@ -47,6 +47,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateHideHealthAndPower = {
                     Type = 'Toggle',
                     Category = 'Hud',
+                    Description = 'Resource indicator powerbar for player character visibility toggle'
                 },
                 NameplatePersonalClickThrough = {
                     Type = 'Toggle',
