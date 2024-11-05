@@ -328,6 +328,9 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         UnitNameFriendlyPlayerName = {
                             Type = 'Toggle',
                         },
+                        nameplateShowFriendlyNPCs = {
+                            Type = 'Toggle',
+                        },
                     },
                 },
                 nameplateShowEnemies = {
