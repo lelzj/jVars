@@ -660,7 +660,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             local MovingPort = Addon.APP:AddMovablePort( self.Browser );
             MovingPort.Edit.Input:SetScript( 'OnEditFocusLost',function( self )
                 if( Addon.DB:GetValue( 'Debug' ) ) then
-                    print( 'MovingPort.Edit.Input','OnEditFocusLost','setting focus....' )
+                    Addon.FRAMES:Debug( 'MovingPort.Edit.Input','OnEditFocusLost','setting focus....' )
                 end
                 self:SetFocus();
             end );

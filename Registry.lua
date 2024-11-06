@@ -890,6 +890,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 RAIDgroundEffectAnimation = {
                     Type = 'Toggle',
                     Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 raidGraphicsEnvironmentDetail = {
                     Type = 'Range',
@@ -905,6 +910,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 raidGraphicsGroundClutter = {
                     Type = 'Range',
@@ -920,6 +930,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 raidGraphicsLiquidDetail = {
                     Type = 'Select',
@@ -942,6 +957,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 raidGraphicsParticleDensity = {
                     Type = 'Select',
@@ -968,6 +988,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 raidGraphicsShadowQuality = {
                     Type = 'Select',
@@ -998,6 +1023,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 raidGraphicsSSAO = {
                     Type = 'Range',
@@ -1646,6 +1676,26 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 16,
                     Category = 'Graphics',
                 },
+                RAIDgroundEffectDensity = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 16,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 256,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 16,
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
                 interactOnLeftClick = {
                     Type = 'Toggle',
                     Category = 'Hud',
@@ -1835,7 +1885,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Step = 1,
-                    Category = 'Grapics',
+                    Category = 'Graphics',
                 },
                 weatherDensity = {
                     Type = 'Range',
@@ -1850,7 +1900,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Step = 1,
-                    Category = 'Grapics',
+                    Category = 'Graphics',
                 },
                 xpBarText = {
                     Type = 'Toggle',
@@ -2275,6 +2325,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 graphicsSpellDensity = {
                     Type = 'Select',
@@ -2305,6 +2360,41 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Graphics',
+                },
+                raidGraphicsSpellDensity = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Essential',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Some',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Half',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'Most',
+                        },
+                        {
+                            Value = 4,
+                            Description = 'Dynamic',
+                        },
+                        {
+                            Value = 5,
+                            Description = 'Everything',
+                        },
+                    },
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 spellClutter = {
                     Type = 'Range',
@@ -2963,6 +3053,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 synchronizeConfig = {
                     Type = 'Toggle',
