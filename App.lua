@@ -358,54 +358,52 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( InCombatLockdown() ) then
                 return;
             end
+            
+            Addon.FRAMES:Notify( 'Refreshing all settings...' );
 
-            C_Timer.After( 5,function()
-                Addon.FRAMES:Notify( 'Refreshing all settings...' );
+            --Addon:Dump( {name='nameplatepersonalshowalways',value=Addon.DB:GetPersistence().Vars['nameplatepersonalshowalways' ].Value } );
+            for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
+                if( not VarData.Missing ) then
 
-                --Addon:Dump( {name='nameplatepersonalshowalways',value=Addon.DB:GetPersistence().Vars['nameplatepersonalshowalways' ].Value } );
-                for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
-                    if( not VarData.Missing ) then
+                    local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
 
-                        local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
-
-                        if( Updated and Addon.DB:GetValue( 'Debug' ) ) then
-                            if( Addon:Minify( VarName ):find( 'nameplatepersonalshowalways' ) or Addon:Minify( VarName ):find( 'otheratbase' ) ) then
-                                local DisplayText = VarName;
-                                if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ~= nil ) then
-                                    DisplayText = Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DisplayText;
-                                end
-                                if( not VarData.Value ) then
-                                    VarData.Value = '';
-                                end
-                                Addon.FRAMES:Debug( 'Updated',DisplayText,'to',VarData.Value );
+                    if( Updated and Addon.DB:GetValue( 'Debug' ) ) then
+                        if( Addon:Minify( VarName ):find( 'nameplatepersonalshowalways' ) or Addon:Minify( VarName ):find( 'otheratbase' ) ) then
+                            local DisplayText = VarName;
+                            if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ~= nil ) then
+                                DisplayText = Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DisplayText;
                             end
-                        end
-
-                        if( Updated and VarData.Cascade ) then
-                            for Name,Data in pairs( VarData.Cascade ) do
-                                SetCVar( Addon:Minify( Name ),VarData.Value );
+                            if( not VarData.Value ) then
+                                VarData.Value = '';
                             end
+                            Addon.FRAMES:Debug( 'Updated',DisplayText,'to',VarData.Value );
                         end
                     end
 
                     if( Updated and VarData.Cascade ) then
-                        for Handling,_ in pairs( VarData.Cascade ) do
-                            if( Addon.APP[Handling] ) then
-
-                                if( Addon.DB:GetValue( 'Debug' ) ) then
-                                    if( Addon:Minify( VarName ):find( 'nameplatepersonalshowalways' ) or Addon:Minify( VarName ):find( 'otheratbase' ) ) then
-                                        Addon.FRAMES:Debug( 'Calling',VarName,'cascade',Handling );
-                                    end
-                                end
-
-                                Addon.APP[Handling]( VarName,VarData );
-                            end
+                        for Name,Data in pairs( VarData.Cascade ) do
+                            SetCVar( Addon:Minify( Name ),VarData.Value );
                         end
                     end
-                end;
+                end
 
-                Addon.FRAMES:Notify( 'Done' );
-            end );
+                if( Updated and VarData.Cascade ) then
+                    for Handling,_ in pairs( VarData.Cascade ) do
+                        if( Addon.APP[Handling] ) then
+
+                            if( Addon.DB:GetValue( 'Debug' ) ) then
+                                if( Addon:Minify( VarName ):find( 'nameplatepersonalshowalways' ) or Addon:Minify( VarName ):find( 'otheratbase' ) ) then
+                                    Addon.FRAMES:Debug( 'Calling',VarName,'cascade',Handling );
+                                end
+                            end
+
+                            Addon.APP[Handling]( VarName,VarData );
+                        end
+                    end
+                end
+            end;
+
+            Addon.FRAMES:Notify( 'Done' );
         end
 
         Addon.APP.FrameRegister = function( self,FrameData )
@@ -837,10 +835,17 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
         
-        C_Timer.After( 2,function()
-            Addon.APP:Init();
-            if( Addon.APP:GetValue( 'Refresh' ) ) then
-                Addon.APP:Refresh();
+        local Iterator = 1;
+        hooksecurefunc( 'SetCVar',function( ... )
+            if( not( Iterator > 1 ) ) then
+                C_Timer.After( 10,function()
+                    Addon.DB:Init();
+                    Addon.APP:Init();
+                    if( Addon.APP:GetValue( 'Refresh' ) ) then
+                        Addon.APP:Refresh();
+                    end
+                end );
+                Iterator = Iterator+1;
             end
         end );
 

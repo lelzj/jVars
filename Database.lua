@@ -211,7 +211,6 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
         end
 
-        Addon.DB:Init();
         Addon.DB:UnregisterEvent( 'ADDON_LOADED' );
     end
 end );
