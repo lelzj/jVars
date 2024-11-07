@@ -975,6 +975,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Description = 'Low',
                         },
                         {
+                            Value = 25,
+                            Description = 'Fair',
+                        },
+                        {
                             Value = 50,
                             Description = 'Good',
                         },
@@ -1758,6 +1762,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         {
                             Value = 10,
                             Description = 'Low',
+                        },
+                        {
+                            Value = 25,
+                            Description = 'Fair',
                         },
                         {
                             Value = 50,
