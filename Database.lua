@@ -110,9 +110,6 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                     end
                 end
             end
-            if( Addon.DB:GetValue( 'Debug' ) ) then
-                Addon:Dump( self:GetPersistence().Vars[ string.lower( Index ) ] );
-            end
             return true;
         end
 

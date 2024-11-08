@@ -23,19 +23,13 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 self:Query();
                 local Updated = SetCVar( Index,Value );
                 if( Updated ) then
+
                     local VarData = Addon.REG:GetRegistry()[ Addon:Minify( Index ) ];
                     if( VarData and VarData.Cascade ) then
                         for Handling,_ in pairs( VarData.Cascade ) do
                             if( Addon.APP[Handling] ) then
                                 Addon.APP[Handling]( Index,VarData,true );
                             end
-                        end
-                    end
-
-                    if( VarData and VarData.Cascade ) then
-                        for Name,Data in pairs( VarData.Cascade ) do
-                            SetCVar( Addon:Minify( Name ),Value );
-                            --print( 'Cascade',Addon:Minify( Name ),Value )
                         end
                     end
                 end
@@ -48,9 +42,14 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                         ReloadUI();
                     end
                 end
-                if( Addon.DB:GetValue( 'Debug' ) ) then
-                    Addon.FRAMES:Notify( 'Updated',Addon.DICT:GetDictionary()[ string.lower( Index ) ].DisplayText,'to',Addon.APP:GetVarValue( Index ) );
+
+                if( Addon.DB:GetPersistence().Vars[ string.lower( Index ) ].Dictionary ) then
+                    Addon.DB:GetPersistence().Vars[ string.lower( Index ) ].Dictionary.CurrentValue = GetCVar( Index );
                 end
+                if( Addon.DB:GetValue( 'Debug' ) ) then
+                    Addon:Dump( Addon.DB:GetPersistence().Vars[ string.lower( Index ) ] );
+                end
+
                 return true;
             end
             return false;
@@ -99,10 +98,16 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             local Value = Addon.APP:GetVarValue( 'findYourselfMode' );
 
             if( Value ) then
-                SetCVar( 'findyourselfanywhere',1 );
-                SetCVar( 'findYourselfModeOutline',Value );
+                if( GetCVar( 'findyourselfanywhere' ) ~= 1 ) then
+                    SetCVar( 'findyourselfanywhere',1 );
+                end
+                if( GetCVar( 'findYourselfModeOutline' ) ~= Value ) then
+                    SetCVar( 'findYourselfModeOutline',Value );
+                end
             else
-                SetCVar( 'findyourselfanywhere',0 );
+                if( GetCVar( 'findyourselfanywhere' ) ~= 0 ) then
+                    SetCVar( 'findyourselfanywhere',0 );
+                end
             end
         end
 
@@ -122,6 +127,56 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     --MultiBarLeft:SetPoint( 'topleft',MultiBarRight,'bottomleft',0,0 );
 
                 end
+            end
+        end
+
+        Addon.APP.RefreshShowFriendlyNPCNamePlates = function( self )
+            local Value = Addon.APP:GetVarValue( 'nameplateShowFriendlyNPCs' );
+
+            if( Value ) then
+                if( GetCVar( 'UnitNameNPC' ) ~= 1 ) then
+                    SetCVar( 'UnitNameNPC',1 );
+                end
+            else
+                if( GetCVar( 'UnitNameNPC' ) ~= 0 ) then
+                    SetCVar( 'UnitNameNPC',0 );
+                end
+            end
+        end
+
+        Addon.APP.RefreshShowPersonalNamePlate = function( self )
+            local Value = Addon.APP:GetVarValue( 'NameplatePersonalShowAlways' );
+
+            if( Value ) then
+                if( GetCVar( 'UnitNameOwn' ) ~= 1 ) then
+                    SetCVar( 'UnitNameOwn',1 );
+                end
+            else
+                if( GetCVar( 'UnitNameOwn' ) ~= 0 ) then
+                    SetCVar( 'UnitNameOwn',0 );
+                end
+            end
+        end
+
+        Addon.APP.RefreshShowAllNamePlates = function( self )
+            local Value = Addon.APP:GetVarValue( 'nameplateShowAll' );
+
+            if( Value ) then
+                if( GetCVar( 'UnitNameOwn' ) ~= 1 ) then
+                    SetCVar( 'UnitNameOwn',1 );
+                end
+                if( GetCVar( 'UnitNameFriendlyPlayerName' ) ~= 1 ) then
+                    SetCVar( 'UnitNameFriendlyPlayerName',1 );
+                end
+                if( GetCVar( 'nameplateShowFriendlyNPCs' ) ~= 1 ) then
+                    SetCVar( 'nameplateShowFriendlyNPCs',1 );
+                end
+            end
+        end
+
+        Addon.APP.RefreshEnableRaidSettings = function( self )
+            if( GetCVar( 'RAIDsettingsEnabled' ) ~= 1 ) then
+                SetCVar( 'RAIDsettingsEnabled',1 );
             end
         end
 
@@ -361,43 +416,16 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             
             Addon.FRAMES:Notify( 'Refreshing all settings...' );
 
-            --Addon:Dump( {name='nameplatepersonalshowalways',value=Addon.DB:GetPersistence().Vars['nameplatepersonalshowalways' ].Value } );
             for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
                 if( not VarData.Missing ) then
 
                     local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
 
-                    if( Updated and Addon.DB:GetValue( 'Debug' ) ) then
-                        if( Addon:Minify( VarName ):find( 'nameplatepersonalshowalways' ) or Addon:Minify( VarName ):find( 'otheratbase' ) ) then
-                            local DisplayText = VarName;
-                            if( Addon.DICT:GetDictionary()[ string.lower( VarName ) ] ~= nil ) then
-                                DisplayText = Addon.DICT:GetDictionary()[ string.lower( VarName ) ].DisplayText;
+                    if( Updated and Addon.REG:GetRegistry()[ Addon:Minify( VarName ) ] and Addon.REG:GetRegistry()[ Addon:Minify( VarName ) ].Cascade ) then
+                        for Handling,_ in pairs( Addon.REG:GetRegistry()[ Addon:Minify( VarName ) ].Cascade ) do
+                            if( Addon.APP[Handling] ) then
+                                Addon.APP[Handling]( VarName,VarData );
                             end
-                            if( not VarData.Value ) then
-                                VarData.Value = '';
-                            end
-                            Addon.FRAMES:Debug( 'Updated',DisplayText,'to',VarData.Value );
-                        end
-                    end
-
-                    if( Updated and VarData.Cascade ) then
-                        for Name,Data in pairs( VarData.Cascade ) do
-                            SetCVar( Addon:Minify( Name ),VarData.Value );
-                        end
-                    end
-                end
-
-                if( Updated and VarData.Cascade ) then
-                    for Handling,_ in pairs( VarData.Cascade ) do
-                        if( Addon.APP[Handling] ) then
-
-                            if( Addon.DB:GetValue( 'Debug' ) ) then
-                                if( Addon:Minify( VarName ):find( 'nameplatepersonalshowalways' ) or Addon:Minify( VarName ):find( 'otheratbase' ) ) then
-                                    Addon.FRAMES:Debug( 'Calling',VarName,'cascade',Handling );
-                                end
-                            end
-
-                            Addon.APP[Handling]( VarName,VarData );
                         end
                     end
                 end

@@ -25,6 +25,40 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return table
         Addon.REG.GetRegistry = function( self )
             local Registry = {
+                RAIDsettingsEnabled = {
+                    Type = 'Toggle',
+                    Category = 'Graphics',
+                },
+                UnitNameNPC = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                UnitNameOwn = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                UnitNameFriendlyPlayerName = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                findYourselfModeOutline = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Circle',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Circle & Outline',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Outline',
+                        },
+                    },
+                    Category = 'Character',
+                },
                 spellEffectLevel = {
                     Type = 'Range',
                     KeyPairs = {
@@ -58,11 +92,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
-                        },
-                        VolumeFog = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -83,11 +113,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Graphics',
-                    Cascade = {
-                        VolumeFog = {
-                            Type = 'Toggle',
-                        },
-                    },
                 },
                 GraphicsTextureResolution = {
                     Type = 'Select',
@@ -125,8 +150,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -144,11 +168,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
-                    Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
-                        },
-                    },
                 },
                 RAIDentityLodDist = {
                     Type = 'Range',
@@ -165,8 +184,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 1,
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -265,8 +283,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -276,10 +293,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
                 findYourselfMode = {
                     Type = 'Select',
-                    Cascade = {
-                        RefreshFindYourself = {
-                        },
-                    },
                     KeyPairs = {
                         {
                             Value = 0,
@@ -295,6 +308,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Character',
+                    Cascade = {
+                        RefreshFindYourself = {
+                        },
+                    },
                 },
                 nameplateOtherAtBase = {
                     Type = 'Range',
@@ -484,8 +501,8 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Character',
                     Cascade = {
-                        UnitNameOwn = {
-                            Type = 'Toggle',
+                        RefreshShowPersonalNamePlate = {
+
                         },
                     },
                 },
@@ -497,11 +514,8 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                     Cascade = {
-                        UnitNameFriendlyPlayerName = {
-                            Type = 'Toggle',
-                        },
-                        nameplateShowFriendlyNPCs = {
-                            Type = 'Toggle',
+                        RefreshShowAllNamePlates = {
+
                         },
                     },
                 },
@@ -585,8 +599,8 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                     Cascade = {
-                        UnitNameNPC = {
-                            Type = 'Toggle',
+                        RefreshShowFriendlyNPCNamePlates = {
+
                         },
                     },
                 },
@@ -1058,10 +1072,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 5,
                     Category = 'Hud',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
+                    Description = 'This CVar controls the view distance of the environment. Manually increasing this CVar beyond the maximum value may cause the client to crash (Error 132).',
                 },
                 waterDetail  = {
                     Type = 'Range',
@@ -1093,8 +1107,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 1,
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -1102,8 +1115,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -1122,8 +1134,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 1,
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -1142,8 +1153,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 1,
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -1169,8 +1179,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -1204,8 +1213,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -1714,6 +1722,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 5,
                     Category = 'Hud',
+                    Description = 'This CVar controls the view distance of the environment. Manually increasing this CVar beyond the maximum value may cause the client to crash (Error 132).',
                 },
                 ffxDeath = {
                     Type = 'Toggle',
@@ -1745,8 +1754,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -1899,8 +1907,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 16,
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -1934,8 +1941,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 16,
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -2021,8 +2027,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -2082,8 +2087,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -2529,6 +2533,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 10,
                     Category = 'Hud',
+                    Description = 'Default camera field of view',
                 },
                 previewTalents = {
                     Type = 'Toggle',
@@ -2636,8 +2641,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 1,
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                     Description = 'Cull unimportant spell effects. -1 means auto based on targetFPS otherwise [0-100], 0 means cull nothing for perf reasons, 100 means cull as much as you can',
@@ -2702,8 +2706,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -3319,8 +3322,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -3420,8 +3422,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 1,
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
@@ -3440,11 +3441,9 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 1,
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
-                    },
-                },
+                    },                },
                 RAIDterrainLodDist = {
                     Type = 'Range',
                     KeyPairs = {
@@ -3460,8 +3459,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 1,
                     Category = 'Graphics',
                     Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
+                        RefreshEnableRaidSettings = {
                         },
                     },
                 },
