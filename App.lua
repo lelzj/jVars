@@ -282,7 +282,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             Frame.Clear = Addon.FRAMES:AddButton( {
                 Name = 'Clear',
                 DisplayText = 'Clear',
-            },Frame )
+            },Frame,self.Theme.HighLight )
             Frame.Clear:SetPoint( 'bottomleft',10,5 );
             Frame.Clear:SetWidth( 50 );
             Frame.Clear:SetScript( 'OnClick',function( self )
@@ -296,7 +296,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             Frame.Ok = Addon.FRAMES:AddButton( {
                 Name = 'Ok',
                 DisplayText = 'Ok',
-            },Frame )
+            },Frame,self.Theme.HighLight )
             Frame.Ok:SetPoint( 'topleft',Frame.Clear,'topright',10,0 );
             Frame.Ok:SetWidth( 50 );
             Frame.Ok:SetScript( 'OnClick',function( self )
@@ -336,7 +336,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             Frame.Close = Addon.FRAMES:AddButton( {
                 Name = 'Close',
                 DisplayText = 'Close',
-            },Frame )
+            },Frame,self.Theme.HighLight )
             Frame.Close:SetPoint( 'topleft',Frame.Ok,'topright',10,0 );
             Frame.Close:SetWidth( 50 );
             Frame.Close:SetScript( 'OnClick',function( self )
@@ -465,7 +465,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 if( not Missing ) then
                     AllData[ Key ] = {
                         DisplayText = Dict.DisplayText,
-                        Description = Dict.Description or VarData.Description,
+                        Description = VarData.Description or Dict.Description,
                         DefaultValue = Dict.DefaultValue,
                         Type = VarData.Type,                -- Toggle, Range, Select, etc
                         Missing = Missing,                  -- Not appearing in list of client commands
@@ -532,6 +532,11 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 return;
             end
 
+            self.Theme = {
+                HighLight = Addon.Theme.Gold,
+                Normal = Addon.Theme.Text,
+            };
+
             self.Name = AddonName;
 
             self.Config = CreateFrame( 'Frame',self.Name);
@@ -588,27 +593,27 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 --end
             end );
     
-            self.Heading.Name = Addon.FRAMES:AddLabel( { DisplayText = 'Name' },self.Heading );
+            self.Heading.Name = Addon.FRAMES:AddLabel( { DisplayText = 'Name' },self.Heading,self.Theme.Normal );
             self.Heading.Name:SetPoint( 'topleft',self.Heading,'topleft',self.Heading.ColInset+3,( ( self.Heading:GetHeight() )*-1 )+20 );
             self.Heading.Name:SetSize( 180,self.Heading.FieldHeight );
             self.Heading.Name:SetJustifyH( 'right' );
 
-            self.Heading.Scope = Addon.FRAMES:AddLabel( { DisplayText = 'Scope' },self.Heading );
+            self.Heading.Scope = Addon.FRAMES:AddLabel( { DisplayText = 'Scope' },self.Heading,self.Theme.Normal );
             self.Heading.Scope:SetPoint( 'topleft',self.Heading.Name,'topright',self.Heading.ColInset,0 );
             self.Heading.Scope:SetSize( 50,self.Heading.FieldHeight );
             self.Heading.Scope:SetJustifyH( 'left' );
 
-            self.Heading.Category = Addon.FRAMES:AddLabel( { DisplayText = 'Category' },self.Heading );
+            self.Heading.Category = Addon.FRAMES:AddLabel( { DisplayText = 'Category' },self.Heading,self.Theme.Normal );
             self.Heading.Category:SetPoint( 'topleft',self.Heading.Scope,'topright',self.Heading.ColInset,0 );
             self.Heading.Category:SetSize( 50,self.Heading.FieldHeight );
             self.Heading.Category:SetJustifyH( 'left' );
 
-            self.Heading.Default = Addon.FRAMES:AddLabel( { DisplayText = 'Default' },self.Heading );
+            self.Heading.Default = Addon.FRAMES:AddLabel( { DisplayText = 'Default' },self.Heading,self.Theme.Normal );
             self.Heading.Default:SetPoint( 'topleft',self.Heading.Category,'topright',self.Heading.ColInset,0 );
             self.Heading.Default:SetSize( 50,self.Heading.FieldHeight );
             self.Heading.Default:SetJustifyH( 'left' );
 
-            self.Heading.Adjustment = Addon.FRAMES:AddLabel( { DisplayText = 'Adjustment' },self.Heading );
+            self.Heading.Adjustment = Addon.FRAMES:AddLabel( { DisplayText = 'Adjustment' },self.Heading,self.Theme.Normal );
             self.Heading.Adjustment:SetPoint( 'topleft',self.Heading.Default,'topright',0,0 );
             self.Heading.Adjustment:SetSize( 150,self.Heading.FieldHeight );
             self.Heading.Adjustment:SetJustifyH( 'left' );
@@ -671,7 +676,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Apply.keyValue = RefreshData.Name;
             self.Apply:SetChecked( self:GetValue( self.Apply.keyValue ) );
             self.Apply:SetPoint( 'topleft',self.Controls,'topleft',0,0 );
-            self.Apply.Label = Addon.FRAMES:AddLabel( RefreshData,self.Apply );
+            self.Apply.Label = Addon.FRAMES:AddLabel( RefreshData,self.Apply,self.Theme.Normal );
             self.Apply.Label:SetPoint( 'topleft',self.Apply,'topright',0,-3 );
             self.Apply.Label:SetSize( self.Controls:GetWidth()/3,20 );
             self.Apply.Label:SetJustifyH( 'left' );
@@ -687,7 +692,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ReloadUI.keyValue = ReloadUIData.Name;
             self.ReloadUI:SetChecked( self:GetValue( self.ReloadUI.keyValue ) );
             self.ReloadUI:SetPoint( 'topleft',self.Apply.Label,'topright',0,3 );
-            self.ReloadUI.Label = Addon.FRAMES:AddLabel( ReloadUIData,self.ReloadUI );
+            self.ReloadUI.Label = Addon.FRAMES:AddLabel( ReloadUIData,self.ReloadUI,self.Theme.Normal );
             self.ReloadUI.Label:SetPoint( 'topleft',self.ReloadUI,'topright',0,-3 );
             self.ReloadUI.Label:SetSize( self.Controls:GetWidth()/3,20 );
             self.ReloadUI.Label:SetJustifyH( 'left' );
@@ -703,7 +708,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ReloadGX.keyValue = ReloadGXData.Name;
             self.ReloadGX:SetChecked( self:GetValue( self.ReloadGX.keyValue ) );
             self.ReloadGX:SetPoint( 'topleft',self.ReloadUI.Label,'topright',0,3 );
-            self.ReloadGX.Label = Addon.FRAMES:AddLabel( ReloadGXData,self.ReloadGX );
+            self.ReloadGX.Label = Addon.FRAMES:AddLabel( ReloadGXData,self.ReloadGX,self.Theme.Normal );
             self.ReloadGX.Label:SetPoint( 'topleft',self.ReloadGX,'topright',0,-3 );
             self.ReloadGX.Label:SetSize( self.Controls:GetWidth()/3,20 );
             self.ReloadGX.Label:SetJustifyH( 'left' );
@@ -715,7 +720,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Name = 'Import',
                 DisplayText = 'Import',
             };
-            self.ImportCVs = Addon.FRAMES:AddButton( ImportCVs,self.Controls );
+            self.ImportCVs = Addon.FRAMES:AddButton( ImportCVs,self.Controls,self.Theme.HighLight );
             self.ImportCVs.keyValue = ImportCVs.Name;
             self.ImportCVs:SetPoint( 'topleft',self.ReloadGX.Label,'topright',10,3 );
             self.ImportCVs:SetSize( 50,25 );
@@ -739,7 +744,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Name = 'Export',
                 DisplayText = 'Export',
             };
-            self.ExportCVs = Addon.FRAMES:AddButton( ExportCVs,self.Controls );
+            self.ExportCVs = Addon.FRAMES:AddButton( ExportCVs,self.Controls,self.Theme.HighLight );
             self.ExportCVs.keyValue = ExportCVs.Name;
             self.ExportCVs:SetPoint( 'topleft',self.ImportCVs,'topright',10,0 );
             self.ExportCVs:SetSize( 50,25 );
@@ -774,7 +779,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 Name = 'DefaultUI',
                 DisplayText = 'Defaults',
             };
-            self.DefaultUI = Addon.FRAMES:AddButton( DefaultUI,self.Controls );
+            self.DefaultUI = Addon.FRAMES:AddButton( DefaultUI,self.Controls,self.Theme.HighLight );
             self.DefaultUI.keyValue = DefaultUI.Name;
             self.DefaultUI:SetPoint( 'topleft',self.ExportCVs,'topright',10,0 );
             self.DefaultUI:SetSize( 50,25 );
@@ -792,7 +797,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Debug.keyValue = DebugData.Name;
             self.Debug:SetChecked( self:GetValue( self.Debug.keyValue ) );
             self.Debug:SetPoint( 'topleft',self.Apply,'bottomleft',0,0 );
-            self.Debug.Label = Addon.FRAMES:AddLabel( DebugData,self.Debug );
+            self.Debug.Label = Addon.FRAMES:AddLabel( DebugData,self.Debug,self.Theme.Normal );
             self.Debug.Label:SetPoint( 'topleft',self.Debug,'topright',0,-3 );
             self.Debug.Label:SetSize( self.Controls:GetWidth()/3,20 );
             self.Debug.Label:SetJustifyH( 'left' );
@@ -808,7 +813,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ReloadOnImport.keyValue = ReloadImportData.Name;
             self.ReloadOnImport:SetChecked( self:GetValue( self.ReloadOnImport.keyValue ) );
             self.ReloadOnImport:SetPoint( 'topleft',self.ReloadUI,'bottomleft',0,0  );
-            self.ReloadOnImport.Label = Addon.FRAMES:AddLabel( ReloadImportData,self.ReloadOnImport );
+            self.ReloadOnImport.Label = Addon.FRAMES:AddLabel( ReloadImportData,self.ReloadOnImport,self.Theme.Normal );
             self.ReloadOnImport.Label:SetPoint( 'topleft',self.ReloadOnImport,'topright',0,-3 );
             self.ReloadOnImport.Label:SetSize( self.Controls:GetWidth()/3,20 );
             self.ReloadOnImport.Label:SetJustifyH( 'left' );

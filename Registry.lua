@@ -40,6 +40,136 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Step = 100,
                     Category = 'Hud',
                 },
+                RAIDVolumeFogLevel = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'High',
+                        },
+                    },
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                        VolumeFog = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
+                volumeFogLevel = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'High',
+                        },
+                    },
+                    Category = 'Graphics',
+                    Cascade = {
+                        VolumeFog = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
+                GraphicsTextureResolution = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'High',
+                        },
+                    },
+                    Category = 'Graphics',
+                },
+                raidGraphicsTextureResolution = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'High',
+                        },
+                    },
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
+                entityLodDist = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 10,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
+                RAIDentityLodDist = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 10,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
                 nameplateShowOnlyNames = {
                     Type = 'Toggle',
                     Category = 'Hud',
@@ -47,7 +177,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 nameplateHideHealthAndPower = {
                     Type = 'Toggle',
                     Category = 'Hud',
-                    Description = 'Resource indicator powerbar for player character visibility toggle'
+                    Description = 'Resource indicator powerbar for player character visibility toggle',
                 },
                 NameplatePersonalClickThrough = {
                     Type = 'Toggle',
@@ -98,6 +228,47 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 countdownForCooldowns = {
                     Type = 'Toggle',
                     Category = 'Character',
+                },
+                graphicsOutlineMode = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Disabled',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'High',
+                        },
+                    },
+                    Category = 'Graphics',
+                },
+                raidGraphicsOutlineMode = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Disabled',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'High',
+                        },
+                    },
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 findyourselfanywhere = {
                     Type = 'Toggle',
@@ -886,6 +1057,46 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 5,
                     Category = 'Hud',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
+                waterDetail  = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 10,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                },
+                RAIDWaterDetail = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 10,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 RAIDgroundEffectAnimation = {
                     Type = 'Toggle',
@@ -954,41 +1165,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         {
                             Value = 3,
                             Description = 'High',
-                        },
-                    },
-                    Category = 'Graphics',
-                    Cascade = {
-                        RAIDsettingsEnabled = {
-                            Type = 'Toggle',
-                        },
-                    },
-                },
-                raidGraphicsParticleDensity = {
-                    Type = 'Select',
-                    KeyPairs = {
-                        {
-                            Value = 0,
-                            Description = 'Disabled',
-                        },
-                        {
-                            Value = 10,
-                            Description = 'Low',
-                        },
-                        {
-                            Value = 25,
-                            Description = 'Fair',
-                        },
-                        {
-                            Value = 50,
-                            Description = 'Good',
-                        },
-                        {
-                            Value = 80,
-                            Description = 'High',
-                        },
-                        {
-                            Value = 100,
-                            Description = 'Ultra',
                         },
                     },
                     Category = 'Graphics',
@@ -1312,6 +1488,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Social',
+                    Description = 'The action new whispers take by default: "popout", "inline", "popout_and_inline"',
                 },
                 Sound_EnableSoundWhenGameIsInBG = {
                     Type = 'Toggle',
@@ -1546,6 +1723,33 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
+                RAIDrippleDetail = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'No reflection',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Sky reflection',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'More reflection',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'High reflection',
+                        },
+                    },
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
                 rippleDetail = {
                     Type = 'Select',
                     KeyPairs = {
@@ -1700,6 +1904,41 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                 },
+                EffectDist = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 32,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 600,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 16,
+                    Category = 'Graphics',
+                },
+                RAIDgroundEffectDist = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 32,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 600,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 16,
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
                 interactOnLeftClick = {
                     Type = 'Toggle',
                     Category = 'Hud',
@@ -1752,6 +1991,41 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
+                RAIDparticleDensity = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Disabled',
+                        },
+                        {
+                            Value = 10,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 25,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 50,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 80,
+                            Description = 'High',
+                        },
+                        {
+                            Value = 100,
+                            Description = 'Ultra',
+                        },
+                    },
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
                 particleDensity = {
                     Type = 'Select',
                     KeyPairs = {
@@ -1785,6 +2059,33 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 projectedtextures = {
                     Type = 'Toggle',
                     Category = 'Graphics',
+                },
+                RAIDreflectionMode = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Screen Space',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Sky',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Sky/Terrain',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'Sky/Terrain/Building',
+                        },
+                    },
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 reflectionMode = {
                     Type = 'Select',
@@ -1913,6 +2214,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 xpBarText = {
                     Type = 'Toggle',
                     Category = 'Hud',
+                    Description = 'Whether the XP bar shows the numeric experience value',
                 },
                 synchronizeMacros = {
                     Type = 'Toggle',
@@ -2338,6 +2640,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                             Type = 'Toggle',
                         },
                     },
+                    Description = 'Cull unimportant spell effects. -1 means auto based on targetFPS otherwise [0-100], 0 means cull nothing for perf reasons, 100 means cull as much as you can',
                 },
                 graphicsSpellDensity = {
                     Type = 'Select',
@@ -2418,6 +2721,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
+                    Description = 'Cull unimportant spell effects. -1 means auto based on targetFPS otherwise [0-100], 0 means cull nothing for perf reasons, 100 means cull as much as you can',
                 },
                 spellClutterDefaultTargetScalar = {
                     Type = 'Range',
@@ -2846,6 +3150,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
+                    Description = 'Require objects to be loaded in streaming non critical radius when preloading',
                 },
                 worldPreloadNonCriticalTimeout = {
                     Type = 'Range',
@@ -2861,6 +3166,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
+                    Description = 'World preload time (in seconds) when non-critical items are automatically ignored',
                 },
                 showTimestamps = {
                     Type = 'Select',
@@ -2918,6 +3224,24 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                 },
+                RAIDhorizonStart = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 800,
+                            Description = 'Default',
+                        },
+                        {
+                            Value = 400,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 1400,
+                            Description = 'High',
+                        },
+                    },
+                    Category = 'Graphics',
+                },
                 WorldTextScale = {
                     Type = 'Select',
                     KeyPairs = {
@@ -2935,6 +3259,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Graphics',
+                    Description = 'The scale of fonts in the world',
                 },
                 WorldTextMinSize = {
                     Type = 'Range',
@@ -2950,6 +3275,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 1,
                     Category = 'Graphics',
+                    Description = 'The minimum size of fonts in the world',
                 },
                 WorldTextMinAlpha = {
                     Type = 'Range',
@@ -2965,6 +3291,38 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Step = 0.1,
                     Category = 'Graphics',
+                    Description = 'The minimum transparancy of fonts in the world',
+                },
+                raidGraphicsComputeEffects = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Disabled',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                        {
+                            Value = 4,
+                            Description = 'Ultra',
+                        },
+                    },
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
                 },
                 graphicsComputeEffects = {
                     Type = 'Select',
@@ -3056,6 +3414,46 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                         High = {
                             Value = 10,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
+                terrainLodDist = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 400,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 1,
+                    Category = 'Graphics',
+                    Cascade = {
+                        RAIDsettingsEnabled = {
+                            Type = 'Toggle',
+                        },
+                    },
+                },
+                RAIDterrainLodDist = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 1,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 400,
                             Description = 'High',
                         },
                     },
