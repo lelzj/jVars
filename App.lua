@@ -113,6 +113,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
         Addon.APP.RefreshActionBars = function( self )
             local Value = Addon.APP:GetVarValue( 'multiBarRightVerticalLayout' );
+
             if( Value and tonumber( Value ) > 0 ) then
                 if( Addon:IsRetail() and MultiBarLeft and MultiBarRight ) then
                     -- Refer to 
@@ -561,7 +562,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
 
             self.Theme = {
-                HighLight = Addon.Theme.Gold,
+                HighLight = Addon.Theme[ self:GetValue( 'Theme' ) ],
                 Normal = Addon.Theme.Text,
             };
 
@@ -848,6 +849,47 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ReloadOnImport:HookScript( 'OnClick',function( self )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
             end );
+
+
+            local Info = {
+                Name = 'Theme',
+                KeyPairs = {
+                    {
+                        Description = 'Sex',
+                        Value = 'Sex',
+                    },
+                    {
+                        Description = 'Gold',
+                        Value = 'Gold',
+                    },
+                    {
+                        Description = 'Blue',
+                        Value = 'Blue',
+                    },
+                },
+            };
+
+            self.ThemeSwap = CreateFrame( 'DropdownButton',nil,self.Controls,'WowStyle1DropdownTemplate' )
+            self.ThemeSwap:SetDefaultText( self:GetValue( 'Theme' ) );
+            self.ThemeSwap:SetPoint( 'topleft',self.ReloadGX,'bottomleft',10 );
+            self.ThemeSwap:SetDefaultText( Info.Name );
+
+            self.ThemeSwap:SetupMenu(function( DropDown,Interface )
+                --Interface:CreateTitle( Info.Name );
+                for i,v in pairs( Info.KeyPairs ) do
+                    Interface:CreateButton( v.Description,function()
+                        --DropDown:SetDefaultText( v.Value );
+
+                        self:SetValue( 'Theme',v.Value );
+                        self.Theme.HighLight = Addon.Theme[ v.Value ];
+
+                        self:Query();
+                    end)
+                end
+            end );
+            if( Addon:IsClassic() and self.ThemeSwap:GetWidth() <= 60 ) then
+                self.ThemeSwap:SetWidth( 120 );
+            end
 
             local Category,Layout;
             if( InterfaceOptions_AddCategory ) then
