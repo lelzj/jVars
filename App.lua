@@ -869,7 +869,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 },
             };
 
-            self.ThemeSwap = CreateFrame( 'DropdownButton',nil,self.Controls,'WowStyle1DropdownTemplate' )
+            self.ThemeSwap = CreateFrame( 'DropdownButton',nil,self.Controls,'WowStyle1DropdownTemplate' );
             self.ThemeSwap:SetDefaultText( self:GetValue( 'Theme' ) );
             self.ThemeSwap:SetPoint( 'topleft',self.ReloadGX,'bottomleft',10 );
             self.ThemeSwap:SetDefaultText( Info.Name );

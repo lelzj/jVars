@@ -155,9 +155,7 @@ Addon.VIEW:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Row.Value = Addon.FRAMES:AddEdit( Data,Row,Handler );
                 end
 
-                if( Data.Type == 'Select' ) then
-                    Row.Value:SetPoint( 'topleft',Row.Default,'topright',-19,7 );
-                elseif( Data.Type == 'Toggle' ) then
+                if( Data.Type == 'Toggle' ) then
                     Row.Value:SetPoint( 'topleft',Row.Default,'topright',-5,5 );
                 elseif( Data.Type == 'Range' ) then
                     Row.Value:SetPoint( 'topleft',Row.Default,'topright',0,5 );
@@ -165,7 +163,7 @@ Addon.VIEW:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Row.Value:SetPoint( 'topleft',Row.Default,'topright',0,0 );
                 end
                 if( Data.Type ~= 'Toggle' ) then
-                    Row.Value:SetSize( 150,Addon.APP.Heading.FieldHeight );
+                    --Row.Value:SetSize( 150,Addon.APP.Heading.FieldHeight );
                 end
 
                 Row.Sep = Addon.FRAMES:AddSeperator( Row );
