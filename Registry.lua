@@ -8,17 +8,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
         Addon.AddonName = AddonName;
         Addon.REG.Registry = {};
 
-        Addon.REG.FillSpeechOptions = function( self )
-            local SelectedValue = tonumber( GetCVar( 'remoteTextToSpeechVoice' ) );
-            for Index,Voice in ipairs( C_VoiceChat.GetRemoteTtsVoices() ) do
-                local Row = {
-                    Value=Voice.voiceID,
-                    Description=VOICE_GENERIC_FORMAT:format( Voice.voiceID ),
-                };
-                table.insert( self.Registry[ string.lower( 'remoteTextToSpeechVoice' ) ].KeyPairs,Row );
-            end
-        end
-
         --
         --  Get module registry
         --
@@ -92,9 +81,12 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     },
                     Category = 'Graphics',
                     Cascade = {
+                        RefreshEnableRaidVolumeFog = {
+                        },
                         RefreshEnableRaidSettings = {
                         },
                     },
+                    Description = 'Volumetric fog is representative of … fog that fills a volume. Lighting then gives this fog depth for 3D visualisation',
                 },
                 volumeFogLevel = {
                     Type = 'Select',
@@ -113,6 +105,11 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Graphics',
+                    Cascade = {
+                        RefreshEnableVolumeFog = {
+                        },
+                    },
+                    Description = 'Volumetric fog is representative of … fog that fills a volume. Lighting then gives this fog depth for 3D visualisation',
                 },
                 GraphicsTextureResolution = {
                     Type = 'Select',
@@ -1183,40 +1180,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                 },
-                raidGraphicsShadowQuality = {
-                    Type = 'Select',
-                    KeyPairs = {
-                        {
-                            Value = 0,
-                            Description = 'Low',
-                        },
-                        {
-                            Value = 1,
-                            Description = 'Fair',
-                        },
-                        {
-                            Value = 2,
-                            Description = 'Good',
-                        },
-                        {
-                            Value = 3,
-                            Description = 'High',
-                        },
-                        {
-                            Value = 4,
-                            Description = 'Ultra',
-                        },
-                        {
-                            Value = 5,
-                            Description = 'Ultra High',
-                        },
-                    },
-                    Category = 'Graphics',
-                    Cascade = {
-                        RefreshEnableRaidSettings = {
-                        },
-                    },
-                },
                 raidGraphicsSSAO = {
                     Type = 'Range',
                     KeyPairs = {
@@ -1828,36 +1791,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         {
                             Value = 3,
                             Description = 'High',
-                        },
-                    },
-                    Category = 'Graphics',
-                },
-                graphicsShadowQuality = {
-                    Type = 'Select',
-                    KeyPairs = {
-                        {
-                            Value = 0,
-                            Description = 'Low',
-                        },
-                        {
-                            Value = 1,
-                            Description = 'Fair',
-                        },
-                        {
-                            Value = 2,
-                            Description = 'Good',
-                        },
-                        {
-                            Value = 3,
-                            Description = 'High',
-                        },
-                        {
-                            Value = 4,
-                            Description = 'Ultra',
-                        },
-                        {
-                            Value = 5,
-                            Description = 'Ultra High',
                         },
                     },
                     Category = 'Graphics',
@@ -2911,6 +2844,7 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 animFrameSkipLOD = {
                     Type = 'Toggle',
                     Category = 'Graphics',
+                    Description = 'Skip loading animation frames in distance',
                 },
                 assaoAdaptiveQualityLimit = {
                     Type = 'Range',
@@ -2940,21 +2874,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Step = 1,
-                    Category = 'Graphics',
-                },
-                assaoDetailShadowStrength = {
-                    Type = 'Range',
-                    KeyPairs = {
-                        Low = {
-                            Value = 0.0,
-                            Description = 'Low',
-                        },
-                        High = {
-                            Value = 5.0,
-                            Description = 'High',
-                        },
-                    },
-                    Step = 0.1,
                     Category = 'Graphics',
                 },
                 assaoFadeOutFrom = {
@@ -3015,6 +2934,93 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                         High = {
                             Value = 1.85,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Graphics',
+                },
+                raidGraphicsShadowQuality = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                        {
+                            Value = 4,
+                            Description = 'Ultra',
+                        },
+                        {
+                            Value = 5,
+                            Description = 'Ultra High',
+                        },
+                    },
+                    Category = 'Graphics',
+                    Cascade = {
+                        RefreshEnableRaidSettings = {
+                        },
+                        RefreshRaidShadowQuality = {
+
+                        },
+                    },
+                },
+                graphicsShadowQuality = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Low',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Fair',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Good',
+                        },
+                        {
+                            Value = 3,
+                            Description = 'High',
+                        },
+                        {
+                            Value = 4,
+                            Description = 'Ultra',
+                        },
+                        {
+                            Value = 5,
+                            Description = 'Ultra High',
+                        },
+                    },
+                    Category = 'Graphics',
+                    Cascade = {
+                        RefreshShadowQuality = {
+
+                        },
+                    },
+                },
+                assaoDetailShadowStrength = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 5.0,
                             Description = 'High',
                         },
                     },
@@ -3484,13 +3490,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                 self.Registry[ string.lower( VarName ) ] = VarData;
             end
 
-            -- Aggrend feedback: https://youtu.be/H69PDuEaxDc?t=654
-            if( Addon:IsClassic() ) then 
-                self.Registry[ string.lower( 'nameplateMaxDistance' ) ].KeyPairs.High.Value = 20;
-            else
-                self.Registry[ string.lower( 'nameplateMaxDistance' ) ].KeyPairs.High.Value = 41;
-            end
-            self:FillSpeechOptions();
             return self.Registry;
         end
 

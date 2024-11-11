@@ -102,7 +102,8 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
                         self:GetPersistence().Modified.Total = self:GetPersistence().Modified.Total - 1;
                     end
                 else
-                    if( self:GetPersistence().Vars[ string.lower( Index ) ].Value ~= Addon.DICT:GetDictionary()[ string.lower( Index ) ].DefaultValue ) then
+
+                    if( tostring( self:GetPersistence().Vars[ string.lower( Index ) ].Value ) ~= tostring( Addon.DICT:GetDictionary()[ string.lower( Index ) ].DefaultValue ) ) then
                         self:GetPersistence().Vars[ string.lower( Index ) ].Modified = true;
                         self:GetPersistence().Modified.Total = self:GetPersistence().Modified.Total + 1;
                     else

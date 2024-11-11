@@ -24,7 +24,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 local Updated = SetCVar( Index,Value );
                 if( Updated ) then
 
-                    local VarData = Addon.REG:GetRegistry()[ Addon:Minify( Index ) ];
+                    local VarData = self.Registry[ Addon:Minify( Index ) ];
                     if( VarData and VarData.Cascade ) then
                         for Handling,_ in pairs( VarData.Cascade ) do
                             if( Addon.APP[Handling] ) then
@@ -178,6 +178,78 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         Addon.APP.RefreshEnableRaidSettings = function( self )
             if( GetCVar( 'RAIDsettingsEnabled' ) ~= 1 ) then
                 SetCVar( 'RAIDsettingsEnabled',1 );
+            end
+        end
+
+        Addon.APP.RefreshEnableVolumeFog = function( self )
+            if( GetCVar( 'volumeFog' ) ~= 1 ) then
+                SetCVar( 'volumeFog',1 );
+            end
+        end
+
+        Addon.APP.RefreshEnableRaidVolumeFog = function( self )
+            if( GetCVar( 'RAIDVolumeFog' ) ~= 1 ) then
+                SetCVar( 'RAIDVolumeFog',1 );
+            end
+        end
+
+        Addon.APP.RefreshShadowQuality = function( self )
+            --[[
+            shadowMode
+
+            0
+            Off. This leaves the 'blob' type shadow only. Blob shadow cannot be removed as CVar_shadowLOD is no longer available.
+            1
+            Precomputed terrain shadows, dynamic shadows near player.
+            2
+            Static environment shadows, dynamic shadows near player.
+            3
+            Full dynamic shadows.
+            ]]
+            local Value = tonumber( Addon.APP:GetVarValue( 'graphicsShadowQuality' ) );
+            print( 'graphicsShadowQuality',type( Value ),Value );
+            if( Value == 0 ) then
+                if( GetCVar( 'shadowMode' ) ~= 0 ) then
+                    SetCVar( 'shadowMode',0 );
+                end
+            elseif( Value > 0 and Value <= 3 ) then
+                if( GetCVar( 'shadowMode' ) ~= 1 ) then
+                    SetCVar( 'shadowMode',1 );
+                end
+            else -- Value > 3
+                if( GetCVar( 'shadowMode' ) ~= 3 ) then
+                    SetCVar( 'shadowMode',3 );
+                end
+            end
+        end
+
+        Addon.APP.RefreshRaidShadowQuality = function( self )
+            --[[
+            shadowMode
+
+            0
+            Off. This leaves the 'blob' type shadow only. Blob shadow cannot be removed as CVar_shadowLOD is no longer available.
+            1
+            Precomputed terrain shadows, dynamic shadows near player.
+            2
+            Static environment shadows, dynamic shadows near player.
+            3
+            Full dynamic shadows.
+            ]]
+            local Value = tonumber( Addon.APP:GetVarValue( 'raidGraphicsShadowQuality' ) );
+            print( 'raidGraphicsShadowQuality',type( Value ),Value );
+            if( Value == 0 ) then
+                if( GetCVar( 'RAIDshadowMode' ) ~= 0 ) then
+                    SetCVar( 'RAIDshadowMode',0 );
+                end
+            elseif( Value > 0 and Value <= 3 ) then
+                if( GetCVar( 'RAIDshadowMode' ) ~= 1 ) then
+                    SetCVar( 'RAIDshadowMode',1 );
+                end
+            else -- Value > 3
+                if( GetCVar( 'RAIDshadowMode' ) ~= 3 ) then
+                    SetCVar( 'RAIDshadowMode',3 );
+                end
             end
         end
 
@@ -422,8 +494,8 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
                     local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
 
-                    if( Updated and Addon.REG:GetRegistry()[ Addon:Minify( VarName ) ] and Addon.REG:GetRegistry()[ Addon:Minify( VarName ) ].Cascade ) then
-                        for Handling,_ in pairs( Addon.REG:GetRegistry()[ Addon:Minify( VarName ) ].Cascade ) do
+                    if( Updated and self.Registry[ Addon:Minify( VarName ) ] and self.Registry[ Addon:Minify( VarName ) ].Cascade ) then
+                        for Handling,_ in pairs( self.Registry[ Addon:Minify( VarName ) ].Cascade ) do
                             if( Addon.APP[Handling] ) then
                                 Addon.APP[Handling]( VarName,VarData );
                             end
@@ -484,7 +556,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end
 
             local AllData = {};
-            for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
+            for VarName,VarData in pairs( self.Registry ) do
 
                 local Key = string.lower( VarName );
                 local Value = self:GetVarValue( Key );
@@ -561,23 +633,36 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 return;
             end
 
+            -- Options
             self.Theme = {
                 HighLight = Addon.Theme[ self:GetValue( 'Theme' ) ],
                 Normal = Addon.Theme.Text,
             };
-
             self.Name = AddonName;
+            self.RowHeight = 35;    -- Each entire row
+            self.ColInset = 17;     -- All column data, including heaings
+            self.FieldHeight = 20;  -- Height of each element in rows
 
+            -- Registry
+            self.Registry = Addon.REG:GetRegistry();
+
+            local SelectedRemoteTextToSpeechVoice = tonumber( GetCVar( 'remoteTextToSpeechVoice' ) );
+            for Index,Voice in ipairs( C_VoiceChat.GetRemoteTtsVoices() ) do
+                local Row = {
+                    Value=Voice.voiceID,
+                    Description=VOICE_GENERIC_FORMAT:format( Voice.voiceID ),
+                };
+                table.insert( self.Registry[ string.lower( 'remoteTextToSpeechVoice' ) ].KeyPairs,Row );
+            end
+
+            -- Framing
             self.Config = CreateFrame( 'Frame',self.Name);
             self.Config.name = self.Name;
-
-            self.RowHeight = 30;
-
             self.Heading = CreateFrame( 'Frame',self.Name..'Heading',self.Config );
             self.Heading:SetPoint( 'topleft',self.Config,'topleft',10,-10 );
             self.Heading:SetSize( 610,100 );
-            self.Heading.FieldHeight = 10;
-            self.Heading.ColInset = 15;
+            self.Heading.FieldHeight = self.FieldHeight;
+            self.Heading.ColInset = self.ColInset;
 
             self.Heading.BookEnd = self.Heading:CreateTexture( nil,'ARTWORK',nil,3 );
             self.Heading.BookEnd:SetTexture( 'Interface\\azerite\\azeritecenterbggold' );
@@ -623,7 +708,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end );
     
             self.Heading.Name = Addon.FRAMES:AddLabel( { DisplayText = 'Name' },self.Heading,self.Theme.Normal );
-            self.Heading.Name:SetPoint( 'topleft',self.Heading,'topleft',self.Heading.ColInset+3,( ( self.Heading:GetHeight() )*-1 )+20 );
+            self.Heading.Name:SetPoint( 'topleft',self.Heading,'topleft',self.Heading.ColInset,( ( self.Heading:GetHeight() )*-1 )+20 );
             self.Heading.Name:SetSize( 180,self.Heading.FieldHeight );
             self.Heading.Name:SetJustifyH( 'right' );
 
@@ -788,7 +873,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 MovingPort:Show();
 
                 local Export = '';
-                for VarName,VarData in pairs( Addon.REG:GetRegistry() ) do
+                for VarName,VarData in pairs( Addon.APP.Registry ) do
                     local Key = string.lower( VarName );
                     local Value = Addon.APP:GetVarValue( Key );
                     local Dict = Addon.DICT:GetDictionary()[ Key ];
@@ -849,7 +934,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ReloadOnImport:HookScript( 'OnClick',function( self )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
             end );
-
 
             local Info = {
                 Name = 'Theme',

@@ -125,7 +125,7 @@ Addon.VIEW:SetScript( 'OnEvent',function( self,Event,AddonName )
                 end
 
                 -- CVar
-                Row.Label:SetPoint( 'topleft',Row,'topleft',Addon.APP.Heading.ColInset,-8 );
+                Row.Label:SetPoint( 'topleft',Row,'topleft',Addon.APP.Heading.ColInset,-5 );
                 Row.Label:SetSize( 180,Addon.APP.Heading.FieldHeight );
                 Row.Label:SetJustifyH( 'right' );
 
@@ -141,7 +141,7 @@ Addon.VIEW:SetScript( 'OnEvent',function( self,Event,AddonName )
 
                 -- Default Value
                 Row.Default:SetPoint( 'topleft',Row.Category,'topright',Addon.APP.Heading.ColInset,0 );
-                Row.Default:SetSize( 50,Addon.APP.Heading.FieldHeight );
+                Row.Default:SetSize( 30,Addon.APP.Heading.FieldHeight );
                 Row.Default:SetJustifyH( 'left' );
 
                 -- Adjust
@@ -154,17 +154,8 @@ Addon.VIEW:SetScript( 'OnEvent',function( self,Event,AddonName )
                 elseif( Data.Type == 'Edit' ) then
                     Row.Value = Addon.FRAMES:AddEdit( Data,Row,Handler );
                 end
-
-                if( Data.Type == 'Toggle' ) then
-                    Row.Value:SetPoint( 'topleft',Row.Default,'topright',-5,5 );
-                elseif( Data.Type == 'Range' ) then
-                    Row.Value:SetPoint( 'topleft',Row.Default,'topright',0,5 );
-                else
-                    Row.Value:SetPoint( 'topleft',Row.Default,'topright',0,0 );
-                end
-                if( Data.Type ~= 'Toggle' ) then
-                    --Row.Value:SetSize( 150,Addon.APP.Heading.FieldHeight );
-                end
+                Row.Value:SetPoint( 'topleft',Row.Default,'topright',15,7 );
+                -- Row.Value:SetSize( 50,Addon.APP.Heading.FieldHeight ); -- keep this dynamic by commenting out
 
                 Row.Sep = Addon.FRAMES:AddSeperator( Row );
                 Row.Sep:SetSize( Row:GetWidth(),1 );
@@ -178,10 +169,6 @@ Addon.VIEW:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,VarData in Addon:Sort( Data ) do
 
                 local Row = self.AddRow( VarData,Handler.ScrollChild,Handler );
-
-                --Row.Art = Row:CreateTexture( nil, 'ARTWORK', nil, 0 )
-                --Row.Art:SetTexture( 'Interface\\Addons\\'..Addon.AddonName..'\\Libs\\jUI\\Textures\\frame' )
-                --Row.Art:SetAllPoints( Row )
 
                 if( not( #RowElements > 0 ) ) then
                     Row:SetPoint( 'topleft',Handler.ScrollChild,'topleft',X,Y );
