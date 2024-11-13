@@ -101,12 +101,15 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 if( GetCVar( 'findyourselfanywhere' ) ~= 1 ) then
                     SetCVar( 'findyourselfanywhere',1 );
                 end
-                if( GetCVar( 'findYourselfModeOutline' ) ~= Value ) then
-                    SetCVar( 'findYourselfModeOutline',Value );
+                if( GetCVar( 'findYourselfModeOutline' ) ~= 1 ) then -- https://warcraft.wiki.gg/wiki/Patch_11.0.0/API_changes
+                    SetCVar( 'findYourselfModeOutline',1 );
                 end
             else
                 if( GetCVar( 'findyourselfanywhere' ) ~= 0 ) then
                     SetCVar( 'findyourselfanywhere',0 );
+                end
+                if( GetCVar( 'findYourselfModeOutline' ) ~= 0 ) then -- https://warcraft.wiki.gg/wiki/Patch_11.0.0/API_changes
+                    SetCVar( 'findYourselfModeOutline',0 );
                 end
             end
         end
@@ -207,7 +210,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             Full dynamic shadows.
             ]]
             local Value = tonumber( Addon.APP:GetVarValue( 'graphicsShadowQuality' ) );
-            print( 'graphicsShadowQuality',type( Value ),Value );
             if( Value == 0 ) then
                 if( GetCVar( 'shadowMode' ) ~= 0 ) then
                     SetCVar( 'shadowMode',0 );
@@ -237,7 +239,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             Full dynamic shadows.
             ]]
             local Value = tonumber( Addon.APP:GetVarValue( 'raidGraphicsShadowQuality' ) );
-            print( 'raidGraphicsShadowQuality',type( Value ),Value );
             if( Value == 0 ) then
                 if( GetCVar( 'RAIDshadowMode' ) ~= 0 ) then
                     SetCVar( 'RAIDshadowMode',0 );

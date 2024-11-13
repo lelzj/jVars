@@ -30,24 +30,6 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Type = 'Toggle',
                     Category = 'Hud',
                 },
-                findYourselfModeOutline = {
-                    Type = 'Select',
-                    KeyPairs = {
-                        {
-                            Value = 0,
-                            Description = 'Circle',
-                        },
-                        {
-                            Value = 1,
-                            Description = 'Circle & Outline',
-                        },
-                        {
-                            Value = 2,
-                            Description = 'Outline',
-                        },
-                    },
-                    Category = 'Character',
-                },
                 spellEffectLevel = {
                     Type = 'Range',
                     KeyPairs = {
