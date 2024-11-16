@@ -945,17 +945,13 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             end );
         end
         
-        local Iterator = 1;
-        if( not( Iterator > 1 ) ) then
-            C_Timer.After( 10,function()
-                Addon.DB:Init();
-                Addon.APP:Init();
-                if( Addon.APP:GetValue( 'Refresh' ) ) then
-                    Addon.APP:Refresh();
-                end
-            end );
-            Iterator = Iterator+1;
-        end
+        C_Timer.After( 15,function()
+            Addon.DB:Init();
+            Addon.APP:Init();
+            if( Addon.APP:GetValue( 'Refresh' ) ) then
+                Addon.APP:Refresh();
+            end
+        end );
 
         self:UnregisterEvent( 'ADDON_LOADED' );
     end

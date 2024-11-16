@@ -148,7 +148,15 @@ Addon.VIEW:SetScript( 'OnEvent',function( self,Event,AddonName )
                 if( Data.Type == 'Toggle' ) then
                     Row.Value = Addon.FRAMES:AddVarToggle( Data,Row,Handler );
                 elseif( Data.Type == 'Range' ) then
-                    Row.Value = Addon.FRAMES:AddRange( Data,Row,Handler );
+                    Row.Value = Addon.FRAMES:AddRange( Data,Row,{
+                        Get = function()
+                            return Handler:GetVarValue( Data.Name );
+                        end,
+                        Set = function()
+                            --print( 'Set',Data.Name,Addon:SliderRound( Row.Value:GetValue(),Data.Step ) )
+                            return Handler:SetVarValue( Data.Name,Addon:SliderRound( Row.Value:GetValue(),Data.Step ) );
+                        end,
+                    } );
                 elseif( Data.Type == 'Select' ) then
                     Row.Value = Addon.FRAMES:AddSelect( Data,Row,Handler );
                 elseif( Data.Type == 'Edit' ) then
