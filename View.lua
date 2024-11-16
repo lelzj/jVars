@@ -153,9 +153,9 @@ Addon.VIEW:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Row.Value = Addon.FRAMES:AddSelect( Data,Row,Handler );
                 elseif( Data.Type == 'Edit' ) then
                     Row.Value = Addon.FRAMES:AddEdit( Data,Row,Handler );
+                    Row.Value:SetSize( 25,Addon.APP.Heading.FieldHeight );
                 end
                 Row.Value:SetPoint( 'topleft',Row.Default,'topright',15,7 );
-                -- Row.Value:SetSize( 50,Addon.APP.Heading.FieldHeight ); -- keep this dynamic by commenting out
 
                 Row.Sep = Addon.FRAMES:AddSeperator( Row );
                 Row.Sep:SetSize( Row:GetWidth(),1 );
