@@ -21,7 +21,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             local Result = Addon.DB:SetVarValue( Index,Value );
             if( Result ) then
                 self:Query();
-                local Updated = SetCVar( Index,Value );
+                local Updated = SetCVar( Index,Value,nil,true );
                 if( Updated ) then
 
                     local VarData = self.Registry[ Addon:Minify( Index ) ];
@@ -99,17 +99,17 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
             if( Value ) then
                 if( GetCVar( 'findyourselfanywhere' ) ~= 1 ) then
-                    SetCVar( 'findyourselfanywhere',1 );
+                    SetCVar( 'findyourselfanywhere',1,nil,true );
                 end
                 if( GetCVar( 'findYourselfModeOutline' ) ~= 1 ) then -- https://warcraft.wiki.gg/wiki/Patch_11.0.0/API_changes
-                    SetCVar( 'findYourselfModeOutline',1 );
+                    SetCVar( 'findYourselfModeOutline',1,nil,true );
                 end
             else
                 if( GetCVar( 'findyourselfanywhere' ) ~= 0 ) then
-                    SetCVar( 'findyourselfanywhere',0 );
+                    SetCVar( 'findyourselfanywhere',0,nil,true );
                 end
                 if( GetCVar( 'findYourselfModeOutline' ) ~= 0 ) then -- https://warcraft.wiki.gg/wiki/Patch_11.0.0/API_changes
-                    SetCVar( 'findYourselfModeOutline',0 );
+                    SetCVar( 'findYourselfModeOutline',0,nil,true );
                 end
             end
         end
@@ -139,11 +139,11 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
             if( Value ) then
                 if( GetCVar( 'UnitNameNPC' ) ~= 1 ) then
-                    SetCVar( 'UnitNameNPC',1 );
+                    SetCVar( 'UnitNameNPC',1,nil,true );
                 end
             else
                 if( GetCVar( 'UnitNameNPC' ) ~= 0 ) then
-                    SetCVar( 'UnitNameNPC',0 );
+                    SetCVar( 'UnitNameNPC',0,nil,true );
                 end
             end
         end
@@ -153,11 +153,11 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
             if( Value ) then
                 if( GetCVar( 'UnitNameOwn' ) ~= 1 ) then
-                    SetCVar( 'UnitNameOwn',1 );
+                    SetCVar( 'UnitNameOwn',1,nil,true );
                 end
             else
                 if( GetCVar( 'UnitNameOwn' ) ~= 0 ) then
-                    SetCVar( 'UnitNameOwn',0 );
+                    SetCVar( 'UnitNameOwn',0,nil,true );
                 end
             end
         end
@@ -167,32 +167,32 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
 
             if( Value ) then
                 if( GetCVar( 'UnitNameOwn' ) ~= 1 ) then
-                    SetCVar( 'UnitNameOwn',1 );
+                    SetCVar( 'UnitNameOwn',1,nil,true );
                 end
                 if( GetCVar( 'UnitNameFriendlyPlayerName' ) ~= 1 ) then
-                    SetCVar( 'UnitNameFriendlyPlayerName',1 );
+                    SetCVar( 'UnitNameFriendlyPlayerName',1,nil,true );
                 end
                 if( GetCVar( 'nameplateShowFriendlyNPCs' ) ~= 1 ) then
-                    SetCVar( 'nameplateShowFriendlyNPCs',1 );
+                    SetCVar( 'nameplateShowFriendlyNPCs',1,nil,true );
                 end
             end
         end
 
         Addon.APP.RefreshEnableRaidSettings = function( self )
             if( GetCVar( 'RAIDsettingsEnabled' ) ~= 1 ) then
-                SetCVar( 'RAIDsettingsEnabled',1 );
+                SetCVar( 'RAIDsettingsEnabled',1,nil,true );
             end
         end
 
         Addon.APP.RefreshEnableVolumeFog = function( self )
             if( GetCVar( 'volumeFog' ) ~= 1 ) then
-                SetCVar( 'volumeFog',1 );
+                SetCVar( 'volumeFog',1,nil,true );
             end
         end
 
         Addon.APP.RefreshEnableRaidVolumeFog = function( self )
             if( GetCVar( 'RAIDVolumeFog' ) ~= 1 ) then
-                SetCVar( 'RAIDVolumeFog',1 );
+                SetCVar( 'RAIDVolumeFog',1,nil,true );
             end
         end
 
@@ -212,15 +212,15 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             local Value = tonumber( Addon.APP:GetVarValue( 'graphicsShadowQuality' ) );
             if( Value == 0 ) then
                 if( GetCVar( 'shadowMode' ) ~= 0 ) then
-                    SetCVar( 'shadowMode',0 );
+                    SetCVar( 'shadowMode',0,nil,true );
                 end
             elseif( Value > 0 and Value <= 3 ) then
                 if( GetCVar( 'shadowMode' ) ~= 1 ) then
-                    SetCVar( 'shadowMode',1 );
+                    SetCVar( 'shadowMode',1,nil,true );
                 end
             else -- Value > 3
                 if( GetCVar( 'shadowMode' ) ~= 3 ) then
-                    SetCVar( 'shadowMode',3 );
+                    SetCVar( 'shadowMode',3,nil,true );
                 end
             end
         end
@@ -241,16 +241,62 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             local Value = tonumber( Addon.APP:GetVarValue( 'raidGraphicsShadowQuality' ) );
             if( Value == 0 ) then
                 if( GetCVar( 'RAIDshadowMode' ) ~= 0 ) then
-                    SetCVar( 'RAIDshadowMode',0 );
+                    SetCVar( 'RAIDshadowMode',0,nil,true );
                 end
             elseif( Value > 0 and Value <= 3 ) then
                 if( GetCVar( 'RAIDshadowMode' ) ~= 1 ) then
-                    SetCVar( 'RAIDshadowMode',1 );
+                    SetCVar( 'RAIDshadowMode',1,nil,true );
                 end
             else -- Value > 3
                 if( GetCVar( 'RAIDshadowMode' ) ~= 3 ) then
-                    SetCVar( 'RAIDshadowMode',3 );
+                    SetCVar( 'RAIDshadowMode',3,nil,true );
                 end
+            end
+        end
+
+        Addon.APP.RefreshParticleDensity = function( self )
+            local Value = tonumber( Addon.APP:GetVarValue( 'particleDensity' ) );
+            if( Value == 0 ) then
+                -- disabled
+                SetCVar( 'graphicsParticleDensity',0,nil,true );
+            elseif( Value == 10 ) then
+                -- low
+                SetCVar( 'graphicsParticleDensity',1,nil,true );
+            elseif( Value == 25 ) then
+                -- fair
+                SetCVar( 'graphicsParticleDensity',2,nil,true );
+            elseif( Value == 50 ) then
+                -- good
+                SetCVar( 'graphicsParticleDensity',3,nil,true );
+            elseif( Value == 80 ) then
+                -- high
+                SetCVar( 'graphicsParticleDensity',4,nil,true );
+            elseif( Value == 100 ) then
+                -- ultra
+                SetCVar( 'graphicsParticleDensity',5,nil,true );
+            end
+        end
+
+        Addon.APP.RefreshRaidParticleDensity = function( self )
+            local Value = tonumber( Addon.APP:GetVarValue( 'RAIDparticleDensity' ) );
+            if( Value == 0 ) then
+                -- disabled
+                SetCVar( 'raidGraphicsParticleDensity',0,nil,true );
+            elseif( Value == 10 ) then
+                -- low
+                SetCVar( 'raidGraphicsParticleDensity',1,nil,true );
+            elseif( Value == 25 ) then
+                -- fair
+                SetCVar( 'raidGraphicsParticleDensity',2,nil,true );
+            elseif( Value == 50 ) then
+                -- good
+                SetCVar( 'raidGraphicsParticleDensity',3,nil,true );
+            elseif( Value == 80 ) then
+                -- high
+                SetCVar( 'raidGraphicsParticleDensity',4,nil,true );
+            elseif( Value == 100 ) then
+                -- ultra
+                SetCVar( 'raidGraphicsParticleDensity',5,nil,true );
             end
         end
 
@@ -262,122 +308,6 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @param  bool    Manual
         --  @return void
         Addon.APP.RefreshCompactPartyFrame = function( VarName,VarData,Manual )
-
-            -- /Blizzard_UnitFrame/Mainline/CompactUnitFrame.lua
-            -- 
-            -- Blizzard_CUFProfiles/Blizzard_CompactUnitFrameProfiles.lua
-            -- /Blizzard_CUFProfiles/Blizzard_CompactUnitFrameProfiles.xml
-            -- $parentKey:
-            -- 
-            -- where $parent is CompactUnitFrameProfiles
-            -- and Key is referred to such as $parentRaidStylePartyFrames
-            --
-            -- More keys:
-            --             $parentHeightSlider
-            --             $parentWidthSlider
-            if( Addon:Minify( VarName ):find( Addon:Minify( 'useCompactPartyFrames' ) ) ) then
-                if( CompactUnitFrameProfilesRaidStylePartyFrames ) then
-                    local CurrentValue = CompactUnitFrameProfilesRaidStylePartyFrames:GetChecked();
-                    if( CurrentValue ~= Addon:Int2Bool( self:GetVarValue( VarName ) ) ) then
-                        CompactUnitFrameProfilesRaidStylePartyFrames:Click();
-                    end
-                end
-            end
-
-            if( Addon:Minify( VarName ):find( Addon:Minify( 'raidOptionKeepGroupsTogether' ) ) ) then
-                if( CompactUnitFrameProfilesGeneralOptionsFrameKeepGroupsTogether ) then
-                    local CurrentValue = CompactUnitFrameProfilesGeneralOptionsFrameKeepGroupsTogether:GetChecked();
-                    if( CurrentValue ~= Addon:Int2Bool( self:GetVarValue( VarName ) ) ) then
-                        CompactUnitFrameProfilesGeneralOptionsFrameKeepGroupsTogether:Click();
-                    end
-                end
-                if( CompactRaidFrameManager_SetKeepGroupsTogether ) then
-                    CompactRaidFrameManager_SetKeepGroupsTogether( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
-                end
-            end
-
-            if( Addon:Minify( VarName ):find( Addon:Minify( 'raidOptionSortMode' ) ) ) then
-                if( CompactRaidFrameManager_SetSortMode ) then
-                    CompactRaidFrameManager_SetSortMode( self:GetVarValue( VarName ) );
-                    CompactUnitFrameProfilesGeneralOptionsFrameSortByDropdown.selectedValue = self:GetVarValue( VarName );
-                end
-            end
-
-            if( Addon:Minify( VarName ):find( Addon:Minify( 'raidFramesDisplayPowerBars' ) ) ) then
-                if( CompactUnitFrameProfilesGeneralOptionsFrameDisplayPowerBar ) then
-                    local CurrentValue = CompactUnitFrameProfilesGeneralOptionsFrameDisplayPowerBar:GetChecked();
-                    if( CurrentValue ~= Addon:Int2Bool( self:GetVarValue( VarName ) ) ) then
-                        CompactUnitFrameProfilesGeneralOptionsFrameDisplayPowerBar:Click();
-                    end
-                end
-            end
-
-            if( Addon:Minify( VarName ):find( Addon:Minify( 'raidFramesDisplayClassColor' ) ) ) then
-                if( CompactUnitFrameProfilesGeneralOptionsFrameUseClassColors ) then
-                    local CurrentValue = CompactUnitFrameProfilesGeneralOptionsFrameUseClassColors:GetChecked();
-                    if( CurrentValue ~= Addon:Int2Bool( self:GetVarValue( VarName ) ) ) then
-                        CompactUnitFrameProfilesGeneralOptionsFrameUseClassColors:Click();
-                    end
-                end
-            end
-
-            if( Addon:Minify( VarName ):find( Addon:Minify( 'raidOptionDisplayPets' ) ) ) then
-                if( CompactUnitFrameProfilesGeneralOptionsFrameDisplayPets ) then
-                    local CurrentValue = CompactUnitFrameProfilesGeneralOptionsFrameDisplayPets:GetChecked();
-                    if( CurrentValue ~= Addon:Int2Bool( self:GetVarValue( VarName ) ) ) then
-                        CompactUnitFrameProfilesGeneralOptionsFrameDisplayPets:Click();
-                    end
-                end
-                if( CompactRaidFrameManager_SetDisplayPets ) then
-                    CompactRaidFrameManager_SetDisplayPets( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
-                end
-            end
-
-            if( Addon:Minify( VarName ):find( Addon:Minify( 'raidOptionDisplayMainTankAndAssist' ) ) ) then
-                if( CompactUnitFrameProfilesGeneralOptionsFrameMainTankAndAssist ) then
-                    local CurrentValue = CompactUnitFrameProfilesGeneralOptionsFrameMainTankAndAssist:GetChecked();
-                    if( CurrentValue ~= Addon:Int2Bool( self:GetVarValue( VarName ) ) ) then
-                        CompactUnitFrameProfilesGeneralOptionsFrameMainTankAndAssist:Click();
-                    end
-                end
-            end
-
-            if( Addon:Minify( VarName ):find( Addon:Minify( 'raidOptionShowBorders' ) ) ) then
-                if( CompactUnitFrameProfilesGeneralOptionsFrameDisplayBorder ) then
-                    local CurrentValue = CompactUnitFrameProfilesGeneralOptionsFrameDisplayBorder:GetChecked();
-                    if( CurrentValue ~= Addon:Int2Bool( self:GetVarValue( VarName ) ) ) then
-                        CompactUnitFrameProfilesGeneralOptionsFrameDisplayBorder:Click();
-                    end
-                end
-                if( CompactRaidFrameManager_SetBorderShown ) then
-                    CompactRaidFrameManager_SetBorderShown( Addon:Int2Bool( self:GetVarValue( VarName ) ) );
-                end
-            end
-
-            if( Addon:Minify( VarName ):find( Addon:Minify( 'raidFramesDisplayOnlyDispellableDebuffs' ) ) ) then
-                if( CompactUnitFrameProfilesGeneralOptionsFrameDisplayOnlyDispellableDebuffs ) then
-                    local CurrentValue = CompactUnitFrameProfilesGeneralOptionsFrameDisplayOnlyDispellableDebuffs:GetChecked();
-                    if( CurrentValue ~= Addon:Int2Bool( self:GetVarValue( VarName ) ) ) then
-                        CompactUnitFrameProfilesGeneralOptionsFrameDisplayOnlyDispellableDebuffs:Click();
-                    end
-                end
-            end
-
-            if( Addon:Minify( VarName ):find( Addon:Minify( 'raidFramesHealthText' ) ) ) then
-                if( CompactUnitFrameProfilesGeneralOptionsFrameHealthTextDropdown ) then
-                    local CurrentValue = CompactUnitFrameProfilesGeneralOptionsFrameHealthTextDropdown.selectedValue;
-                    if( CurrentValue ~= self:GetVarValue( VarName ) ) then
-                        CompactUnitFrameProfilesGeneralOptionsFrameHealthTextDropdown.selectedValue = self:GetVarValue( VarName );
-                    end
-                end
-            end
-
-            --CompactUnitFrameProfiles_UpdateCurrentPanel();
-            --CompactUnitFrameProfiles_ApplyCurrentSettings();
-            
-            if( Manual ) then
-                Addon.FRAMES:Warn( 'Changing this setting may require a reload' );
-            end
         end
 
         Addon.APP.AddMovablePort = function( self,Parent )
@@ -493,7 +423,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             for VarName,VarData in pairs( Addon.DB:GetPersistence().Vars ) do
                 if( not VarData.Missing ) then
 
-                    local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value );
+                    local Updated = SetCVar( Addon:Minify( VarName ),VarData.Value,nil,true );
 
                     if( Updated and self.Registry[ Addon:Minify( VarName ) ] and self.Registry[ Addon:Minify( VarName ) ].Cascade ) then
                         for Handling,_ in pairs( self.Registry[ Addon:Minify( VarName ) ].Cascade ) do
@@ -993,21 +923,39 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Settings.OpenToCategory( Category.ID );
                 end
             end
+
+            hooksecurefunc( 'SetCVar',function( ... )
+                local Index,Value,Ignored,Internal = ...;
+                if( not Internal ) then
+                    if( Index ~= nil and Value ~= nil ) then
+                        local Result = Addon.DB:SetVarValue( Index,Value );
+                        if( Result ) then
+                            if( Addon.DB:GetPersistence().Vars[ string.lower( Index ) ] ) then
+                                if( Addon.DB:GetPersistence().Vars[ string.lower( Index ) ].Dictionary ) then
+                                    Addon.DB:GetPersistence().Vars[ string.lower( Index ) ].Dictionary.CurrentValue = GetCVar( Index );
+                                end
+                            end
+                            if( Addon.DB:GetValue( 'Debug' ) ) then
+                                Addon.FRAMES:Debug( 'Non-Internal SetCVar call...','Index:',Index,'Value:',Value );
+                            end
+                            Addon.APP:Query();
+                        end
+                    end
+                end
+            end );
         end
         
         local Iterator = 1;
-        hooksecurefunc( 'SetCVar',function( ... )
-            if( not( Iterator > 1 ) ) then
-                C_Timer.After( 10,function()
-                    Addon.DB:Init();
-                    Addon.APP:Init();
-                    if( Addon.APP:GetValue( 'Refresh' ) ) then
-                        Addon.APP:Refresh();
-                    end
-                end );
-                Iterator = Iterator+1;
-            end
-        end );
+        if( not( Iterator > 1 ) ) then
+            C_Timer.After( 10,function()
+                Addon.DB:Init();
+                Addon.APP:Init();
+                if( Addon.APP:GetValue( 'Refresh' ) ) then
+                    Addon.APP:Refresh();
+                end
+            end );
+            Iterator = Iterator+1;
+        end
 
         self:UnregisterEvent( 'ADDON_LOADED' );
     end

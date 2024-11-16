@@ -1944,6 +1944,8 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Cascade = {
                         RefreshEnableRaidSettings = {
                         },
+                        RefreshRaidParticleDensity = {
+                        },
                     },
                 },
                 particleDensity = {
@@ -1975,6 +1977,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                     Category = 'Graphics',
+                    Cascade = {
+                        RefreshParticleDensity = {
+                        },
+                    },
                 },
                 projectedtextures = {
                     Type = 'Toggle',
