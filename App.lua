@@ -793,7 +793,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Apply:SetPoint( 'topleft',self.Controls,'topleft',0,0 );
             self.Apply.Label = Addon.FRAMES:AddLabel( RefreshData,self.Apply,self.Theme.Normal );
             self.Apply.Label:SetPoint( 'topleft',self.Apply,'topright',0,-3 );
-            self.Apply.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.Apply.Label:SetSize( ( self.Controls:GetWidth()/3 )-5,20 );
             self.Apply.Label:SetJustifyH( 'left' );
             self.Apply:HookScript( 'OnClick',function( self )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
@@ -809,7 +809,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ReloadUI:SetPoint( 'topleft',self.Apply.Label,'topright',0,3 );
             self.ReloadUI.Label = Addon.FRAMES:AddLabel( ReloadUIData,self.ReloadUI,self.Theme.Normal );
             self.ReloadUI.Label:SetPoint( 'topleft',self.ReloadUI,'topright',0,-3 );
-            self.ReloadUI.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.ReloadUI.Label:SetSize( ( self.Controls:GetWidth()/3 )-5,20 );
             self.ReloadUI.Label:SetJustifyH( 'left' );
             self.ReloadUI:HookScript( 'OnClick',function( self )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
@@ -825,7 +825,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ReloadGX:SetPoint( 'topleft',self.ReloadUI.Label,'topright',0,3 );
             self.ReloadGX.Label = Addon.FRAMES:AddLabel( ReloadGXData,self.ReloadGX,self.Theme.Normal );
             self.ReloadGX.Label:SetPoint( 'topleft',self.ReloadGX,'topright',0,-3 );
-            self.ReloadGX.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.ReloadGX.Label:SetSize( ( self.Controls:GetWidth()/3 )-5,20 );
             self.ReloadGX.Label:SetJustifyH( 'left' );
             self.ReloadGX:HookScript( 'OnClick',function( self )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
@@ -914,7 +914,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.Debug:SetPoint( 'topleft',self.Apply,'bottomleft',0,0 );
             self.Debug.Label = Addon.FRAMES:AddLabel( DebugData,self.Debug,self.Theme.Normal );
             self.Debug.Label:SetPoint( 'topleft',self.Debug,'topright',0,-3 );
-            self.Debug.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.Debug.Label:SetSize( ( self.Controls:GetWidth()/3 )-5,20 );
             self.Debug.Label:SetJustifyH( 'left' );
             self.Debug:HookScript( 'OnClick',function( self )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
@@ -930,7 +930,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
             self.ReloadOnImport:SetPoint( 'topleft',self.ReloadUI,'bottomleft',0,0  );
             self.ReloadOnImport.Label = Addon.FRAMES:AddLabel( ReloadImportData,self.ReloadOnImport,self.Theme.Normal );
             self.ReloadOnImport.Label:SetPoint( 'topleft',self.ReloadOnImport,'topright',0,-3 );
-            self.ReloadOnImport.Label:SetSize( self.Controls:GetWidth()/3,20 );
+            self.ReloadOnImport.Label:SetSize( ( self.Controls:GetWidth()/3 )-5,20 );
             self.ReloadOnImport.Label:SetJustifyH( 'left' );
             self.ReloadOnImport:HookScript( 'OnClick',function( self )
                 Addon.APP:SetValue( self.keyValue,self:GetChecked() );
