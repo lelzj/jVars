@@ -149,9 +149,11 @@ Addon.VIEW:SetScript( 'OnEvent',function( self,Event,AddonName )
                     Row.Value = Addon.FRAMES:AddVarToggle( Data,Row,Handler );
                 elseif( Data.Type == 'Range' ) then
                     Row.Value = Addon.FRAMES:AddRange( Data,Row,{
+                        -- AddRange initialization calls this
                         Get = function()
                             return Handler:GetVarValue( Data.Name );
                         end,
+                        -- AddRange:OnValueChanged calls this
                         Set = function()
                             --print( 'Set',Data.Name,Addon:SliderRound( Row.Value:GetValue(),Data.Step ) )
                             return Handler:SetVarValue( Data.Name,Addon:SliderRound( Row.Value:GetValue(),Data.Step ) );
