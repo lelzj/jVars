@@ -167,6 +167,73 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
                         },
                     },
                 },
+                ShowNamePlateLoseAggroFlash = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
+                nameplateMotion = {
+                    Type = 'Select',
+                    KeyPairs = {
+                        {
+                            Value = 0,
+                            Description = 'Overlapping',
+                        },
+                        {
+                            Value = 1,
+                            Description = 'Stacking',
+                        },
+                        {
+                            Value = 2,
+                            Description = 'Spreading',
+                        },
+                    },
+                    Category = 'Hud',
+                },
+                nameplateOverlapH = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1.1,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Hud',
+                },
+                nameplateOverlapV = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1.1,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Hud',
+                },
+                nameplateGlobalScale = {
+                    Type = 'Range',
+                    KeyPairs = {
+                        Low = {
+                            Value = 0.0,
+                            Description = 'Low',
+                        },
+                        High = {
+                            Value = 1.0,
+                            Description = 'High',
+                        },
+                    },
+                    Step = 0.1,
+                    Category = 'Hud',
+                },
                 nameplateShowOnlyNames = {
                     Type = 'Toggle',
                     Category = 'Hud',
