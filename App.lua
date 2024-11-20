@@ -633,6 +633,9 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                 if( InCombatLockdown() ) then
                     return;
                 end
+                if( not Addon.APP.Config:IsVisible() ) then
+                    return;
+                end
                 --if( string.len( self:GetText() ) > 3 ) then
                     Addon.APP:Query();
                 --end
