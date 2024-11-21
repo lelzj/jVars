@@ -14,6 +14,10 @@ Addon.REG:SetScript( 'OnEvent',function( self,Event,AddonName )
         --  @return table
         Addon.REG.GetRegistry = function( self )
             local Registry = {
+                disableSuggestedLevelActivityFilter = {
+                    Type = 'Toggle',
+                    Category = 'Hud',
+                },
                 useClassicGuildUI = {
                     Type = 'Toggle',
                     Category = 'Hud',
