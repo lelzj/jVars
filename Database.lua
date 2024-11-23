@@ -48,9 +48,6 @@ Addon.DB:SetScript( 'OnEvent',function( self,Event,AddonName )
             if( not self.db ) then
                 return;
             end
-            local Player = UnitName( 'player' );
-            local Realm = GetRealmName();
-            local PlayerRealm = Player..'-'..Realm;
 
             self.persistence = self.db.global;
             if( not self.persistence ) then

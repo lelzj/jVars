@@ -939,7 +939,7 @@ Addon.APP:SetScript( 'OnEvent',function( self,Event,AddonName )
                                 end
                             end
                             if( Addon.DB:GetValue( 'Debug' ) ) then
-                                Addon.FRAMES:Debug( 'Non-Internal SetCVar call...','Index:',Index,'Value:',Value );
+                                Addon.FRAMES:Debug( 'Non-Internal SetCVar call...','Index:',tostring( Index ),'Value:',tostring( Value ) );
                             end
                             Addon.APP:Query();
                         end
